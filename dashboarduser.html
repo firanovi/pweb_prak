@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SakaMadura</title>
+    <link rel="stylesheet" href="./styledu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+    <div class="nav-left">
+        <a href="#" class="logo">SakaMadura</a>
+        <div class="nav-links">
+            <a href="./homepage.html" class="nav-link">About</a>
+            <a href="#" class="nav-link">Heritage</a>
+            <a href="#" class="nav-link">Shop</a>
+        </div>
+    </div>
+    
+    <div class="nav-right">
+        <div class="search-box">
+            <input type="text" placeholder="Search">
+            <i class="fas fa-search"></i>
+        </div>
+        <a href="#" class="login-btn">Log in</a>
+    </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        
+        <!-- Dashboard Wrapper -->
+        <div class="dashboard">
+            
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <a href="#" class="menu-item active">
+                    <i class="far fa-user"></i>
+                    <span>Account</span>
+                </a>
+                <a href="./payment.html" class="menu-item">
+                    <i class="far fa-credit-card"></i>
+                    <span>Payment Methods</span>
+                </a>
+                <a href="./cart.html" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                </a>
+                <a href="./order.html" class="menu-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Your Orders</span>
+                </a>
+                <a href="./historyorder.html" class="menu-item">
+                    <i class="far fa-file-alt"></i>
+                    <span>History Order</span>
+                </a>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                
+                <!-- Profile Card -->
+                <div class="profile-card">
+                    <a href="./editprof.html" class="edit-btn">Edit</a>
+                    <div class="profile-header">
+                        <img src="./img/carmen.png" alt="Profile" class="avatar">
+                        <div class="profile-title-section">
+                            <h1 class="profile-title">Profile</h1>
+                        </div>
+                    </div>
+
+                    <div class="profile-info">
+                        <span class="info-label">Username</span>
+                        <span class="info-value">Carmencc</span>
+                        
+                        <span class="info-label">Nama</span>
+                        <span class="info-value">Carmen</span>
+                        
+                        <span class="info-label">Nomor HP</span>
+                        <span class="info-value">085733427998</span>
+                        
+                        <span class="info-label">Email</span>
+                        <span class="info-value">carmencantik@gmail.com</span>
+                        
+                        <span class="info-label">Alamat</span>
+                        <span class="info-value">Jl. Airlangga NO.7</span>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="settings-section">
+                    <h2 class="section-title">Pengaturan</h2>
+                    
+                    <div class="settings-list">
+                        <a href="./historyorder.html" class="setting-item">
+                            <div class="setting-icon">
+                               <i class="fas fa-clock"></i> 
+                            </div>
+                            <span class="setting-text">Order History</span>
+                            <span class="arrow">></span>
+                        </a>
+
+                        <a href="#" class="setting-item">
+                            <div class="setting-icon">
+                                <i class="fas fa-store"></i> <!-- ganti ikon yang lebih sesuai -->
+                            </div>
+                            <span class="setting-text">Seller Dashboard</span>
+                            <span class="arrow">></span>
+                        </a>
+
+                        <a href="./changepass.html" class="setting-item">
+                            <div class="setting-icon">
+                                <i class="fas fa-lock"></i> <!-- ganti ikon yang lebih sesuai -->
+                            </div>
+                            <span class="setting-text">Change Passkey</span>
+                            <span class="arrow">></span>
+                        </a>
+
+                        <a href="#" class="setting-item">
+                            <div class="setting-icon">
+                                <i class="fas fa-sign-out-alt"></i> <!-- ganti ikon yang lebih sesuai -->
+                            </div>
+                            <span class="setting-text">Log Out</span>
+                            <span class="arrow">></span>
+                        </a>
+                    </div>
+                </div>
+                
+            </div> <!-- End Main Content -->
+            
+        </div> <!-- End Dashboard -->
+        
+    </div> <!-- End Container -->
+
+<!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bg">
+            <img src="./gambar/Teks paragraf Anda (1512 x 982 piksel) (3).png" alt="Background">
+        </div>
+        <div class="footer-content-wrapper">
+            <div class="footer-left">
+                <h3 class="footer-logo">SakaMadura</h3>
+                <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-middle">
+                <h4>Navigasi</h4>
+                <br>
+                <ul>
+                    <li><a href="./homepage.html">About</a></li>
+                    <li><a href="#">Heritage</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-right">
+                <h4>Hubungi Kami</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(0123) 15734</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><a href="mailto:sakaMadura@gmail.com">sakaMadura@gmail.com</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <hr class="divider">
+    
+        <div class="copyright">
+            <p>&copy; 2024 SakaMadura. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

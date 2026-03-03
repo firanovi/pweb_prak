@@ -1,0 +1,440 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e4e0 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Left Side - Logo & Links */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            font-family: 'Sacramento', cursive;
+            font-size: 30px;
+            font-weight: 400;
+            color: #2c3e50;
+            text-decoration: none;
+            font-style: italic;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #2c3e50;
+        }
+
+        /* Right Side - Search & Login */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            width: 200px;
+            height: 32px;
+            border-radius: 16px;
+            border: 1px solid #ddd;
+            background: #f0f0f0;
+            padding: 0 35px 0 15px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            background: #fff;
+            border-color: #555;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 12px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .login-btn {
+            padding: 6px 20px;
+            background: #2c3e50; 
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #555;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            
+            .nav-links {
+                display: none; /* atau buat hamburger menu */
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2c3e50;
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        
+        /* Main Container */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* Card Container - Sesuai Prototype */
+        .password-card {
+            background: rgb(255, 255, 255);
+            border-radius: 12px;
+            padding: 40px 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+            margin-top: 70px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 15px;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00a8e8;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Button Container */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #00a8e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0086b6;
+        }
+        /* Footer */
+        .footer {
+            position: relative;
+            color: white;
+            padding: 35px 10%;
+            overflow: hidden;
+        }
+
+        .footer-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .footer-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.3);
+        }
+
+        .footer-content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            font-family: 'Sacramento', cursive;;
+            font-size: 35px;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .footer-right h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: white;
+            justify-items: left;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            width: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .contact-item span {
+            opacity: 0.9;
+        }
+
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .contact-item a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .footer-middle ul {
+            list-style: none;
+        }
+
+        .footer-middle ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-middle a,
+        .footer-right a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .footer-middle a:hover,
+        .footer-right a:hover {
+            opacity: 1;
+        }
+
+        .footer-right p {
+            margin-bottom: 10px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: left;
+            gap: 0rem;
+            margin-top: 0rem;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-light);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .footer .divider {
+            border: none;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2); /* Putih transparan untuk footer gelap */
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+
+        .copyright{
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .profile-card {
+                padding: 20px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .edit-btn {
+                position: static;
+                display: block;
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            .profile-info {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .info-label {
+                color: #999;
+                font-size: 12px;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 20px;
+            }
+        }

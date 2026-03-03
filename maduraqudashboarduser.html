@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard User - MaduraQ </title>
+    <link rel="stylesheet" href="./styleuser.css">
+
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo"> <!--link ke homepage-->
+            MaduraQ
+        </a>
+        
+        <div class="nav-menu">
+            <a href="#" class="nav-link">Beranda</a> <!--link ke homepage-->
+            <a href="#" class="nav-link">Tentang Madura</a> <!--link ke about content-->
+            <a href="#" class="nav-link">Lainnya</a> <!--link ke others-->
+
+        </div>
+    </nav>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Selamat Datang, Budi!</h1>
+                <p>Lihat aktivitas terbaru dan kelola pesanan Anda di dashboard ini.</p>
+            </div>
+            <div class="welcome-stats">
+                <div class="welcome-stat">
+                    <span class="welcome-stat-value">12</span>
+                    <span class="welcome-stat-label">Pesanan</span>
+                </div>
+                <div class="welcome-stat">
+                    <span class="welcome-stat-value">2</span>
+                    <span class="welcome-stat-label">Alamat</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard-->
+        <div class="dashboard">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="menu-item active">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item">
+                    <span>👤</span>
+                    <span>Profil Saya</span>
+                
+                </div>
+                <div class="menu-item">
+                    <span>📦</span>
+                    <span>Pesanan Saya</span>
+                </div>
+                <div class="menu-item">
+                    <span>📍</span>
+                    <span>Alamat</span>
+                </div>
+                <div class="menu-item">
+                    <span>⚙️</span>
+                    <span>Pengaturan</span>
+                </div>
+                <div class="menu-item">
+                    <span>🚪</span>
+                    <span>Keluar</span>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Profile Card -->
+                <div class="card">
+                    <div class="profile-card">
+                        <div class="profile-avatar">B</div>
+                        <div class="profile-info">
+                            <h3>Budi Santoso</h3>
+                            <p> budi.santoso@email.com | 0857-3331-7899</p>
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">12</div>
+                                    <div class="profile-stat-label">Total Pesanan</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">Rp 2.5M</div>
+                                    <div class="profile-stat-label">Total Belanja</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">2</div>
+                                    <div class="profile-stat-label">Alamat Tersimpan</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline">Edit Profil</button>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📦 Pesanan Terbaru</h3>
+                        <a href="#" class="btn btn-primary">Lihat Semua</a> <!--Link ke pesanan saya-->
+                    </div>
+                    <div class="order-list">
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Pesanan #TRX-2024-001</h4>
+                                <div class="order-meta">
+                                    <span>📅 15 Jan 2024</span>
+                                    <span>📦 3 Item</span>
+                                    <span>💳 Transfer Bank</span>
+                                </div>
+                            </div>
+                            <span class="order-status status-delivered">Terkirim</span>
+                            <div class="order-total">
+                                <div class="order-amount">Rp 450.000</div>
+                                <a href="#" style="font-size: 13px; color: var(--primary);">Detail →</a> <!--Link ke pesanan saya-->
+                            </div>
+                        </div>
+                        
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Pesanan #TRX-2024-002</h4>
+                                <div class="order-meta">
+                                    <span>📅 18 Jan 2024</span>
+                                    <span>📦 2 Item</span>
+                                    <span>💳 COD</span>
+                                </div>
+                            </div>
+                            <span class="order-status status-shipping">Dikirim</span>
+                            <div class="order-total">
+                                <div class="order-amount">Rp 280.000</div>
+                                <a href="#" style="font-size: 13px; color: var(--primary);">Detail →</a> <!--Link ke pesanan saya-->
+                            </div>
+                        </div>
+                        
+                        <div class="order-item">
+                            <div class="order-info">
+                                <h4>Pesanan #TRX-2024-003</h4>
+                                <div class="order-meta">
+                                    <span>📅 20 Jan 2024</span>
+                                    <span>📦 1 Item</span>
+                                    <span>💳 E-Wallet</span>
+                                </div>
+                            </div>
+                            <span class="order-status status-processing">Diproses</span>
+                            <div class="order-total">
+                                <div class="order-amount">Rp 125.000</div>
+                                <a href="#" style="font-size: 13px; color: var(--primary);">Detail →</a> <!--Link ke pesanan saya-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Alamat Tersimpan</h3>
+                        <a href="#" class="btn btn-primary">+ Tambah Alamat</a> <!--link ke alamat-->
+
+                    </div>
+                    <div class="address-grid">
+                        <div class="address-card primary">
+                            <div class="address-label">Rumah</div>
+                            <div class="address-name">Budi Santoso</div>
+                            <div class="address-text">
+                                Jl. Raya No. 123, RT 01/RW 02<br>
+                                Kelurahan Bangkalan, Kecamatan Bangkalan<br>
+                                Bangkalan, Jawa Timur 69112<br>
+                                0812-3456-7890
+                            </div>
+                            <div class="address-actions">
+                                <button class="btn btn-outline btn-small">Edit</button>
+                                <button class="btn btn-outline btn-small">Hapus</button>
+                            </div>
+                        </div>
+                        
+                        <div class="address-card">
+                            <div class="address-label">Kantor</div>
+                            <div class="address-name">Budi Santoso</div>
+                            <div class="address-text">
+                                Jl. Ahmad Yani No. 45<br>
+                                Kelurahan Sampang, Kecamatan Sampang<br>
+                                Sampang, Jawa Timur 69213<br>
+                                0812-3456-7890
+                            </div>
+                            <div class="address-actions">
+                                <button class="btn btn-outline btn-small">Edit</button>
+                                <button class="btn btn-outline btn-small">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

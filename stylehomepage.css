@@ -1,0 +1,640 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Left Side - Logo & Links */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.logo {
+    font-family: 'Sacramento', cursive;
+    font-size: 30px;
+    font-weight: 400;
+    color: #2c3e50;
+    text-decoration: none;
+    font-style: italic;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none; /* Hapus bullet */
+    margin: 0;        /* Hapus margin default */
+    padding: 0;
+}
+
+.nav-links li {
+    display: flex;    /* Agar alignment rapi */
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    padding: 8px 12px;       /* Tambah padding untuk area klik */
+    border-radius: 20px;     /* Rounded hover effect */
+}
+
+.nav-links li a:hover {
+    color: #2c3e50;
+    background: rgba(0,0,0,0.05);
+}
+
+/* Active State - Baru! */
+.nav-links li a.active {
+    color: white;
+    background: #2c3e50;
+    font-weight: 600;
+}
+
+/* Right Side - Search & Login (tetap sama) */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box input {
+    width: 200px;
+    height: 32px;
+    border-radius: 16px;
+    border: 1px solid #ddd;
+    background: #f0f0f0;
+    padding: 0 35px 0 15px;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.search-box input:focus {
+    background: #fff;
+    border-color: #555;
+}
+
+.search-box i {
+    position: absolute;
+    right: 12px;
+    color: #999;
+    font-size: 12px;
+}
+
+.login-btn {
+    padding: 6px 20px;
+    background: #2c3e50; 
+    color: white;
+    text-decoration: none;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.login-btn:hover {
+    background: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+    }
+    
+    .nav-links {
+        display: none; /* atau buat hamburger menu */
+    }
+    
+    .search-box input {
+        width: 150px;
+    }
+}
+
+/* Hero Section */
+.hero {
+    margin-top: 0;
+    position: top;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.8);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.hero-overlay h1 {
+    font-size: 120px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    letter-spacing: 5px;
+}
+/* ==================== SEJARAH SECTION ==================== */
+.sejarah-section {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Background Image */
+.sejarah-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.sejarah-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Overlay Gradient - Biar teks terbaca */
+.sejarah-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.85) 50%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    z-index: -1;
+}
+
+/* Content */
+.sejarah-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 80px 40px;
+    text-align: center;
+}
+
+/* Title */
+.sejarah-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Garis bawah title */
+.sejarah-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: #3498db;
+    border-radius: 2px;
+}
+
+/* Text Container */
+.sejarah-text {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.sejarah-text p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #555;
+}
+
+/* Highlight paragraph */
+.sejarah-text .highlight {
+    font-size: 19px;
+    color: #333;
+    font-weight: 400;
+}
+
+/* Divider */
+.divider {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #3498db, transparent);
+    margin: 10px auto;
+}
+
+/* Tags */
+.tag {
+    display: inline-block;
+    background: #e8f4f8;
+    color: #2c3e50;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 4px;
+}
+
+/* Strong & Em */
+.sejarah-text strong {
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+.sejarah-text em {
+    color: #3498db;
+    font-style: italic;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .sejarah-title {
+        font-size: 36px;
+    }
+    
+    .sejarah-text p {
+        font-size: 15px;
+    }
+    
+    .sejarah-text .highlight {
+        font-size: 17px;
+    }
+    
+    .sejarah-content {
+        padding: 60px 25px;
+    }
+}
+
+/* Treasures Section */
+.treasures-section {
+    padding: 80px 5%;
+    background-color: white;
+    position: relative;
+}
+
+/* Container utama - 2 kolom */
+.treasures-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 40px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Left Side - Text */
+.treasures-text h2 {
+    font-size: 34px;
+    font-weight: 400;
+    color: #2c3e50;
+    line-height: 1.4;
+    text-underline-offset: 8px;
+    text-decoration-thickness: 2px;
+    font-family: serif;
+}
+
+/* Right Side - Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.product-card {
+    background: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: #e0e0e0;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    padding: 15px 15px 5px 15px;
+    margin: 0;
+}
+
+.price {
+    font-size: 12px;
+    color: #666;
+    padding: 0 15px 15px 15px;
+    margin: 0;
+}
+
+/* Bottom Tabs */
+.treasures-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #ddd;
+}
+
+.tab {
+    font-size: 16px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s;
+    font-weight: 400;
+}
+
+.tab:hover {
+    color: #555;
+}
+
+.tab.active {
+    color: #333;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .treasures-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .treasures-text h2 {
+        font-size: 24px;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .treasures-tabs {
+        gap: 30px;
+        font-size: 14px;
+    }
+}
+
+/* Footer */
+.footer {
+    position: relative;
+    color: white;
+    padding: 35px 10%;
+    overflow: hidden;
+}
+
+.footer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.footer-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.3);
+}
+
+.footer-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-logo {
+    font-family: 'Sacramento', cursive;;
+    font-size: 35px;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.footer-right h4 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: white;
+    justify-items: left;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-size: 14px;
+}
+
+.contact-item i {
+    width: 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.contact-item span {
+    opacity: 0.9;
+}
+
+.contact-item a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.contact-item a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.footer-middle ul {
+    list-style: none;
+}
+
+.footer-middle ul li {
+    margin-bottom: 10px;
+}
+
+.footer-middle a,
+.footer-right a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.footer-middle a:hover,
+.footer-right a:hover {
+    opacity: 1;
+}
+
+.footer-right p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.social-links {
+    display: flex;
+    justify-content: left;
+    gap: 0rem;
+    margin-top: 0rem;
+}
+
+.social-link {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-light);
+    color: var(--text-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.social-link:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-3px);
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.4);
+    margin: 15px 0;
+}
+
+.copyright{
+    font-size: 13px;
+    color: #ddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+    }
+    
+    .nav-menu {
+        gap: 15px;
+    }
+    
+    .hero-overlay h1 {
+        font-size: 60px;
+    }
+    
+    .sejarah-singkat {
+        padding: 40px 10%;
+    }
+    
+    .gallery-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .gallery-container img {
+        width: 100%;
+        height: 250px;
+    }
+    
+    .footer-content-wrapper {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}

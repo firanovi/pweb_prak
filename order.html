@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders - SakaMadura</title>
+    <link rel="stylesheet" href="./order.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">SakaMadura</a>
+            <div class="nav-links">
+                <a href="./homepage.html" class="nav-link">About</a>
+                <a href="#" class="nav-link">Heritage</a>
+                <a href="#" class="nav-link">Shop</a>
+            </div>
+        </div>
+        
+        <div class="nav-right">
+            <div class="search-box">
+                <input type="text" placeholder="Search">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="dashboard">
+            
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <a href="./dashboarduser.html" class="menu-item">
+                    <i class="far fa-user"></i>
+                    <span>Account</span>
+                </a>
+                <a href="./payment.html" class="menu-item">
+                    <i class="far fa-credit-card"></i>
+                    <span>Payment Methods</span>
+                </a>
+                <a href="./cart.html" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                </a>
+                <a href="./order.html" class="menu-item active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Your Orders</span>
+                </a>
+                <a href="./historyorder.html" class="menu-item">
+                    <i class="far fa-file-alt"></i>
+                    <span>History Order</span>
+                </a>
+            </aside>
+
+            <!-- Orders Content -->
+<!-- Orders Content -->
+            <div class="orders-content">
+                
+                <h1 class="page-title">Order</h1>
+                
+                <!-- Order Card 1 -->
+                <div class="order-card">
+                    <div class="order-status delivered">Delivered</div>
+                    
+                    <div class="order-details">
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="label">Order Number</span>
+                                <span class="value">25692784399</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="label">Order Date</span>
+                                <span class="value">March 2, 2025</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Delivery Date</span>
+                                <span class="value">March 12, 2025</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="label">Ship To</span>
+                                <span class="value">Sidoarjo, Jawa Timur</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Payment Method</span>
+                                <span class="value">Dana</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <div class="item">
+                            <img src="./gambar/batik2.jpg" alt="Batik Sumenep">
+                            <div class="item-info">
+                                <h4>Batik Sumenep</h4>
+                                <p class="qty">Qty: 1</p>
+                            </div>
+                            <span class="price">Rp500.000</span>
+                        </div>
+                        
+                        <div class="item">
+                            <img src="./gambar/baju.jpeg" alt="Kaos Sakera">
+                            <div class="item-info">
+                                <h4>Kaos Sakera</h4>
+                                <p class="qty">Size: L</p>
+                            </div>
+                            <span class="price">Rp40.000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <div class="total">
+                            <span class="label">Total Amount:</span>
+                            <span class="amount">Rp540.000,00</span>
+                        </div>
+                        <div class="actions">
+                            <a href="#" class="download-btn">Download Invoice</a>
+                            <a href="#" class="buy-again">Buy it again</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Card 2 -->
+                <div class="order-card">
+                    <div class="order-status shipped">Shipped</div>
+                    
+                    <div class="order-details">
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="label">Order Number</span>
+                                <span class="value">25692784400</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="label">Order Date</span>
+                                <span class="value">March 15, 2025</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Est. Delivery</span>
+                                <span class="value">March 20, 2025</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="label">Ship To</span>
+                                <span class="value">Surabaya, Jawa Timur</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Payment Method</span>
+                                <span class="value">ShopeePay</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <div class="item">
+                            <img src="./gambar/kacangotok.jpeg" alt="Kacang Otok">
+                            <div class="item-info">
+                                <h4>Kacang Otok</h4>
+                                <p class="qty">Qty: 3</p>
+                            </div>
+                            <span class="price">Rp45.000</span>
+                        </div>
+                        
+                        <div class="item">
+                            <img src="./gambar/buah.jpg" alt="Kue Macho">
+                            <div class="item-info">
+                                <h4>Buah Lontar</h4>
+                                <p class="qty">Qty: 2</p>
+                            </div>
+                            <span class="price">Rp40.000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-footer">
+                        <div class="total">
+                            <span class="label">Total Amount:</span>
+                            <span class="amount">Rp85.000,00</span>
+                        </div>
+                        <div class="actions">
+                            <a href="#" class="track-btn">Track Order</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> <!-- End Orders Content -->
+        </div> <!-- End Dashboard -->
+    </div> <!-- End Container -->
+
+<!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bg">
+            <img src="./gambar/Teks paragraf Anda (1512 x 982 piksel) (3).png" alt="Background">
+        </div>
+        <div class="footer-content-wrapper">
+            <div class="footer-left">
+                <h3 class="footer-logo">SakaMadura</h3>
+                <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-middle">
+                <h4>Navigasi</h4>
+                <br>
+                <ul>
+                    <li><a href="./homepage.html">About</a></li>
+                    <li><a href="#">Heritage</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="./dashboarduser.html">Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-right">
+                <h4>Hubungi Kami</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(0123) 15734</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><a href="mailto:sakaMadura@gmail.com">sakaMadura@gmail.com</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <hr class="divider">
+    
+        <div class="copyright">
+            <p>&copy; 2024 SakaMadura. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
