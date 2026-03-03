@@ -99,7 +99,7 @@ nav a {
 /* ================= HERO ================= */
 .hero {
     height: 550px;
-    background: url('background1.jpg') center/cover no-repeat;
+    background: url('./gambar/background1.jpg') center/cover no-repeat;
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
@@ -193,7 +193,7 @@ nav a {
 
 /* ================= FOOTER ================= */
 footer {
-    background: url(background\ footer.png) center/cover no-repeat;
+    background: url(./gambar/background\ footer.png) center/cover no-repeat;
     color: white;
     padding-top: 50px;
     padding-bottom: 20px;
