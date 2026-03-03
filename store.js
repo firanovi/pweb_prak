@@ -1,9 +1,8 @@
 // Data Produk (Bisa ditambah sesuai kebutuhan)
 const products = [
-    { id: 1, name: "Batik Sumenep", price: 500000, category: "heritage", img: "batik.jpg" },
-    { id: 2, name: "Kacang Otok", price: 15000, category: "food", img: "kacang.jpg" },
-    { id: 3, name: "Kue Macho", price: 20000, category: "food", img: "macho.jpg" },
-    { id: 4, name: "Odheng", price: 25000, category: "heritage", img: "odheng.jpg" }
+    { id: 1, name: "Batik Sumenep", price: 500000, category: "heritage", img: "./gambar/batik sumenep.jpg" },
+    { id: 2, name: "Kacang Otok", price: 15000, category: "food", img: "./gambar/kacang otok.jpeg" },
+    { id: 3, name: "Kue Macho", price: 20000, category: "food", img: "./gambar/kue macho.png" },
 ];
 
 let cart = [];
@@ -16,7 +15,6 @@ function renderProducts() {
             <img src="${product.img}" alt="${product.name}">
             <h3>${product.name}</h3>
             <p>Rp ${product.price.toLocaleString('id-ID')}</p>
-            <button onclick="addToCart(${product.id})" class="btn-add">Tambah ke Keranjang</button>
         </div>
     `).join('');
 }
