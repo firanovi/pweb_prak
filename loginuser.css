@@ -33,7 +33,7 @@ a:hover{
 body{
     margin: 0;
     height: 100vh;
-    background: url('../../backgroundloginmadura.jpg.jpeg') no-repeat center center;
+    background: url('./img/backgroundloginmadura.jpg.jpeg') no-repeat center center;
     background-size: cover;
 
 }
