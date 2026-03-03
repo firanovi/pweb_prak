@@ -59,7 +59,7 @@ const views = {
                 <tr>
                     <td>
                         <div class="product-info">
-                            <img src="batik sumenep.jpg" class="prod-thumb">
+                            <img src="./img/batik sumenep.jpg" class="prod-thumb">
                             <strong>Batik Sumenep</strong>
                         </div>
                     </td>
@@ -72,7 +72,7 @@ const views = {
                 <tr>
                     <td>
                         <div class="product-info">
-                            <img src="kacang otok.jpeg" class="prod-thumb">
+                            <img src="./img/Kacang otok.jpeg" class="prod-thumb">
                             <strong>Kacang Otok</strong>
                         </div>
                     </td>
@@ -85,7 +85,7 @@ const views = {
                 <tr>
                     <td>
                         <div class="product-info">
-                            <img src="kacang otok.jpeg" class="prod-thumb">
+                            <img src="./img/Kacang otok.jpeg" class="prod-thumb">
                             <strong>Kacang Otok</strong>
                         </div>
                     </td>
@@ -98,7 +98,7 @@ const views = {
                 <tr>
                     <td>
                         <div class="product-info">
-                            <img src="kacang otok.jpeg" class="prod-thumb">
+                            <img src="./img/Kacang otok.jpeg" class="prod-thumb">
                             <strong>Kacang Otok</strong>
                         </div>
                     </td>
