@@ -89,7 +89,7 @@ body {
     height: 35px;
     border-radius: 20px;
     border: 1px solid #ddd;
-    background: #e8e8e8;
+    background: #f0f0f0;
     padding: 0 40px 0 15px;
     font-size: 13px;
     outline: none;
@@ -103,7 +103,7 @@ body {
 
 .search-box i {
     position: absolute;
-    right: 15x;
+    right: 15px;
     color: #999;
     font-size: 13px;
 }
@@ -215,7 +215,6 @@ body {
     border-radius: 15px;
     padding: 25px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 2px solid #3498db; /* Border biru */
     margin-top: 25px;
 }
 
