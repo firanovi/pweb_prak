@@ -1,0 +1,396 @@
+:root {
+    --primary-dark: #2c3e50;
+    --text-gray: #555;
+    --light-bg: #f7f7f7;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+body { 
+    font-family: 'Inter', sans-serif; 
+    background: #fff; 
+    overflow-x: hidden; 
+}
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 0 20px; 
+}
+
+/* HEADER */
+header {
+    background: #fff; 
+    padding: 15px 0; 
+    border-bottom: 1px solid #ddd;
+    position: sticky; 
+    top: 0; 
+    z-index: 1000;
+}
+.navbar { 
+    display: flex; 
+    align-items: center; 
+    gap: 50px; 
+}
+.logo { 
+    font-size: 32px; 
+    font-family: 'Sacramento', cursive; 
+}
+nav ul { 
+    display: flex; 
+    list-style: none; 
+    gap: 30px; 
+}
+nav a { 
+    text-decoration: none; 
+    color: #333; 
+    font-size: 14px; 
+}
+.active { 
+    background: var(--primary-dark); 
+    color: white !important; 
+    padding: 6px 16px; 
+    border-radius: 8px; 
+}
+
+.search-login { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    margin-left: auto; 
+}
+.search-login input { 
+    padding: 10px 18px; 
+    border-radius: 25px; 
+    border: 1px solid #ddd; 
+    background: var(--light-bg); 
+    width: 200px; 
+}
+.btn-login { 
+    background: var(--primary-dark); 
+    color: white; 
+    border: none; 
+    padding: 8px 20px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+}
+
+/* HERO */
+.hero {
+    height: 70vh; 
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('./img/Background\ sejarah\ atas.png') center/cover;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+    text-align: center;
+}
+.hero h1 { 
+    font-family: 'Cinzel Decorative', serif; 
+    font-size: 5rem; 
+    letter-spacing: 10px; 
+}
+.hero .thin { 
+    font-weight: 300; 
+}
+
+/* SUB-NAV */
+.sub-nav { 
+    padding: 40px 0; 
+    background: #fff; 
+}
+.sub-nav-flex { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.see-other-group { 
+    display: flex; 
+    align-items: center; 
+    flex: 1; 
+    gap: 20px; 
+}
+.line { 
+    height: 1.5px; 
+    background: #000; 
+    width: 100%; 
+    max-width: 500px; 
+}
+.category-links { 
+    display: flex; 
+    gap: 30px; 
+}
+.cat-item { 
+    text-decoration: none; 
+    color: #aaa; 
+    font-weight: 600; 
+    transition: 0.3s; 
+}
+.active-cat { 
+    color: #000; 
+}
+
+/* CONTENT BOXES */
+.tab-content { 
+    display: none; 
+    animation: fadeIn 0.6s ease; 
+}
+.active-content { 
+    display: block; 
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.story-row { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 0; 
+    min-height: 500px; 
+    position: relative;
+    overflow: visible;
+    background-color: #fff;
+}
+.story-row.reverse { 
+    flex-direction: row-reverse; 
+}
+.story-row .text-box {
+    margin-right: -10%; 
+    text-align: left;
+}
+
+.story-row.reverse .text-box {
+    margin-left: -25%;
+    margin-right: 0;
+}
+
+.text-box { 
+    flex: 1; 
+    padding: 0 5%; 
+    z-index: 2;
+}
+.text-box h2 { 
+    font-family: 'Playfair Display', serif; 
+    font-size: 2.8rem; 
+    margin-bottom: 20px; 
+}
+.text-box p { 
+    font-family: 'Lora', serif; 
+    font-size: 1.1rem; 
+    line-height: 1.8; 
+    color: var(--text-gray); 
+    text-align: justify; 
+}
+
+.image-box { 
+    flex: 3; 
+    height: 500px; 
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.5s ease;
+}
+.content-wrapper {
+    width: 100%;
+    background-color: #fff;
+}
+
+/* MASKING EFFECTS (Faded Edges) */
+.story-row .image-box {
+    -webkit-mask-image: 
+        linear-gradient(to right, transparent 0%, black 40%),
+        linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: 
+        linear-gradient(to right, transparent 0%, black 40%),
+        linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    -webkit-mask-composite: source-in; 
+    mask-composite: intersect;
+}
+.story-row.reverse .image-box {
+    -webkit-mask-image: 
+        linear-gradient(to left, transparent 0%, black 40%),
+        linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: 
+        linear-gradient(to left, transparent 0%, black 40%),
+        linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+}
+/* FOOTER */
+footer {
+    background: url(./gambar/background\ footer.png) center/cover no-repeat;
+    color: white;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-logo h2{
+    font-family: 'Sacramento';
+    font-style: italic;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+.social-icons{
+    margin-right: 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    gap: 25px;
+}
+.social-link {
+    color: white;        
+    text-decoration: none;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:visited {
+    color: white;        
+}
+
+.social-link:hover {
+    transform: translateY(-4px) scale(1.1);
+    color: #ccc;        
+}
+
+.footer-contact h4 {
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+    color: white;
+    font-weight: 600;
+}
+.footer-contact a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1rem;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.footer-contact a:visited {
+    color: #ddd;      
+}
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ddd;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-item i {
+    font-size: 1.2rem;
+    color: white;
+}
+.contact-item a {
+    color: #ddd;
+    text-decoration: none;
+}
+
+.contact-item a:visited {
+    color: #ddd;
+}
+
+.contact-item:hover {
+    transform: translateY(-4px);
+    text-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.footer-nav h4{
+margin-bottom: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: white;
+}
+.footer-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-nav li {
+    margin-bottom: 12px;   
+}
+
+.footer-nav a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 1rem;      
+    transition: all 0.3s ease;
+}
+
+.footer-nav a:visited {
+    color: #ddd;           
+}
+
+.footer-nav a:hover {
+    color: white;
+    padding-left: 5px;     
+}
+.footer-line {
+    height: 2px;
+    background-color: rgba(255,255,255,0.2);
+    width: 90%;
+    margin: 0 auto 15px auto;
+}
+/* Copyright */
+.footer-bottom {
+    width: 90%;
+    margin: 0 auto;
+    text-align: left;   
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+.tab-content {
+    display: none !important; 
+}
+
+.tab-content.active-content {
+    display: block !important; 
+}
+/* Background images untuk 4 bagian History */
+.img-hist-1 { background-image: url('./img/The\ History\ of\ Madura1.png'); } 
+.img-hist-2 { background-image: url('./img/The\ History\ of\ Madura2.png'); }
+.img-hist-3 { background-image: url('./img/The\ History\ of\ Madura3.png'); }
+.img-hist-4 { background-image: url('./img/The\ History\ of\ Madura4.png'); }
+
+.story-row.reverse .text-box {
+    text-align: right; 
+}
+
+/* Background images untuk 10 bagian Culture */
+.img-cult-1 { background-image: url('./img/Mamapar\ Gigi.png'); }
+.img-cult-2 { background-image: url('./img/Ojhung.png'); }
+.img-cult-3 { background-image: url('./img/Karapan\ Sapi.png'); }
+.img-cult-4 { background-image: url('./img/Carok.png'); }
+.img-cult-5 { background-image: url('./img/Toktok.png'); }
+.img-cult-6 { background-image: url('./img/Rokat\ Tase.png'); }
+.img-cult-7 { background-image: url('./img/Moang\ Sangkal.png'); }
+.img-cult-8 { background-image: url('./img/Gambu.png'); }
+.img-cult-9 { background-image: url('./img/Saronen.png'); }
+.img-cult-10 { background-image: url('./img/Tong-tong.png'); }
+
+/* Background images untuk 9 bagian Destination */
+.img-dest-1 { background-image: url('./img/Gili\ Labak.png'); }
+.img-dest-2 { background-image: url('./img/Arosbaya\ Limestone\ Hill.png'); }
+.img-dest-3 { background-image: url('./img/Pemandian\ Sumber\ Pocong.png'); }
+.img-dest-4 { background-image: url('./img/Telaga\ Kermata.png'); }
+.img-dest-5 { background-image: url('./img/Kapal\ Jodoh.png'); }
+.img-dest-6 { background-image: url('./img/Toroan\ Waterfall.png'); }
+.img-dest-7 { background-image: url('./img/Geger\ Hill.png'); }
+.img-dest-8 { background-image: url('./img/Gili\ Iyang.png'); }
+.img-dest-9 { background-image: url('./img/Jadih\ Hill.png'); }
