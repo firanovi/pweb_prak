@@ -39,10 +39,6 @@
                     <i class="far fa-user"></i>
                     <span>Account</span>
                 </a>
-                <a href="./payment.html" class="menu-item active">
-                    <i class="far fa-credit-card"></i>
-                    <span>Payment Methods</span>
-                </a>
                 <a href="./cart.html" class="menu-item">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Cart</span>
@@ -65,7 +61,7 @@
                 <!-- Credit Card Section -->
                 <div class="payment-section">
                     <h2>Credit & Debit Card</h2>
-                    <button class="add-card-btn">
+                    <button class="add-card-btn" onclick="showQR('Credit Card')">
                         <i class="fas fa-credit-card"></i>
                         <span>Add Card</span>
                         <i class="fas fa-plus-circle"></i>
@@ -76,27 +72,27 @@
                 <div class="payment-section">
                     <h2>Bank Transfer</h2>
                     <div class="bank-grid">
-                        <div class="bank-item">
+                        <div class="bank-item" onclick="showQR('BNI')">
                             <img src="./bank/bni.png" alt="BNI">
                             <span>BNI</span>
                         </div>
-                        <div class="bank-item">
+                        <div class="bank-item" onclick="showQR('BRI')">
                             <img src="./bank/bri.png" alt="BRI">
                             <span>BRI</span>
                         </div>
-                        <div class="bank-item">
+                        <div class="bank-item" onclick="showQR('Mandiri')">
                             <img src="./bank/mandiri.png" alt="Mandiri">
                             <span>Mandiri</span>
                         </div>
-                        <div class="bank-item">
+                        <div class="bank-item" onclick="showQR('CIMB Niaga')">
                             <img src="./bank/cimb.png" alt="CIMB Niaga">
                             <span>CIMB Niaga</span>
                         </div>
-                        <div class="bank-item">
+                        <div class="bank-item" onclick="showQR('BCA')">
                             <img src="./bank/bca.png" alt="BCA">
                             <span>BCA</span>
                         </div>
-                        <div class="bank-item">
+                        <div class="bank-item" onclick="showQR('Seabank')">
                             <img src="./bank/sea ban.png" alt="Seabank">
                             <span>Seabank</span>
                         </div>
@@ -107,19 +103,19 @@
                 <div class="payment-section">
                     <h2>E-Wallet</h2>
                     <div class="wallet-grid">
-                        <div class="wallet-item">
+                        <div class="wallet-item" onclick="showQR('ShopeePay')">
                             <img src="./bank/spay.png" alt="ShopeePay">
                             <span>ShopeePay</span>
                         </div>
-                        <div class="wallet-item">
+                        <div class="wallet-item" onclick="showQR('Dana')">
                             <img src="./bank/dana.png" alt="Dana">
                             <span>Dana</span>
                         </div>
-                        <div class="wallet-item">
+                        <div class="wallet-item" onclick="showQR('Gopay')">
                             <img src="./bank/gpay.png" alt="Gopay">
                             <span>Gopay</span>
                         </div>
-                        <div class="wallet-item">
+                        <div class="wallet-item" onclick="showQR('OVO')">
                             <img src="./bank/ovo.png" alt="OVO">
                             <span>OVO</span>
                         </div>
@@ -130,6 +126,63 @@
             
         </div> <!-- End Dashboard -->
     </div> <!-- End Container -->
+
+    <!-- QR Payment Popup -->
+    <div id="qrPopup" class="qr-popup">
+        <div class="qr-popup-content">
+            <div class="qr-header">
+                <h3 id="paymentMethodName">Payment</h3>
+                <button class="close-btn" onclick="closeQR()">&times;</button>
+            </div>
+            
+            <div class="qr-body">
+                <div class="qr-code-container">
+                    <!-- QR Code placeholder - bisa diganti dengan QR generator library -->
+                    <div class="qr-placeholder">
+                        <i class="fas fa-qrcode"></i>
+                        <img id="qrImage" src="" alt="QR Code" style="display: none;">
+                    </div>
+                    <p class="qr-instruction">Scan QR code menggunakan aplikasi <span id="methodName">Bank</span></p>
+                </div>
+                
+                <div class="payment-details">
+                    <div class="detail-row">
+                        <span>Total Pembayaran:</span>
+                        <span class="total-amount">Rp 150.000</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>No. Order:</span>
+                        <span>#ORD-2024-001</span>
+                    </div>
+                </div>
+
+                <div class="countdown">
+                    <p>Selesaikan pembayaran dalam:</p>
+                    <div class="timer" id="countdown">15:00</div>
+                </div>
+            </div>
+
+            <div class="qr-footer">
+                <button class="btn-check-status" onclick="checkPaymentStatus()">
+                    <i class="fas fa-check-circle"></i>
+                    Saya Sudah Bayar
+                </button>
+                <button class="btn-cancel" onclick="closeQR()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="success-popup">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Pembayaran Berhasil!</h3>
+            <p>Pesanan Anda sedang diproses</p>
+            <button class="btn-view-order" onclick="goToOrders()">Lihat Pesanan</button>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -175,5 +228,70 @@
             <p>&copy; 2024 SakaMadura. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        let countdownInterval;
+        let timeLeft = 900; // 15 menit dalam detik
+
+        function showQR(method) {
+            document.getElementById('paymentMethodName').textContent = 'Pembayaran ' + method;
+            document.getElementById('methodName').textContent = method;
+            document.getElementById('qrPopup').style.display = 'flex';
+            
+            // Generate QR code URL (menggunakan API placeholder)
+            const qrText = `PAYMENT-${method}-${Date.now()}`;
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText)}`;
+            document.getElementById('qrImage').style.display = 'block';
+            document.querySelector('.qr-placeholder i').style.display = 'none';
+            
+            startCountdown();
+        }
+
+        function closeQR() {
+            document.getElementById('qrPopup').style.display = 'none';
+            clearInterval(countdownInterval);
+            timeLeft = 900;
+            document.getElementById('countdown').textContent = '15:00';
+        }
+
+        function startCountdown() {
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('countdown').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    alert('Waktu pembayaran habis!');
+                    closeQR();
+                }
+            }, 1000);
+        }
+
+        function checkPaymentStatus() {
+            // Simulasi cek pembayaran
+            closeQR();
+            document.getElementById('successPopup').style.display = 'flex';
+        }
+
+        function goToOrders() {
+            window.location.href = './order.html';
+        }
+
+        // Tutup popup jika klik di luar
+        window.onclick = function(event) {
+            const qrPopup = document.getElementById('qrPopup');
+            const successPopup = document.getElementById('successPopup');
+            if (event.target === qrPopup) {
+                closeQR();
+            }
+            if (event.target === successPopup) {
+                goToOrders();
+            }
+        }
+    </script>
 </body>
 </html>

@@ -326,6 +326,315 @@ body {
     font-weight: 500;
 }
 
+/* Payment Items Cursor */
+.bank-item, .wallet-item, .add-card-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bank-item:hover, .wallet-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.bank-item:active, .wallet-item:active {
+    transform: translateY(0);
+}
+
+/* QR Popup Styles */
+.qr-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.qr-popup-content {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: popupSlide 0.3s ease;
+}
+
+@keyframes popupSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.qr-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.qr-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.qr-body {
+    padding: 24px;
+}
+
+.qr-code-container {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.qr-placeholder {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ddd;
+}
+
+.qr-placeholder i {
+    font-size: 80px;
+    color: #ccc;
+}
+
+.qr-placeholder img {
+    width: 180px;
+    height: 180px;
+    border-radius: 8px;
+}
+
+.qr-instruction {
+    color: #666;
+    font-size: 14px;
+}
+
+.qr-instruction span {
+    font-weight: 600;
+    color: #333;
+}
+
+.payment-details {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-row span:first-child {
+    color: #666;
+}
+
+.total-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4a90e2;
+}
+
+.countdown {
+    text-align: center;
+    padding: 16px;
+    background: #fff3cd;
+    border-radius: 12px;
+    border: 1px solid #ffeaa7;
+}
+
+.countdown p {
+    font-size: 13px;
+    color: #856404;
+    margin-bottom: 8px;
+}
+
+.timer {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e74c3c;
+    font-family: 'Courier New', monospace;
+}
+
+.qr-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-check-status {
+    width: 100%;
+    padding: 14px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-check-status:hover {
+    background: #357abd;
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+    background: #f5f5f5;
+}
+
+/* Success Popup */
+.success-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.success-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    animation: popupSlide 0.3s ease;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #d4edda;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.success-icon i {
+    font-size: 40px;
+    color: #28a745;
+}
+
+.success-content h3 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.success-content p {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.btn-view-order {
+    width: 100%;
+    padding: 14px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-view-order:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .qr-popup-content {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .qr-placeholder {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .qr-placeholder img {
+        width: 140px;
+        height: 140px;
+    }
+}
+
 /* ==================== FOOTER ==================== */
 .footer {
     position: relative;
