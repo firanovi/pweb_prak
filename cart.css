@@ -387,21 +387,27 @@ body {
 }
 
 .checkout-btn {
+    display: block;
     width: 100%;
     padding: 15px;
-    background: #4a90e2; /* Biru */
+    background: #4a90e2;
     color: white;
+    text-align: center;
+    text-decoration: none;
     border: none;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
-    transition: background 0.3s;
+    transition: background 0.3s ease;
 }
 
 .checkout-btn:hover {
     background: #357abd;
+}
+
+.checkout-btn:active {
+    transform: translateY(1px);
 }
 
 /* ==================== RESPONSIVE ==================== */
