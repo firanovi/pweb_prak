@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SakaMadura Dashboard</title>
     <link rel="stylesheet" href="dashboardseller.css">
+    <link rel="stylesheet" href="./hamburger.css">
     <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +35,13 @@
 
         <div class="content-container">
             <header class="header">
+
+                <div class="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
                 <div class="search-wrapper">
                     <input type="text" placeholder="Search">
                 </div>
@@ -107,5 +115,12 @@
     </div>
 
     <script src="dashboardseller.js"></script>
+
+    <script>
+    function toggleMenu(){
+        document.querySelector(".nav-links").classList.toggle("show");
+    }
+    </script>
+    
 </body>
 </html>
