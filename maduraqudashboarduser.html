@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard User - MaduraQ </title>
     <link rel="stylesheet" href="./styleuser.css">
+    <link rel="stylesheet" href="./hamburger.css">
 
 </head>
 <body>
@@ -13,6 +14,12 @@
         <a href="#" class="logo"> <!--link ke homepage-->
             MaduraQ
         </a>
+
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         
         <div class="nav-menu">
             <a href="#" class="nav-link">Beranda</a> <!--link ke homepage-->
@@ -200,5 +207,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+    function toggleMenu(){
+        document.querySelector(".nav-links").classList.toggle("show");
+    }
+    </script>
+    
 </body>
 </html>
