@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - MaduraKu</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./hamburger.css">
+    
 </head>
 <body>
     <div class="container">
@@ -56,6 +58,13 @@
         <main class="main-content">
             <!-- Header -->
             <div class="header">
+
+                <div class="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
                 <h2>Dashboard Admin</h2>
                 <div class="header-actions">
                     <button class="btn btn-primary">
@@ -196,5 +205,12 @@
             </div>
         </main>
     </div>
+
+    <script>
+    function toggleMenu(){
+        document.querySelector(".nav-links").classList.toggle("show");
+    }
+    </script>
+    
 </body>
 </html>
