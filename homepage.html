@@ -6,6 +6,7 @@
     <title>MaduraWeb</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./stylehomepage.css">
+    <link rel="stylesheet" href="./hamburger.css">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
 </head>
@@ -15,6 +16,13 @@
     <nav class="navbar">
     <div class="nav-left">
         <a href="#" class="logo">SakaMadura</a>
+
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
         <ul class="nav-links">
             <li><a href="#" class="active">About</a></li>
             <li><a href="./sejarah.html">Heritage</a></li>
@@ -161,5 +169,12 @@
             <p>&copy; 2024 SakaMadura. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+    function toggleMenu(){
+        document.querySelector(".nav-links").classList.toggle("show");
+    }
+    </script>
+    
 </body>
 </html>
