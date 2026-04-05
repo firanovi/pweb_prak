@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods - SakaMadura</title>
+    <link rel="stylesheet" href="./payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">SakaMadura</a>
+            <div class="nav-links">
+                <a href="./homepage.html" class="nav-link">About</a>
+                <a href="#" class="nav-link">Heritage</a>
+                <a href="./store.html" class="nav-link">Shop</a>
+            </div>
+        </div>
+        
+        <div class="nav-right">
+            <div class="search-box">
+                <input type="text" placeholder="Search">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="dashboard">
+            <aside class="sidebar">
+                <a href="./dashboarduser.html" class="menu-item">
+                    <i class="far fa-user"></i>
+                    <span>Account</span>
+                </a>
+                <a href="./cart.html" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                </a>
+                <a href="./order.html" class="menu-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Your Orders</span>
+                </a>
+                <a href="./historyorder.html" class="menu-item">
+                    <i class="far fa-file-alt"></i>
+                    <span>History Order</span>
+                </a>
+            </aside>
+
+            <!-- Payment Content Area -->
+            <div class="payment-content">
+                
+                <h1 class="page-title">Payment Methods</h1>
+                
+                <!-- Credit Card Section -->
+                <div class="payment-section">
+                    <h2>Credit & Debit Card</h2>
+                    <button class="add-card-btn" onclick="showQR('Credit Card')">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Add Card</span>
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                </div>
+
+                <!-- Bank Transfer Section -->
+                <div class="payment-section">
+                    <h2>Bank Transfer</h2>
+                    <div class="bank-grid">
+                        <div class="bank-item" onclick="showQR('BNI')">
+                            <img src="./bank/bni.png" alt="BNI">
+                            <span>BNI</span>
+                        </div>
+                        <div class="bank-item" onclick="showQR('BRI')">
+                            <img src="./bank/bri.png" alt="BRI">
+                            <span>BRI</span>
+                        </div>
+                        <div class="bank-item" onclick="showQR('Mandiri')">
+                            <img src="./bank/mandiri.png" alt="Mandiri">
+                            <span>Mandiri</span>
+                        </div>
+                        <div class="bank-item" onclick="showQR('CIMB Niaga')">
+                            <img src="./bank/cimb.png" alt="CIMB Niaga">
+                            <span>CIMB Niaga</span>
+                        </div>
+                        <div class="bank-item" onclick="showQR('BCA')">
+                            <img src="./bank/bca.png" alt="BCA">
+                            <span>BCA</span>
+                        </div>
+                        <div class="bank-item" onclick="showQR('Seabank')">
+                            <img src="./bank/sea ban.png" alt="Seabank">
+                            <span>Seabank</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- E-Wallet Section -->
+                <div class="payment-section">
+                    <h2>E-Wallet</h2>
+                    <div class="wallet-grid">
+                        <div class="wallet-item" onclick="showQR('ShopeePay')">
+                            <img src="./bank/spay.png" alt="ShopeePay">
+                            <span>ShopeePay</span>
+                        </div>
+                        <div class="wallet-item" onclick="showQR('Dana')">
+                            <img src="./bank/dana.png" alt="Dana">
+                            <span>Dana</span>
+                        </div>
+                        <div class="wallet-item" onclick="showQR('Gopay')">
+                            <img src="./bank/gpay.png" alt="Gopay">
+                            <span>Gopay</span>
+                        </div>
+                        <div class="wallet-item" onclick="showQR('OVO')">
+                            <img src="./bank/ovo.png" alt="OVO">
+                            <span>OVO</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> <!-- End Payment Content -->
+            
+        </div> <!-- End Dashboard -->
+    </div> <!-- End Container -->
+
+    <!-- QR Payment Popup -->
+    <div id="qrPopup" class="qr-popup">
+        <div class="qr-popup-content">
+            <div class="qr-header">
+                <h3 id="paymentMethodName">Payment</h3>
+                <button class="close-btn" onclick="closeQR()">&times;</button>
+            </div>
+            
+            <div class="qr-body">
+                <div class="qr-code-container">
+                    <!-- QR Code placeholder - bisa diganti dengan QR generator library -->
+                    <div class="qr-placeholder">
+                        <i class="fas fa-qrcode"></i>
+                        <img id="qrImage" src="" alt="QR Code" style="display: none;">
+                    </div>
+                    <p class="qr-instruction">Scan QR code menggunakan aplikasi <span id="methodName">Bank</span></p>
+                </div>
+                
+                <div class="payment-details">
+                    <div class="detail-row">
+                        <span>Total Pembayaran:</span>
+                        <span class="total-amount">Rp 150.000</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>No. Order:</span>
+                        <span>#ORD-2024-001</span>
+                    </div>
+                </div>
+
+                <div class="countdown">
+                    <p>Selesaikan pembayaran dalam:</p>
+                    <div class="timer" id="countdown">15:00</div>
+                </div>
+            </div>
+
+            <div class="qr-footer">
+                <button class="btn-check-status" onclick="checkPaymentStatus()">
+                    <i class="fas fa-check-circle"></i>
+                    Saya Sudah Bayar
+                </button>
+                <button class="btn-cancel" onclick="closeQR()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="success-popup">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Pembayaran Berhasil!</h3>
+            <p>Pesanan Anda sedang diproses</p>
+            <button class="btn-view-order" onclick="goToOrders()">Lihat Pesanan</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bg">
+            <img src="./gambar/Teks paragraf Anda (1512 x 982 piksel) (3).png" alt="Background">
+        </div>
+        <div class="footer-content-wrapper">
+            <div class="footer-left">
+                <h3 class="footer-logo">SakaMadura</h3>
+                <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-middle">
+                <h4>Navigasi</h4>
+                <br>
+                <ul>
+                    <li><a href="./homepage.html">About</a></li>
+                    <li><a href="#">Heritage</a></li>
+                    <li><a href="./store.html">Shop</a></li>
+                    <li><a href="./dashboarduser.html">Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-right">
+                <h4>Hubungi Kami</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(0123) 15734</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><a href="mailto:sakaMadura@gmail.com">sakaMadura@gmail.com</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <hr class="divider">
+    
+        <div class="copyright">
+            <p>&copy; 2024 SakaMadura. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let countdownInterval;
+        let timeLeft = 900; // 15 menit dalam detik
+
+        function showQR(method) {
+            document.getElementById('paymentMethodName').textContent = 'Pembayaran ' + method;
+            document.getElementById('methodName').textContent = method;
+            document.getElementById('qrPopup').style.display = 'flex';
+            
+            // Generate QR code URL (menggunakan API placeholder)
+            const qrText = `PAYMENT-${method}-${Date.now()}`;
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText)}`;
+            document.getElementById('qrImage').style.display = 'block';
+            document.querySelector('.qr-placeholder i').style.display = 'none';
+            
+            startCountdown();
+        }
+
+        function closeQR() {
+            document.getElementById('qrPopup').style.display = 'none';
+            clearInterval(countdownInterval);
+            timeLeft = 900;
+            document.getElementById('countdown').textContent = '15:00';
+        }
+
+        function startCountdown() {
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('countdown').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    alert('Waktu pembayaran habis!');
+                    closeQR();
+                }
+            }, 1000);
+        }
+
+        function checkPaymentStatus() {
+            // Simulasi cek pembayaran
+            closeQR();
+            document.getElementById('successPopup').style.display = 'flex';
+        }
+
+        function goToOrders() {
+            window.location.href = './order.html';
+        }
+
+        // Tutup popup jika klik di luar
+        window.onclick = function(event) {
+            const qrPopup = document.getElementById('qrPopup');
+            const successPopup = document.getElementById('successPopup');
+            if (event.target === qrPopup) {
+                closeQR();
+            }
+            if (event.target === successPopup) {
+                goToOrders();
+            }
+        }
+    </script>
+</body>
+</html>

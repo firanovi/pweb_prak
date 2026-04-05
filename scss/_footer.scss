@@ -1,0 +1,140 @@
+footer {
+    color: white;
+    padding-top: 50px;
+    padding-bottom: 20px;
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    /* LOGO */
+    .footer-logo {
+        h2 {
+            font-family: 'Sacramento', cursive;
+            font-style: italic;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 25px;
+
+            .social-link {
+                color: white;
+                text-decoration: none;
+                font-size: 1.8rem;
+                transition: 0.3s;
+
+                &:visited {
+                    color: white;
+                }
+
+                &:hover {
+                    transform: translateY(-4px) scale(1.1);
+                    color: #ccc;
+                }
+            }
+        }
+    }
+
+    /* CONTACT */
+    .footer-contact {
+        h4 {
+            margin-bottom: 25px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 1rem;
+
+            &:visited {
+                color: #ddd;
+            }
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            .contact-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: #ddd;
+                transition: 0.3s;
+
+                i {
+                    font-size: 1.2rem;
+                    color: white;
+                }
+
+                a {
+                    color: #ddd;
+                }
+
+                &:hover {
+                    transform: translateY(-4px);
+                    text-shadow: 0 6px 15px rgba(0,0,0,0.3);
+                }
+            }
+        }
+    }
+
+    /* NAV */
+    .footer-nav {
+        h4 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        ul {
+            list-style: none;
+
+            li {
+                margin-bottom: 12px;
+
+                a {
+                    color: #ccc;
+                    text-decoration: none;
+                    transition: 0.3s;
+
+                    &:visited {
+                        color: #ddd;
+                    }
+
+                    &:hover {
+                        color: white;
+                        padding-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    /* LINE */
+    .footer-line {
+        height: 2px;
+        background-color: rgba(255,255,255,0.2);
+        width: 90%;
+        margin: 0 auto 15px;
+    }
+
+    /* COPYRIGHT */
+    .footer-bottom {
+        width: 90%;
+        margin: 0 auto;
+        text-align: left;
+        font-size: 0.9rem;
+        color: #bbb;
+    }
+}

@@ -1,0 +1,38 @@
+/* Hamburger Button */
+.hamburger{
+    display:none;
+    flex-direction:column;
+    cursor:pointer;
+    gap:5px;
+}
+
+.hamburger span{
+    width:25px;
+    height:3px;
+    background:#333;
+    display:block;
+}
+
+/* Mobile */
+@media (max-width:768px){
+
+    .hamburger{
+        display:flex;
+    }
+
+    .nav-links{
+        display:none;
+        position:absolute;
+        top:60px;
+        left:0;
+        width:100%;
+        background:white;
+        flex-direction:column;
+        padding:20px;
+    }
+
+    .nav-links.show{
+        display:flex;
+    }
+
+}

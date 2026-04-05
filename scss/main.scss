@@ -1,0 +1,9 @@
+@import "variables";
+@import "mixins";
+@import "navbar";
+@import "footer";
+
+body {
+  font-family: $font-main;
+  background: $light-bg;
+}

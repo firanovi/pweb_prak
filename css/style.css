@@ -1,0 +1,184 @@
+header {
+  background: #fff;
+  padding: 15px 0;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+header .navbar {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+header .logo {
+  font-size: 32px;
+  font-family: "Sacramento", cursive;
+}
+header nav ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+header nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+header nav a.active {
+  background: #2c3e50;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+header .search-login {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+header .search-login input {
+  padding: 10px 18px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  width: 200px;
+}
+header .search-login .btn-login {
+  background: #2c3e50;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+footer {
+  color: white;
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+footer .footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+footer {
+  /* LOGO */
+}
+footer .footer-logo h2 {
+  font-family: "Sacramento", cursive;
+  font-style: italic;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+footer .footer-logo .social-icons {
+  display: flex;
+  gap: 25px;
+}
+footer .footer-logo .social-icons .social-link {
+  color: white;
+  text-decoration: none;
+  font-size: 1.8rem;
+  transition: 0.3s;
+}
+footer .footer-logo .social-icons .social-link:visited {
+  color: white;
+}
+footer .footer-logo .social-icons .social-link:hover {
+  transform: translateY(-4px) scale(1.1);
+  color: #ccc;
+}
+footer {
+  /* CONTACT */
+}
+footer .footer-contact h4 {
+  margin-bottom: 25px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+footer .footer-contact a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 1rem;
+}
+footer .footer-contact a:visited {
+  color: #ddd;
+}
+footer .footer-contact .contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+footer .footer-contact .contact-info .contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ddd;
+  transition: 0.3s;
+}
+footer .footer-contact .contact-info .contact-item i {
+  font-size: 1.2rem;
+  color: white;
+}
+footer .footer-contact .contact-info .contact-item a {
+  color: #ddd;
+}
+footer .footer-contact .contact-info .contact-item:hover {
+  transform: translateY(-4px);
+  text-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+footer {
+  /* NAV */
+}
+footer .footer-nav h4 {
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+footer .footer-nav ul {
+  list-style: none;
+}
+footer .footer-nav ul li {
+  margin-bottom: 12px;
+}
+footer .footer-nav ul li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: 0.3s;
+}
+footer .footer-nav ul li a:visited {
+  color: #ddd;
+}
+footer .footer-nav ul li a:hover {
+  color: white;
+  padding-left: 5px;
+}
+footer {
+  /* LINE */
+}
+footer .footer-line {
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 90%;
+  margin: 0 auto 15px;
+}
+footer {
+  /* COPYRIGHT */
+}
+footer .footer-bottom {
+  width: 90%;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #f7f7f7;
+}
+
+/*# sourceMappingURL=style.css.map */
