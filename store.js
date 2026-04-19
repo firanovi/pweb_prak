@@ -1,7 +1,7 @@
 // Data Produk (Bisa ditambah sesuai kebutuhan)
 const products = [
     { id: 1, name: "Batik Sumenep", price: 500000, category: "heritage", img: "./gambar/batik sumenep.jpg" },
-    { id: 2, name: "Kacang Otok", price: 15000, category: "food", img: "./gambar/kacang otok.jpeg" },
+    { id: 2, name: "Kacang Otok", price: 15000, category: "food", img: "./gambar/Kacang otok.jpeg" },
     { id: 3, name: "Kue Macho", price: 20000, category: "food", img: "./gambar/kue macho.png" },
 ];
 

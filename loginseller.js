@@ -12,7 +12,7 @@ form.addEventListener("submit", function(e){
     if(email === sellerEmail && password === sellerPassword){
         alert("Login Seller Berhasil!");
         // redirect ke dashboard seller
-        window.location.href = "dashboard-seller.html";
+        window.location.href = "dashboardseller.html";
     } else {
         alert("Email atau Password Seller salah!");
     }
