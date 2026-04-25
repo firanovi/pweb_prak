@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Wishlist - SakaMadura</title>
-        <link rel="stylesheet" href="./wishlist.css">
+        <title>Product - SakaMadura</title>
+        <link rel="stylesheet" href="./detailProduk.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
     
     <body>
         <!-- NAVBAR -->
-         <nav class="navbar">
+        <nav class="navbar">
             <div class="nav-left">
                 <a href="#" class="logo">SakaMadura</a>
                 
@@ -30,54 +30,102 @@
                     <a href="./cart.html"><i class="fas fa-shopping-cart"></i></a>
                 </div>
             </div>
+                
+                <!-- HAMBURGER -->
+                <div class="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu">
+            <a href="./homepage.html">About</a>
+            <a href="#">Heritage</a>
+            <a href="./store.html">Shop</a>
             
-            <!-- HAMBURGER -->
-             <div class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="mobile-icons">
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-shopping-cart"></i>
             </div>
         </div>
-    </nav>
     
-    <div class="mobile-menu">
-        <a href="./homepage.html">About</a>
-        <a href="#">Heritage</a>
-        <a href="./store.html">Shop</a>
-        
-        <div class="mobile-icons">
-            <i class="fas fa-heart"></i>
-            <i class="fas fa-shopping-cart"></i>
-        </div>
-    </div>
-
-<!-- WISHLIST -->
- <section class="wishlist">
-    
-    <div class="wishlist-box">
-        <div class="wishlist-header">
-            <h2>My Wishlist</h2>
-            <span>1 items</span>
+    <!-- PRODUCT -->
+    <section class="product">
+        <div class="product-left">
+            <img src="img/odheng.png" class="main-img">
+            <img src="img/odheng 2.png" class="sub-img">
         </div>
         
-        <div class="wishlist-item">
-            <img src="img/rengginang lorjuk.png">
-
-            <div class="wishlist-info">
-                <h3>Rengginang Lorjuk</h3>
-                <p>Prize: 30.000,00</p>
-                <span class="stock">IN STOCK</span>
+        <div class="product-right">
+            <h2>Odheng</h2>
+            <p class="price">Rp25.000</p>
+            
+            <div class="qty">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
             </div>
+            
+            <div class="buttons">
+                <button class="outline">Add to cart</button>
+                <button class="outline">Wishlist</button>
+            </div>
+            
+            <button class="buy">Buy it now</button>
+            
+            <p class="desc">
+                Odheng is a traditional headcloth worn by men in Madura. It is usually made from batik fabric or cloth with traditional Madurese patterns and folded in a specific way to form a distinctive head covering. 
+            </p>
+            <p class="desc">
+                Odheng symbolizes honor, bravery, and the identity of Madurese men, and it is commonly worn during traditional ceremonies, cultural performances, and official events.
+            </p>
+        </div>
+    </section>
+    
+    <!-- REKOMENDASI -->
+    <section class="recommend">
+    <div class="recommend-wrapper">
 
-            <button class="add-cart">ADD TO CART</button>
+        <!-- KIRI -->
+        <div class="recommend-left">
+            <h2>You might<br>like this too<br>
+        </div>
+
+        <!-- KANAN -->
+        <div class="recommend-right">
+
+            <a href="detailKausSakera.html" class="card">
+                <img src="img/kaos sakera.jpeg">
+                <p>Kaus Sakera</p>
+                <span>Rp40.000</span>
+            </a>
+
+            <a href="detailBuahSiwalan.html" class="card">
+                <img src="img/buah siwalan.jpg">
+                <p>Buah Siwalan</p>
+                <span>Rp36.000</span>
+            </a>
+
+            <a href="detailKeripikTette.html" class="card">
+                <img src="img/keripik tette.jpeg">
+                <p>Keripik Tette</p>
+                <span>Rp25.000</span>
+            </a>
+
+            <a href="detailPetisMadura.html" class="card">
+                <img src="img/petis madura.png">
+                <p>Petis Madura</p>
+                <span>Rp20.000</span>
+            </a>
+
         </div>
 
     </div>
-
 </section>
-
-<!-- FOOTER -->
-<section class="info-section">
+    
+    <section class="info-section">
         <div class="info-item">
             <img src="img/logo origins.png" alt="Origins">
             <p>Origins</p>
@@ -144,10 +192,5 @@
             <p>&copy; 2026 SakaMadura. All rights reserved.</p>
         </div>
     </footer>
-    <script>
-    function toggleMenu(){
-        document.querySelector(".mobile-menu").classList.toggle("show");
-        }
-    </script>
 </body>
 </html>

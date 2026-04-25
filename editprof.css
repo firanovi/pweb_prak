@@ -154,107 +154,108 @@ body {
     color: #555;
 }
 
-/* ================= HERO ================= */
-.hero {
-    height: 550px;
-    background: url('./gambar/background1.jpg') center/cover no-repeat;
+        
+/* Main Container */
+.container {
+    flex: 1;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 60px;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Card Container - Sesuai Prototype */
+.password-card {
+    background: rgb(255, 255, 255);
+    border-radius: 12px;
+    padding: 40px 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 450px;
+    margin-top: 70px;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 15px;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #00a8e8;
+}
+
+/* Button Container */
+.button-group {
+    display: flex;
+    justify-content: center; /* Pusatkan horizontal */
+    align-items: center;     /* Pusatkan vertical */
+    gap: 15px;               /* Jarak antar tombol */
+    margin-top: 30px;
+    width: 100%;
+}
+
+/* Style Tombol Base */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+/* Tombol Kembali - ABU-ABU */
+.btn-secondary {
+    background: #d1d5db;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #9ca3af;
+    transform: translateY(-2px);
+}
+
+/* Tombol Konfirmasi - BIRU */
+.btn-primary {
+    background: #0ea5e9;
     color: white;
 }
 
-.hero h1 {
-    font-size: 3.5rem;
-    text-align: right;
-    font-family: serif;
-    line-height: 1;
-}
-
-.hero-content h1 {
-    line-height: 2;
-}
-
-/* ================= PRODUCT LAYOUT ================= */
-.product-grid-wrapper {
-    display: flex;
-    border-top: 1px solid #eee;
-    width: 100%;
-}
-
-.section-title {
-    flex: 0 0 300px; 
-    padding: 60px 40px;
-    padding-top: 160px;
-    border-right: 1px solid #eee;
-}
-.product-content-area {
-    flex: 1;
-}
-.section-title h2 {
-    font-size: 2.5rem;
-    color: #333;
-    font-weight: 300;
-    line-height: 1.1;
-    font-family: serif;
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    width: 100%;
-}
-
-.product-grid.grid-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.product-card {
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    padding: 20px;
-    background: #fdfdfd;
-    transition: all 0.3s ease;
-}
-.product-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-.product-card img {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-    display: block;
-}
-
-.card-info {
-    margin-top: 15px;
-}
-
-.card-info h3 {
-    font-size: 0.95rem;
-    font-weight: bold;
-}
-
-.card-info p {
-    font-size: 0.85rem;
-    color: #666;
-}
-
-/* ================= BANNER ================= */
-.middle-banner {
-    width: 100vw;      
-    height: 550px;
-    margin-left: calc(-50vw + 50%); 
-    overflow: hidden;
-}
-
-.middle-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;     
+.btn-primary:hover {
+    background: #0284c7;
+    transform: translateY(-2px);
 }
 
 /* ================= FOOTER ================= */
@@ -405,96 +406,47 @@ body {
     padding-bottom: 10px;
 }
 
-/* ================= MEDIA QUERIES ================= */
-
-/* Tablet (768px - 1024px) */
-@media (max-width: 1024px) {
-    .hero {
-        height: 400px;
-        padding: 40px 30px;
-    }
-
-    .hero h1 {
-        font-size: 2.5rem;
-    }
-
-    .product-grid-wrapper {
-        flex-direction: column;
-    }
-
-    .section-title {
-        flex: none;
-        width: 100%;
-        padding: 40px;
-        padding-top: 40px;
-        border-right: none;
-        border-bottom: 1px solid #eee;
-    }
-
-    .section-title h2 {
-        font-size: 2rem;
-    }
-
-    .product-grid.grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .footer-content-wrapper {
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-    }
-}
-
-/* Mobile (max 768px) */
-@media (max-width: 768px) {
+/* Responsive */
+@media (max-width: 600px) {
     .navbar {
-        padding: 12px 20px;
+        padding: 15px 20px;
     }
 
-    .nav-links {
-        display: none;
+    .container {
+        padding: 20px 15px;
     }
 
-    .search-box input {
-        width: 130px;
+    .profile-card {
+        padding: 20px;
     }
 
-    .hero {
-        height: 300px;
-        padding: 30px 20px;
-        align-items: flex-end;
-        justify-content: flex-start;
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
-    .hero h1 {
-        font-size: 1.8rem;
-        text-align: left;
+    .edit-btn {
+        position: static;
+        display: block;
+        text-align: center;
+        margin-top: 15px;
     }
 
-    .section-title {
-        padding: 30px 20px;
-        padding-top: 30px;
-    }
-
-    .section-title h2 {
-        font-size: 1.6rem;
-    }
-
-    .product-grid.grid-3 {
+    .profile-info {
         grid-template-columns: 1fr;
+        gap: 8px;
     }
 
-    .product-card img {
-        height: 200px;
+    .info-label {
+        color: #999;
+        font-size: 12px;
     }
 
-    .middle-banner {
-        height: 250px;
-    }
-
-    .footer-content-wrapper {
-        grid-template-columns: 1fr;
-        gap: 25px;
-        padding: 0 5%;
+    .footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 20px;
     }
 }

@@ -159,9 +159,152 @@ body {
     -webkit-mask-composite: source-in;
     mask-composite: intersect;
 }
-/* FOOTER */
-footer {
-    background: url(./gambar/background\ footer.png) center/cover no-repeat;
+/* ================= FOOTER ================= */
+.footer {
+    position: relative;
+    color: white;
+    padding: 40px 10% 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.footer-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.3);
+}
+
+.footer-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 60px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.footer-logo {
+    font-family: 'Sacramento', cursive;
+    font-size: 35px;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.footer-middle h4,
+.footer-right h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.footer-middle ul {
+    list-style: none;
+    margin-top: 0;
+}
+
+.footer-middle ul li {
+    margin-bottom: 10px;
+}
+
+.footer-middle a,
+.footer-right a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.footer-middle a:hover,
+.footer-right a:hover {
+    opacity: 1;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-size: 14px;
+}
+
+.contact-item i {
+    width: 20px;
+    text-align: center;
+    color: rgba(255,255,255,0.8);
+}
+
+.contact-item a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.9;
+}
+
+.contact-item a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.social-links {
+    display: flex;
+    gap: 5px;
+    margin-top: 12px;
+}
+
+.social-link {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 1.3rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.social-link:hover {
+    color: white;
+    transform: translateY(-3px);
+}
+
+.footer .divider {
+    border: none;
+    height: 1px;
+    background-color: rgba(255,255,255,0.2);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.copyright {
+    font-size: 13px;
+    color: #ddd;
+    position: relative;
+    z-index: 1;
+    text-align: left;
+    padding-bottom: 10px;
 }
 
 /* Background images untuk 4 bagian History */

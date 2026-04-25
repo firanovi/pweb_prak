@@ -109,7 +109,7 @@ body {
 }
 
 .nav-icons a {
-    color: #333;        /* atau warna yang kamu mau */
+    color: #333;       
     text-decoration: none;
 }
 
@@ -173,7 +173,7 @@ body {
 .product-left img {
     width: 100%;
     max-width: 400px;
-    border-radius: px;
+    border-radius: 4px;
     margin-bottom: 15px;
 }
 
@@ -274,8 +274,10 @@ body {
 
 /* DESC */
 .desc {
-    font-size: 14px;
-    color: #666;
+    font-size: 18px;
+    color: #0a0a0a;
+    margin-bottom: 25px;
+    line-height: 1.8;
 }
 
 .recommend {
@@ -296,6 +298,8 @@ body {
     background: #eaeaea;
     min-height: 400px;
     text-align: center;
+    font-family: serif;
+    font-size: 40px;
 }
 
 .recommend-left p {
@@ -327,13 +331,13 @@ body {
 }
 
 .card p {
-    font-size: 14px;
+    font-size: 19px;
     margin-top: 8px;
+    font-weight: 500;
 }
 
 .card span {
-    font-size: 13px;
-    color: #666;
+    font-size: 17px;
 }
 
 .card {
@@ -352,13 +356,6 @@ body {
 }
 
 /* FOOTER */
-.footer {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-    background: white;
-    margin-top: 40px;
-}
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
@@ -385,12 +382,15 @@ body {
     }
 }
 
-/* Footer */
+/* ================= FOOTER ================= */
 .footer {
     position: relative;
     color: white;
-    padding: 20px 10%;
+    padding: 40px 10% 20px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .footer-bg {
@@ -411,68 +411,32 @@ body {
 
 .footer-content-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 60px;
     position: relative;
     z-index: 1;
-    margin-top: 10px;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .footer-logo {
-    font-family: 'Sacramento', cursive;;
+    font-family: 'Sacramento', cursive;
     font-size: 35px;
     font-weight: 300;
     font-style: italic;
 }
 
+.footer-middle h4,
 .footer-right h4 {
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 15px;
     font-weight: 600;
     color: white;
-    justify-items: left;
-}
-
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.contact-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: white;
-    font-size: 14px;
-}
-
-.contact-item i {
-    width: 20px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 14px;
-}
-
-.contact-item span {
-    opacity: 0.9;
-}
-
-.contact-item a {
-    color: white;
-    text-decoration: none;
-    opacity: 0.9;
-    transition: opacity 0.3s;
-}
-
-.contact-item a:hover {
-    opacity: 1;
-    text-decoration: underline;
+    margin-bottom: 10px;
 }
 
 .footer-middle ul {
     list-style: none;
+    margin-top: 0;
 }
 
 .footer-middle ul li {
@@ -493,49 +457,77 @@ body {
     opacity: 1;
 }
 
-.footer-right p {
-    margin-bottom: 10px;
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
     font-size: 14px;
+}
+
+.contact-item i {
+    width: 20px;
+    text-align: center;
+    color: rgba(255,255,255,0.8);
+}
+
+.contact-item a {
+    color: white;
+    text-decoration: none;
     opacity: 0.9;
+}
+
+.contact-item a:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 .social-links {
     display: flex;
-    justify-content: left;
-    gap: 0rem;
-    margin-top: 0rem;
+    gap: 5px;
+    margin-top: 12px;
 }
 
 .social-link {
-    width: 60px;
-    height: 60px;
-    background: var(--bg-light);
-    color: var(--text-light);
-    border-radius: 50%;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 1.3rem;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
-    justify-content: left;
-    text-decoration: none;
+    justify-content: center;
     transition: all 0.3s;
 }
 
 .social-link:hover {
-    background: var(--primary-color);
-    color: var(--white);
+    color: white;
     transform: translateY(-3px);
 }
 
 .footer .divider {
     border: none;
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.2); /* Putih transparan untuk footer gelap */
-    margin-top: 40px;
-    margin-bottom: 10px;
+    background-color: rgba(255,255,255,0.2);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
 }
 
-.copyright{
+.copyright {
     font-size: 13px;
     color: #ddd;
+    position: relative;
+    z-index: 1;
+    text-align: left;
+    padding-bottom: 10px;
 }
 
 /* ================= RESPONSIVE ================= */
@@ -634,16 +626,9 @@ body {
         height: 32px;
         margin-right: 12px;
     }
-
-    .footer {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-        padding: 20px;
-    }
 }
 
-/* INFO SECTION (BARU) */
+/* gambar origins, treasures, dan tradition */
 .info-section {
     display: flex;
     justify-content: center;
@@ -667,7 +652,7 @@ body {
 }
 
 .info-item p {
-    font-size: 16px;
+    font-size: 25px;
     color: #333;
 }
 
