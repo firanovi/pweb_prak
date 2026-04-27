@@ -75,6 +75,17 @@ body {
     color: #000; 
 }
 
+.login-btn {
+    padding: 6px 20px;
+    background: #2c3e50; 
+    color: white;
+    text-decoration: none;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
 /* CONTENT BOXES */
 .tab-content { 
     display: none; 
