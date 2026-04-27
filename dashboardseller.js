@@ -223,20 +223,13 @@ analytics: `
             <canvas id="financialChart" style="max-height: 300px; width: 100%;"></canvas>
         </div>
 
-            <div class="main-card">
-                <h3>Sales By Location</h3>
-                <div style="padding: 20px; text-align: center;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg" style="width:80%; filter: brightness(0) opacity(0.8);">
-                </div>
-                <div class="location-list">
-                    <div class="loc-item"><span>Surabaya</span> <strong>400 pcs</strong></div>
-                    <div class="progress-bar blue"><div style="width: 80%"></div></div>
-                    <div class="loc-item"><span>Banyuwangi</span> <strong>50 pcs</strong></div>
-                    <div class="progress-bar light-blue"><div style="width: 20%"></div></div>
-                    <div class="loc-item"><span>Jogja</span> <strong>50 pcs</strong></div>
-                    <div class="progress-bar light-blue"><div style="width: 20%"></div></div>
-                </div>
+        <!-- SALES BY LOCATION - BAR CHART -->
+        <div class="main-card" style="padding: 20px;">
+            <h3 style="margin-bottom: 20px;">Sales By Location</h3>
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="locationChart" style="max-height: 300px; width: 100%;"></canvas>
             </div>
+        </div>
 
         <div class="main-card target-card">
             <h3>Monthly Target</h3>

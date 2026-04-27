@@ -1,200 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - MaduraKu</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>SakaMadura Dashboard</title>
+    <link rel="stylesheet" href="dashboardseller.css">
+    <link rel="stylesheet" href="./hamburger.css">
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
+
+    <div class="main-wrapper">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>MaduraQ</h1>
-                <p>Admin Dashboard</p>
-            </div>
-            
-            <div class="admin-profile">
-                <div class="admin-avatar">A</div>
-                <h3>Admin Madura</h3>
-            </div>
-            
-            <nav class="nav-menu">
-                <div class="nav-item active">
-                    <span>📊</span>
-                    <span>Dashboard</span>
+            <div class="logo">SakaMadura</div>
+            <nav>
+                <div class="nav-item active" onclick="navigate('dashboard', this)">
+                    <span class="icon">👤</span> Preview
                 </div>
-                <div class="nav-item">
-                    <span>📝</span>
-                    <span>Kelola Konten</span>
+                <div class="nav-item" onclick="navigate('orders', this)">
+                    <span class="icon">📋</span> Order
                 </div>
-                <div class="nav-item">
-                    <span>📦</span>
-                    <span>Kelola Produk</span>
+                <div class="nav-item" onclick="navigate('product', this)">
+                    <span class="icon">📦</span> Product
                 </div>
-                <div class="nav-item">
-                    <span>👥</span>
-                    <span>Kelola User</span>
-                </div>
-                <div class="nav-item">
-                    <span>🛒</span>
-                    <span>Transaksi</span>
-                </div>
-                <div class="nav-item">
-                    <span>⚙️</span>
-                    <span>Pengaturan</span>
-                </div>
-                <div class="nav-item">
-                    <span>🚪</span>
-                    <span>Logout</span>
+                <div class="nav-item" onclick="navigate('analytics', this)">
+                    <span class="icon">📊</span> Analytics
                 </div>
             </nav>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <h2>Dashboard Admin</h2>
-                <div class="header-actions">
-                    <button class="btn btn-primary">
-                        <span>+</span>
-                        <span>Tambah Produk</span>
-                    </button>
+        <div class="content-container">
+            <header class="header">
+                <div class="search-wrapper">
+                    <input type="text" placeholder="Search">
                 </div>
-            </div>
+                <div class="user-meta">
+                    <span class="notif-icon">🔔</span>
+                    <div class="profile-pill">
+                        <img src="https://i.pravatar.cc/40?img=12" alt="Jiwoo">
+                        <div class="text">
+                            <strong>Jiwoo</strong>
+                            <small>jiwoooo@gmail.com</small>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card primary">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Total Penjualan</div>
-                            <div class="stat-value">Rp 12.5M</div>
-                            <div class="stat-change">↑ 12% dari bulan lalu</div>
-                        </div>
-                        <div class="stat-icon">💰</div>
-                    </div>
+            <div id="render-target">
                 </div>
-                
-                <div class="stat-card success">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Total Order</div>
-                            <div class="stat-value">1,247</div>
-                            <div class="stat-change">↑ 8% dari bulan lalu</div>
-                        </div>
-                        <div class="stat-icon">📦</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card warning">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">User Terdaftar</div>
-                            <div class="stat-value">3,842</div>
-                            <div class="stat-change">↑ 15% dari bulan lalu</div>
-                        </div>
-                        <div class="stat-icon">👥</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card accent">
-                    <div class="stat-header">
-                        <div>
-                            <div class="stat-title">Produk</div>
-                            <div class="stat-value">156</div>
-                            <div class="stat-change negative">↓ 2 produk habis</div>
-                        </div>
-                        <div class="stat-icon">🏷️</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Content Grid -->
-            <div class="content-grid">
-                <!-- Recent Orders -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📋 Pesanan Terbaru</h3>
-                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">Lihat Semua</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID Order</th>
-                                        <th>Customer</th>
-                                        <th>Produk</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>#TRX-001</td>
-                                        <td>Budi Santoso</td>
-                                        <td>Batik Madura</td>
-                                        <td>Rp 250.000</td>
-                                        <td><span class="status success">Selesai</span></td>
-                                        <td>
-                                            <div class="action-btns">
-                                                <button class="btn-icon btn-edit">edit</button>
-                                                <button class="btn-icon btn-delete">hapus</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#TRX-002</td>
-                                        <td>Ani Wijaya</td>
-                                        <td>Kerajinan Anyaman</td>
-                                        <td>Rp 180.000</td>
-                                        <td><span class="status processing">Diproses</span></td>
-                                        <td>
-                                            <div class="action-btns">
-                                                <button class="btn-icon btn-edit">edit</button>
-                                                <button class="btn-icon btn-delete">hapus</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#TRX-003</td>
-                                        <td>Citra Lestari</td>
-                                        <td>Sapu Tangan Batik</td>
-                                        <td>Rp 95.000</td>
-                                        <td><span class="status pending">Menunggu</span></td>
-                                        <td>
-                                            <div class="action-btns">
-                                                <button class="btn-icon btn-edit">edit</button>
-                                                <button class="btn-icon btn-delete">hapus</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#TRX-004</td>
-                                        <td>Dedi Pratama</td>
-                                        <td>Topi Madura</td>
-                                        <td>Rp 120.000</td>
-                                        <td><span class="status success">Selesai</span></td>
-                                        <td>
-                                            <div class="action-btns">
-                                                <button class="btn-icon btn-edit">edit</button>
-                                                <button class="btn-icon btn-delete">hapus</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
+
+    <footer class="footer-bar">
+        <div class="footer-logo">SakaMadura</div>
+        <div class="footer-link">Contact us</div>
+    </footer>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Product</h2>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="p-name">Product Name</label>
+                    <input type="text" id="p-name" placeholder="Masukkan nama produk" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="p-id">Product ID</label>
+                        <input type="text" id="p-id" placeholder="Contoh: D128" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="p-price">Price (Rp)</label>
+                        <input type="number" id="p-price" placeholder="500000" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="p-stock">Stock</label>
+                        <input type="number" id="p-stock" placeholder="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="p-type">Type</label>
+                        <select id="p-type">
+                            <option value="Clothes">Clothes</option>
+                            <option value="Food">Food</option>
+                            <option value="Accessory">Accessory</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="p-image">Product Image</label>
+                    <input type="file" id="p-image" accept="image/*">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-white" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-blue">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboardseller.js"></script>
 </body>
 </html>
