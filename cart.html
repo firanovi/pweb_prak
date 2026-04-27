@@ -2,151 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart - SakaMadura</title>
-    <link rel="stylesheet" href="./cart.css">
-    <link rel="stylesheet" href="./hamburger.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>SakaMadura - Your Cart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./cart.css">
+    <link rel="stylesheet" href="./hamburger.css">
 </head>
-
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo">SakaMadura</a>
 
-            <div class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <div class="nav-links">
-                <a href="./homepage.html" class="nav-link">About</a>
-                <a href="#" class="nav-link">Heritage</a>
-                <a href="./store.html" class="nav-link">Shop</a>
-            </div>
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="#" class="logo">SakaMadura</a>
+        <div class="nav-links">
+            <a href="./homepage.html" class="nav-link">About</a>
+            <a href="./sejarah.html" class="nav-link">Heritage</a>
+            <a href="./store.html" class="nav-link">Shop</a>
         </div>
-        
-        <div class="nav-right">
-            <div class="search-box">
-                <input type="text" placeholder="Search">
-                <i class="fas fa-search"></i>
-            </div>
+    </div>
+    <div class="nav-right">
+        <div class="search-box">
+            <input type="text" placeholder="Search">
+            <i class="fas fa-search"></i>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="dashboard">
+<div class="container">
+    <div class="dashboard">
+        <!-- Sidebar navigasi (tetap ada, tapi tidak mengganggu) -->
+        <aside class="sidebar">
+            <a href="./dashboarduser.html" class="menu-item"><i class="far fa-user"></i><span>Account</span></a>
+            <a href="" class="menu-item active"><i class="fas fa-shopping-cart"></i><span>Cart</span></a>
+            <a href="./order.html" class="menu-item"><i class="fas fa-clipboard-list"></i><span>Your Orders</span></a>
+            <a href="./historyorder.html" class="menu-item"><i class="far fa-file-alt"></i><span>History Order</span></a>
+        </aside>
+
+        <!-- KONTEN UTAMA CART: tanpa kupon, tanpa gambar tambahan, hanya daftar item + summary dan tombol checkout -->
+        <div class="cart-content">
+            <h1 class="page-title">Cart</h1>
             
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <a href="./dashboarduser.html" class="menu-item">
-                    <i class="far fa-user"></i>
-                    <span>Account</span>
-                </a>
-                <a href="./cart.html" class="menu-item active">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Cart</span>
-                </a>
-                <a href="./order.html" class="menu-item">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span>Your Orders</span>
-                </a>
-                <a href="./historyorder.html" class="menu-item">
-                    <i class="far fa-file-alt"></i>
-                    <span>History Order</span>
-                </a>
-            </aside>
-
-            <!-- Cart Content -->
-            <div class="cart-content">
-                
-                <h1 class="page-title">Cart</h1>
-                
-                <!-- Cart Table -->
-                <div class="cart-table">
-                    <div class="table-header">
-                        <span class="col-product">Product</span>
-                        <span class="col-price">Price</span>
-                        <span class="col-qty">Quantity</span>
-                        <span class="col-subtotal">Subtotal</span>
-                    </div>
-                    
-                    <div class="table-body">
-                        <div class="cart-item">
-                            <div class="col-product">
-                                <img src="./gambar/buah.jpg" alt="Buah Lontar">
-                                <span>Buah Lontar</span>
-                            </div>
-                            <span class="col-price">Rp40.000,00</span>
-                            <span class="col-qty">1</span>
-                            <span class="col-subtotal">Rp40.000,00</span>
-                        </div>
-                        
-                        <div class="cart-item">
-                            <div class="col-product">
-                                <img src="./gambar/songkok.jpeg" alt="Songkok">
-                                <span>Odheng</span>
-                            </div>
-                            <span class="col-price">Rp40.000,00</span>
-                            <span class="col-qty">1</span>
-                            <span class="col-subtotal">Rp40.000,00</span>
-                        </div>
-                    </div>
+            <!-- Tabel produk -->
+            <div class="cart-table">
+                <div class="table-header">
+                    <span>Product</span>
+                    <span>Price</span>
+                    <span>Quantity</span>
+                    <span>Subtotal</span>
                 </div>
+                <div class="table-body" id="cartItemsContainer">
+                    <!-- JS akan render daftar produk disini -->
+                </div>
+            </div>
 
-                <!-- Bottom Section -->
-                <div class="cart-bottom">
-                    <!-- Coupon -->
-                    <div class="coupon-section">
-                        <h3>Have a coupon?</h3>
-                        <p>Add your code for an instant cart discount</p>
-                        <div class="coupon-input">
-                            <input type="text" placeholder="Input">
-                            <button class="apply-btn">Apply</button>
-                        </div>
-                    </div>
-
-                    <!-- Cart Summary -->
-                    <div class="cart-summary">
-                        <h3>Cart summary</h3>
-                        
-                        <div class="summary-row">
-                            <span>Free Shipping</span>
-                            <span class="price">0</span>
-                        </div>
-                        
-                        <div class="summary-row">
-                            <span>Express Shipping</span>
-                            <span class="price">30.000</span>
-                        </div>
-                        
-                        <div class="summary-divider"></div>
-                        
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span class="price">Rp80.000,00</span>
-                        </div>
-                        
-                        <div class="summary-row total">
-                            <span>Total</span>
-                            <span class="price">Rp110.000,00</span>
-                        </div>
-                        <div class="checkout-wrapper">
-                            <div class ="container">
-                                <a href="./payment.html" class="checkout-btn">Checkout</a>
-                            </div>
-                        </div>
-                    </div>
-                
-            </div> <!-- End Cart Content -->
-            
-        </div> <!-- End Dashboard -->
-    </div> <!-- End Container -->
+            <!-- Ringkasan belanja (tanpa kupon, tanpa elemen kanan tambahan) dan HANYA TOMBOL CHECKOUT -->
+            <div class="cart-summary" id="summaryPanel">
+                <h3>Cart summary</h3>
+                <div class="summary-row">
+                    <span>Free Shipping</span>
+                    <span class="price">Rp0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Express Shipping</span>
+                    <span class="price" id="shippingCost">Rp30.000</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span class="price" id="subtotalDisplay">Rp80.000,00</span>
+                </div>
+                <!-- Tidak ada baris diskon karena kupon dihapus total -->
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span class="price" id="totalDisplay">Rp110.000,00</span>
+                </div>
+                <!-- TOMBOL CHECKOUT MURNI tanpa hiasan, gambar, atau apapun -->
+                <button class="checkout-btn" id="checkoutBtn">Checkout →</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -166,7 +103,7 @@
                 <h4>Navigasi</h4>
                 <ul>
                     <li><a href="./homepage.html">About</a></li>
-                    <li><a href="#">Heritage</a></li>
+                    <li><a href="./sejarah.html">Heritage</a></li>
                     <li><a href="./store.html">Shop</a></li>
                     <li><a href="./dashboarduser.html">Account</a></li>
                 </ul>
@@ -198,5 +135,6 @@
             <p>&copy; 2026 SakaMadura. All rights reserved.</p>
         </div>
     </footer>
+<script src="./cart.js"></script>
 </body>
 </html>
