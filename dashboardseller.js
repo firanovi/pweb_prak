@@ -3,20 +3,81 @@
 // ============================================
 
 // ============================================
-// DATA PRODUCTS
+// CONFIG
 // ============================================
-let productsData = [
-    { id: "D123", name: "Batik Sumenep", price: 500000, stock: 80, type: "Clothes", status: "Active", image: "./img/batik sumenep.jpg" },
-    { id: "D124", name: "Kacang Otok", price: 15000, stock: 60, type: "Food", status: "Inactive", image: "./img/Kacang otok.jpeg" },
-    { id: "D125", name: "Kacang Otok", price: 15000, stock: 60, type: "Food", status: "Pending", image: "./img/Kacang otok.jpeg" },
-    { id: "D126", name: "Kacang Otok", price: 15000, stock: 60, type: "Food", status: "On Sale", image: "./img/Kacang otok.jpeg" },
-    { id: "D127", name: "Odheng Madura", price: 75000, stock: 40, type: "Accessory", status: "Active", image: "./img/batik sumenep.jpg" },
-    { id: "D128", name: "Miniatur Karapan Sapi", price: 1200000, stock: 10, type: "Accessory", status: "Active", image: "./img/batik sumenep.jpg" },
-];
+const userId = "USER_ID_DARI_SESSION"; // Ganti setelah login dibuat
 
-let currentPageProducts = 0;
-const productsPerPage = 4;
+// ============================================
+// DATA PRODUCTS - FETCH DARI DATABASE
+// ============================================
+let productsData = [];
 
+async function loadProducts() {
+    try {
+        const res = await fetch(`/api/produk?seller=${userId}`);
+        const data = await res.json();
+        productsData = data.map(p => ({
+            id: p._id,
+            name: p.nama,
+            price: p.harga,
+            stock: p.stok,
+            type: p.kategori,
+            status: p.status || 'Active',
+            image: p.gambar || 'https://via.placeholder.com/40'
+        }));
+        renderProductsTable();
+    } catch (err) {
+        console.error('Gagal load produk:', err);
+        showToast('Gagal memuat produk', 'error');
+    }
+}
+
+// ============================================
+// DATA ORDERS - FETCH DARI DATABASE
+// ============================================
+let ordersData = [];
+let originalOrdersData = [];
+
+async function loadOrders() {
+    try {
+        const res = await fetch(`/api/order?seller=${userId}`);
+        const data = await res.json();
+        ordersData = data.map(o => ({
+            id: o._id,
+            customer: {
+                name: o.user?.nama || 'Unknown',
+                email: o.user?.email || '-',
+                phone: o.user?.noHp || '-',
+                address: o.alamatPengiriman || '-'
+            },
+            date: new Date(o.createdAt).toLocaleDateString('id-ID'),
+            items: o.items.map(i => ({
+                name: i.produk?.nama || '-',
+                quantity: i.jumlah,
+                price: i.harga
+            })),
+            shipping: {
+                courier: o.kurir || 'JNE',
+                tracking: o.noResi || '-',
+                cost: o.ongkir || 0
+            },
+            payment: {
+                method: o.metodePembayaran || '-',
+                status: o.statusPembayaran || 'Menunggu'
+            },
+            status: o.status || 'Pending'
+        }));
+        originalOrdersData = [...ordersData];
+        renderOrdersTable();
+    } catch (err) {
+        console.error('Gagal load orders:', err);
+        showToast('Gagal memuat orders', 'error');
+    }
+}
+
+// ============================================
+// VIEWS TEMPLATES
+// ============================================
 const views = {
     dashboard: `
     <div class="stats-grid">
@@ -191,6 +252,15 @@ function getProductStatusDropdownStyle(status) {
 }
 
 // ============================================
+// PAGINATION VARIABLES
+// ============================================
+let currentPageProducts = 0;
+const productsPerPage = 4;
+let currentPageOrders = 0;
+const ordersPerPage = 5;
+const statusOptions = ["Pending", "Processing", "Shipping", "Completed", "Cancelled"];
+
+// ============================================
 // RENDER PRODUCTS TABLE (WITH PAGINATION)
 // ============================================
 function renderProductsTable() {
@@ -257,18 +327,37 @@ function changeProductPage(direction) {
     }
 }
 
-function updateProductStatus(productId, selectEl) {
+// ============================================
+// UPDATE PRODUCT STATUS (WITH API)
+// ============================================
+async function updateProductStatus(productId, selectEl) {
     const newStatus = selectEl.value;
-    const product = productsData.find(p => p.id === productId);
-    if (product) {
-        product.status = newStatus;
+    try {
+        const res = await fetch(`/api/produk/${productId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!res.ok) throw new Error('Gagal update status');
+
+        // Update local data
+        const product = productsData.find(p => p.id === productId);
+        if (product) product.status = newStatus;
+        
         selectEl.style.cssText = getProductStatusDropdownStyle(newStatus);
-        showToast(`Status "${product.name}" diubah menjadi ${newStatus}`, 'success');
+        showToast(`Status "${product?.name}" diubah menjadi ${newStatus}`, 'success');
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal mengubah status', 'error');
+        // Revert select value
+        const product = productsData.find(p => p.id === productId);
+        if (product) selectEl.value = product.status;
     }
 }
 
 // ============================================
-// EDIT PRODUCT MODAL
+// EDIT PRODUCT MODAL & FUNCTIONS
 // ============================================
 function openEditModal(productId) {
     const product = productsData.find(p => p.id === productId);
@@ -290,126 +379,39 @@ function closeEditModal() {
     document.getElementById('editProductModal').style.display = 'none';
 }
 
-function saveEditProduct(e) {
+async function saveEditProduct(e) {
     e.preventDefault();
     const productId = document.getElementById('edit-p-id-hidden').value;
-    const product   = productsData.find(p => p.id === productId);
-    if (!product) return;
 
-    product.name   = document.getElementById('edit-p-name').value;
-    product.price  = parseInt(document.getElementById('edit-p-price').value);
-    product.stock  = parseInt(document.getElementById('edit-p-stock').value);
-    product.type   = document.getElementById('edit-p-type').value;
-    product.status = document.getElementById('edit-p-status').value;
+    const data = {
+        nama:     document.getElementById('edit-p-name').value,
+        harga:    parseInt(document.getElementById('edit-p-price').value),
+        stok:     parseInt(document.getElementById('edit-p-stock').value),
+        kategori: document.getElementById('edit-p-type').value,
+        status:   document.getElementById('edit-p-status').value
+    };
 
     const fileInput = document.getElementById('edit-p-image');
     if (fileInput.files && fileInput.files[0]) {
-        product.image = URL.createObjectURL(fileInput.files[0]);
+        data.gambar = URL.createObjectURL(fileInput.files[0]);
     }
 
-    renderProductsTable();
-    closeEditModal();
-    showToast(`Produk "${product.name}" berhasil diperbarui`, 'success');
-}
+    try {
+        const res = await fetch(`/api/produk/${productId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
 
-// ============================================
-// DATA ORDERS
-// ============================================
-let ordersData = [
-    {
-        id: "SK2458",
-        customer: { name: "Haewon", email: "haewon@example.com", phone: "08123456789", address: "Jl. Merpati No. 12, Surabaya" },
-        date: "01/01/2026",
-        items: [{ name: "Batik Sumenep", quantity: 2, price: 250000 }, { name: "Kacang Otok", quantity: 3, price: 15000 }],
-        shipping: { courier: "JNE Reguler", tracking: "JT1234567890", cost: 25000 },
-        payment: { method: "Bank Transfer", status: "Lunas" },
-        status: "Completed"
-    },
-    {
-        id: "SK2459",
-        customer: { name: "Jiwoo", email: "jiwoo@example.com", phone: "08198765432", address: "Jl. Kenari No. 5, Malang" },
-        date: "02/01/2026",
-        items: [{ name: "Kaos Sakera", quantity: 1, price: 150000 }, { name: "Odheng", quantity: 2, price: 75000 }, { name: "Kue Macho", quantity: 1, price: 50000 }],
-        shipping: { courier: "JNE YES", tracking: "JT0987654321", cost: 35000 },
-        payment: { method: "COD", status: "Belum Lunas" },
-        status: "Pending"
-    },
-    {
-        id: "SK2460",
-        customer: { name: "Karina", email: "karina@example.com", phone: "08111222333", address: "Jl. Mawar No. 8, Sidoarjo" },
-        date: "03/01/2026",
-        items: [{ name: "Miniatur Karapan Sapi", quantity: 1, price: 1200000 }],
-        shipping: { courier: "SiCepat", tracking: "SC55667788", cost: 20000 },
-        payment: { method: "Credit Card", status: "Lunas" },
-        status: "Completed"
-    },
-    {
-        id: "SK2461",
-        customer: { name: "Winter", email: "winter@example.com", phone: "08144556677", address: "Jl. Cempaka No. 3, Gresik" },
-        date: "04/01/2026",
-        items: [{ name: "Buah Siwalan", quantity: 2, price: 100000 }, { name: "Kacang Otok", quantity: 1, price: 15000 }],
-        shipping: { courier: "JNE Reguler", tracking: "JT11223344", cost: 25000 },
-        payment: { method: "Bank Transfer", status: "Dibatalkan" },
-        status: "Cancelled"
-    },
-    {
-        id: "SK2462",
-        customer: { name: "Ningning", email: "ningning@example.com", phone: "08199887766", address: "Jl. Anggrek No. 15, Surabaya" },
-        date: "05/01/2026",
-        items: [{ name: "Batik Sumenep", quantity: 1, price: 250000 }, { name: "Kaos Sakera", quantity: 2, price: 150000 }],
-        shipping: { courier: "JNE Reguler", tracking: "JT55443322", cost: 25000 },
-        payment: { method: "Bank Transfer", status: "Lunas" },
-        status: "Completed"
-    },
-    {
-        id: "SK2463",
-        customer: { name: "Ryujin", email: "ryujin@example.com", phone: "08122334455", address: "Jl. Melati No. 7, Pasuruan" },
-        date: "06/01/2026",
-        items: [{ name: "Odheng", quantity: 3, price: 75000 }, { name: "Kue Macho", quantity: 2, price: 50000 }],
-        shipping: { courier: "SiCepat", tracking: "SC99887766", cost: 20000 },
-        payment: { method: "COD", status: "Proses" },
-        status: "Processing"
-    },
-    {
-        id: "SK2464",
-        customer: { name: "Lia", email: "lia@example.com", phone: "08166778899", address: "Jl. Dahlia No. 22, Mojokerto" },
-        date: "07/01/2026",
-        items: [{ name: "Miniatur Karapan Sapi", quantity: 1, price: 1200000 }, { name: "Buah Siwalan", quantity: 3, price: 100000 }],
-        shipping: { courier: "JNE Reguler", tracking: "JT77665544", cost: 25000 },
-        payment: { method: "Bank Transfer", status: "Lunas" },
-        status: "Shipping"
-    },
-    {
-        id: "SK2465",
-        customer: { name: "Yeji", email: "yeji@example.com", phone: "08133221100", address: "Jl. Teratai No. 9, Lumajang" },
-        date: "08/01/2026",
-        items: [{ name: "Kacang Otok", quantity: 5, price: 15000 }],
-        shipping: { courier: "JNE Reguler", tracking: "JT44332211", cost: 15000 },
-        payment: { method: "COD", status: "Menunggu" },
-        status: "Pending"
+        if (!res.ok) throw new Error('Gagal update produk');
+
+        showToast(`Produk berhasil diperbarui`, 'success');
+        closeEditModal();
+        await loadProducts(); // Refresh dari database
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal memperbarui produk', 'error');
     }
-];
-
-let currentPageOrders = 0;
-const ordersPerPage = 5;
-const statusOptions  = ["Pending", "Processing", "Shipping", "Completed", "Cancelled"];
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-function calculateSubtotal(item)      { return item.quantity * item.price; }
-function calculateTotalProduct(items) { return items.reduce((t, i) => t + calculateSubtotal(i), 0); }
-function calculateTotalAmount(order)  { return calculateTotalProduct(order.items) + order.shipping.cost; }
-function formatRupiah(amount)         { return 'Rp ' + amount.toLocaleString('id-ID'); }
-
-function getStatusBadge(status) {
-    const cls = { 'Pending': 'pending', 'Processing': 'processing', 'Shipping': 'shipping', 'Completed': 'active', 'Cancelled': 'inactive' };
-    return `<span class="status ${cls[status] || 'pending'}">${status}</span>`;
-}
-
-function getStatusClassForDropdown(status) {
-    const cls = { 'Pending': 'status-pending', 'Processing': 'status-processing', 'Shipping': 'status-shipping', 'Completed': 'status-success', 'Cancelled': 'status-cancelled' };
-    return cls[status] || 'status-pending';
 }
 
 // ============================================
@@ -457,26 +459,37 @@ function updateOrderPaginationButtons() {
 }
 
 // ============================================
-// ORDER MANAGEMENT
+// ORDER MANAGEMENT (WITH API)
 // ============================================
-function updateOrderStatus(orderId, newStatus) {
-    const order = ordersData.find(o => o.id === orderId);
-    if (order) {
-        order.status = newStatus;
-        if (newStatus === "Completed") order.payment.status = "Lunas";
-        renderOrdersTable();
-        showToast(`Status order ${orderId} diubah menjadi ${newStatus}`, 'success');
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        const res = await fetch(`/api/order/${orderId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!res.ok) throw new Error('Gagal update status');
+
+        showToast(`Status order diubah menjadi ${newStatus}`, 'success');
+        await loadOrders(); // Refresh dari database
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal mengubah status order', 'error');
     }
 }
 
-function deleteOrder(orderId) {
-    if (confirm(`Hapus order ${orderId}?`)) {
-        ordersData = ordersData.filter(o => o.id !== orderId);
-        const totalPages = Math.ceil(ordersData.length / ordersPerPage);
-        if (currentPageOrders >= totalPages && currentPageOrders > 0) currentPageOrders = totalPages - 1;
-        if (currentPageOrders < 0) currentPageOrders = 0;
-        renderOrdersTable();
-        showToast(`Order ${orderId} berhasil dihapus`, 'success');
+async function deleteOrder(orderId) {
+    if (!confirm(`Hapus order ${orderId}?`)) return;
+    try {
+        const res = await fetch(`/api/order/${orderId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Gagal hapus order');
+
+        showToast(`Order berhasil dihapus`, 'success');
+        await loadOrders(); // Refresh dari database
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal menghapus order', 'error');
     }
 }
 
@@ -487,6 +500,24 @@ function changePage(direction) {
         currentPageOrders = newPage;
         renderOrdersTable();
     }
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+function calculateSubtotal(item)      { return item.quantity * item.price; }
+function calculateTotalProduct(items) { return items.reduce((t, i) => t + calculateSubtotal(i), 0); }
+function calculateTotalAmount(order)  { return calculateTotalProduct(order.items) + order.shipping.cost; }
+function formatRupiah(amount)         { return 'Rp ' + amount.toLocaleString('id-ID'); }
+
+function getStatusBadge(status) {
+    const cls = { 'Pending': 'pending', 'Processing': 'processing', 'Shipping': 'shipping', 'Completed': 'active', 'Cancelled': 'inactive' };
+    return `<span class="status ${cls[status] || 'pending'}">${status}</span>`;
+}
+
+function getStatusClassForDropdown(status) {
+    const cls = { 'Pending': 'status-pending', 'Processing': 'status-processing', 'Shipping': 'status-shipping', 'Completed': 'status-success', 'Cancelled': 'status-cancelled' };
+    return cls[status] || 'status-pending';
 }
 
 // ============================================
@@ -567,8 +598,6 @@ function closeDetailModal() {
 // ============================================
 // FILTER & EXPORT ORDERS
 // ============================================
-let originalOrdersData = [...ordersData];
-
 function filterOrders() {
     const searchTerm = prompt("Cari berdasarkan Order ID atau Nama Customer:");
     if (searchTerm && searchTerm.trim()) {
@@ -611,6 +640,71 @@ function exportProducts() {
 }
 
 // ============================================
+// ADD NEW PRODUCT (WITH API)
+// ============================================
+function openModal() {
+    const modal = document.getElementById('productModal');
+    if (modal) modal.style.display = 'block';
+    const productForm = document.getElementById('productForm');
+    if (productForm) productForm.onsubmit = e => { e.preventDefault(); addNewProduct(); };
+}
+
+function closeModal() {
+    const modal = document.getElementById('productModal');
+    if (modal) modal.style.display = 'none';
+}
+
+async function addNewProduct() {
+    const name      = document.getElementById('p-name').value.trim();
+    const id        = document.getElementById('p-id').value.trim();
+    const price     = parseInt(document.getElementById('p-price').value);
+    const stock     = parseInt(document.getElementById('p-stock').value);
+    const type      = document.getElementById('p-type').value;
+    const fileInput = document.getElementById('p-image');
+
+    if (!name || !id || isNaN(price) || isNaN(stock)) {
+        showToast('Semua field harus diisi dengan benar', 'error');
+        return;
+    }
+
+    let image = 'https://via.placeholder.com/40';
+    if (fileInput.files && fileInput.files[0]) {
+        image = URL.createObjectURL(fileInput.files[0]);
+    }
+
+    try {
+        const res = await fetch('/api/produk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                sellerId: userId,
+                _id: id,
+                nama: name,
+                harga: price,
+                stok: stock,
+                kategori: type,
+                gambar: image,
+                status: 'Active'
+            })
+        });
+
+        if (!res.ok) throw new Error('Gagal tambah produk');
+
+        showToast(`Produk "${name}" berhasil ditambahkan`, 'success');
+        closeModal();
+        document.getElementById('productForm').reset();
+        await loadProducts(); // Refresh dari database
+        
+        // Reset pagination to last page
+        currentPageProducts = Math.ceil(productsData.length / productsPerPage) - 1;
+        renderProductsTable();
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal menambah produk', 'error');
+    }
+}
+
+// ============================================
 // TOAST NOTIFICATION
 // ============================================
 function showToast(message, type = 'success') {
@@ -641,10 +735,10 @@ function navigate(viewName, element) {
         renderDashboardChart();
     } else if (viewName === 'orders') {
         currentPageOrders = 0;
-        renderOrdersTable();
+        loadOrders(); // Fetch dari DB
     } else if (viewName === 'product') {
         currentPageProducts = 0;
-        renderProductsTable();
+        loadProducts(); // Fetch dari DB
         const productForm = document.getElementById('productForm');
         if (productForm) productForm.onsubmit = e => { e.preventDefault(); addNewProduct(); };
     }
@@ -686,349 +780,9 @@ function initAnalyticsCharts() {
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
     });
 
-    if (targetChart) new Chart(targetChart, {
+    if (targetChart) new Chart(targetChart), {
         type: 'doughnut',
         data: { datasets: [{ data: [66, 34], backgroundColor: ['#4D96FF', '#D9E9FF'], borderWidth: 0, circumference: 180, rotation: 270 }] },
-        options: { cutout: '85%', plugins: { tooltip: { enabled: false } } }
-    });
-
-    if (salesDonut) new Chart(salesDonut, {
-        type: 'doughnut',
-        data: {
-            labels: ['Karapan', 'Kaos', 'Odheng', 'Siwalan', 'Kue', 'Kacang', 'Batik'],
-            datasets: [{ data: [12, 5, 8, 10, 15, 20, 30], backgroundColor: ['#6BCB77', '#4ECDC4', '#FF6B6B', '#FF8E72', '#FFCC5C', '#A29BFE', '#4D96FF'], borderWidth: 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, cutout: '60%' }
-    });
+        options: { cutout: '85%', plugins}
+    }
 }
-
-// ============================================
-// PRODUCT MODAL (ADD)
-// ============================================
-function openModal() {
-    const modal = document.getElementById('productModal');
-    if (modal) modal.style.display = 'block';
-    const productForm = document.getElementById('productForm');
-    if (productForm) productForm.onsubmit = e => { e.preventDefault(); addNewProduct(); };
-}
-
-function closeModal() {
-    const modal = document.getElementById('productModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function addNewProduct() {
-    const name      = document.getElementById('p-name').value.trim();
-    const id        = document.getElementById('p-id').value.trim();
-    const price     = parseInt(document.getElementById('p-price').value);
-    const stock     = parseInt(document.getElementById('p-stock').value);
-    const type      = document.getElementById('p-type').value;
-    const statusEl  = document.getElementById('p-status-add');
-    const status    = statusEl ? statusEl.value : 'Active';
-    const fileInput = document.getElementById('p-image');
-
-    let image = 'https://via.placeholder.com/40';
-    if (fileInput.files && fileInput.files[0]) image = URL.createObjectURL(fileInput.files[0]);
-
-    if (productsData.find(p => p.id === id)) { showToast(`Product ID "${id}" sudah ada!`, 'error'); return; }
-
-    productsData.push({ id, name, price, stock, type, status, image });
-    currentPageProducts = Math.ceil(productsData.length / productsPerPage) - 1;
-    renderProductsTable();
-    closeModal();
-    document.getElementById('productForm').reset();
-    showToast(`Produk "${name}" berhasil ditambahkan`, 'success');
-}
-
-// ============================================
-// INJECT EDIT PRODUCT MODAL INTO BODY
-// ============================================
-function injectEditModal() {
-    if (document.getElementById('editProductModal')) return;
-    const el = document.createElement('div');
-    el.id = 'editProductModal';
-    el.innerHTML = `
-        <div class="edit-modal-content">
-            <div class="edit-modal-header">
-                <h2>Edit Product</h2>
-                <span class="close-modal" onclick="closeEditModal()">&times;</span>
-            </div>
-            <div class="edit-modal-body">
-                <form id="editProductForm" onsubmit="saveEditProduct(event)">
-                    <input type="hidden" id="edit-p-id-hidden">
-                    <div class="form-group">
-                        <label for="edit-p-name">Product Name</label>
-                        <input type="text" id="edit-p-name" placeholder="Nama produk" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-p-id-display">Product ID</label>
-                            <input type="text" id="edit-p-id-display" disabled style="background:#f5f5f5;color:#888;cursor:not-allowed;">
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-p-price">Price (Rp)</label>
-                            <input type="number" id="edit-p-price" placeholder="500000" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-p-stock">Stock</label>
-                            <input type="number" id="edit-p-stock" placeholder="10" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-p-type">Type</label>
-                            <select id="edit-p-type">
-                                <option value="Clothes">Clothes</option>
-                                <option value="Food">Food</option>
-                                <option value="Accessory">Accessory</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-p-status">Status</label>
-                        <select id="edit-p-status">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                            <option value="Pending">Pending</option>
-                            <option value="On Sale">On Sale</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-p-image">Product Image <span style="color:#aaa;font-weight:400;">(opsional)</span></label>
-                        <input type="file" id="edit-p-image" accept="image/*">
-                    </div>
-                    <div class="modal-actions">
-                        <button type="button" class="btn-white" onclick="closeEditModal()">Cancel</button>
-                        <button type="submit" class="btn-blue">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(el);
-}
-
-// ============================================
-// GLOBAL STYLES
-// ============================================
-const style = document.createElement('style');
-style.textContent = `
-    /* ---- Product Status Dropdown ---- */
-    .product-status-dropdown {
-        appearance: none;
-        -webkit-appearance: none;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        outline: none;
-        min-width: 90px;
-        text-align: center;
-    }
-    .product-status-dropdown:focus { box-shadow: 0 0 0 3px rgba(0,149,255,0.15); }
-
-    /* ---- Edit Button ---- */
-    .btn-edit {
-        background: #F0F7FF;
-        color: #0095FF;
-        border: 1.5px solid #0095FF;
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        white-space: nowrap;
-    }
-    .btn-edit:hover { background: #0095FF; color: white; }
-
-    /* ---- Edit Product Modal Overlay ---- */
-    #editProductModal {
-        display: none;
-        position: fixed;
-        z-index: 1001;
-        left: 0; top: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.45);
-        backdrop-filter: blur(5px);
-        align-items: flex-start;   /* allow modal box to sit at top when tall */
-        justify-content: center;
-        overflow-y: auto;           /* overlay scrolls if needed */
-        padding: 30px 0;
-    }
-
-    /* ---- Edit Modal Box ---- */
-    .edit-modal-content {
-        background: white;
-        border-radius: 25px;
-        width: 500px;
-        max-width: 95vw;
-        max-height: 88vh;           /* cap height */
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        animation: modalSlideIn 0.3s ease;
-        margin: auto;
-    }
-
-    /* ---- Sticky header — never scrolls away ---- */
-    .edit-modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 22px 28px 18px;
-        border-bottom: 1px solid #f0f0f0;
-        flex-shrink: 0;
-    }
-    .edit-modal-header h2 { font-size: 20px; font-weight: 700; margin: 0; }
-
-    /* ---- Scrollable form body ---- */
-    .edit-modal-body {
-        padding: 24px 28px 28px;
-        overflow-y: auto;           /* ← scroll happens here */
-        flex: 1;
-        overscroll-behavior: contain;
-    }
-
-    /* ---- Order Status Dropdown ---- */
-    .status-dropdown {
-        padding: 6px 12px;
-        border-radius: 20px;
-        border: 1px solid #ddd;
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        background: white;
-        transition: all 0.2s;
-    }
-    .status-dropdown:focus { outline: none; border-color: #4D96FF; }
-    .status-dropdown.status-pending    { background:#FFF3E0; color:#FF9800; border-color:#FF9800; }
-    .status-dropdown.status-processing { background:#E3F2FD; color:#2196F3; border-color:#2196F3; }
-    .status-dropdown.status-shipping   { background:#E8F5E9; color:#4CAF50; border-color:#4CAF50; }
-    .status-dropdown.status-success    { background:#E8F5E9; color:#4CAF50; border-color:#4CAF50; }
-    .status-dropdown.status-cancelled  { background:#FFEBEE; color:#f44336; border-color:#f44336; }
-
-    /* ---- Small Buttons ---- */
-    .btn-small {
-        padding: 5px 12px;
-        margin: 0 3px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 12px;
-        transition: all 0.2s;
-    }
-    .btn-detail { background: #4D96FF; color: white; }
-    .btn-detail:hover { background: #3a7ccd; }
-    .btn-delete { background: #ff4757; color: white; }
-    .btn-delete:hover { background: #e64553; }
-
-    /* ---- Shared Pagination (Products & Orders) ---- */
-    .pagination-orders {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-        margin-top: 24px;
-        padding: 12px 0;
-    }
-    .pagination-orders .page-btn {
-        padding: 8px 20px;
-        border: 1px solid #ddd;
-        background: white;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        font-size: 14px;
-        transition: all 0.2s;
-    }
-    .pagination-orders .page-btn:hover:not(:disabled) { background: #4D96FF; color: white; border-color: #4D96FF; }
-    .pagination-orders .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .page-info { font-size: 14px; font-weight: 500; color: #666; background: #f5f5f5; padding: 6px 14px; border-radius: 20px; }
-
-    /* ---- Order Detail Modal ---- */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0; top: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-content {
-        background: white;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 700px;
-        max-height: 85vh;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        animation: modalSlideIn 0.3s ease;
-    }
-    @keyframes modalSlideIn {
-        from { transform: translateY(-30px); opacity: 0; }
-        to   { transform: translateY(0);     opacity: 1; }
-    }
-    .modal-header { display:flex; justify-content:space-between; align-items:center; padding:18px 24px; background:linear-gradient(135deg,#4D96FF 0%,#3570c4 100%); color:white; }
-    .modal-header h3 { margin:0; font-size:18px; }
-    .modal-close { background:rgba(255,255,255,0.2); border:none; font-size:24px; cursor:pointer; color:white; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
-    .modal-close:hover { background:rgba(255,255,255,0.3); }
-    .modal-body { padding:24px; max-height:calc(85vh - 70px); overflow-y:auto; }
-
-    /* ---- Detail Sections ---- */
-    .detail-section { margin-bottom:28px; border-bottom:1px solid #eee; padding-bottom:20px; }
-    .detail-section:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
-    .section-title { font-size:16px; font-weight:600; color:#333; margin-bottom:16px; padding-left:12px; border-left:4px solid #4D96FF; }
-    .info-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px 20px; }
-    .info-grid div { display:flex; flex-direction:column; }
-    .info-grid .label { font-size:12px; color:#888; margin-bottom:4px; }
-    .info-grid .value { font-size:14px; font-weight:500; color:#333; }
-    .detail-table { width:100%; border-collapse:collapse; font-size:13px; }
-    .detail-table th { text-align:left; padding:10px 0; color:#888; font-weight:500; border-bottom:1px solid #eee; }
-    .detail-table td { padding:10px 0; border-bottom:1px solid #f0f0f0; }
-    .payment-status { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500; }
-    .payment-status.paid   { background:#E8F5E9; color:#4CAF50; }
-    .payment-status.unpaid { background:#FFF3E0; color:#FF9800; }
-    .summary-section { background:#F8F9FC; margin-top:8px; padding:16px 20px; border-radius:16px; border-bottom:none; }
-    .summary-row { display:flex; justify-content:space-between; padding:8px 0; font-size:14px; }
-    .total-row { border-top:2px dashed #ddd; margin-top:8px; padding-top:12px; font-weight:700; font-size:16px; color:#4D96FF; }
-
-    /* ---- Toast ---- */
-    .toast { position:fixed; bottom:24px; right:24px; background:#333; color:white; padding:12px 24px; border-radius:12px; display:flex; align-items:center; gap:10px; z-index:10000; animation:toastIn 0.3s ease; box-shadow:0 4px 15px rgba(0,0,0,0.2); font-size:14px; }
-    .toast-success { background:#4CAF50; }
-    .toast-error   { background:#f44336; }
-    .toast-info    { background:#2196F3; }
-    .toast-icon { font-weight:bold; font-size:16px; }
-    @keyframes toastIn  { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
-    .toast-hide { animation:toastOut 0.3s ease forwards; }
-    @keyframes toastOut { to { transform:translateX(100%); opacity:0; } }
-
-    /* ---- Add Product Modal ---- */
-    #productModal .modal-content { max-width:500px; }
-    #productModal .modal-header  { background:linear-gradient(135deg,#4D96FF 0%,#3570c4 100%); }
-`;
-document.head.appendChild(style);
-
-// ============================================
-// WINDOW CLICK HANDLER
-// ============================================
-window.onclick = function(e) {
-    const modal       = document.getElementById('productModal');
-    const detailModal = document.getElementById('detailModal');
-    const editModal   = document.getElementById('editProductModal');
-    if (e.target === modal)       closeModal();
-    if (e.target === detailModal) closeDetailModal();
-    if (e.target === editModal)   closeEditModal();
-};
-
-// ============================================
-// INITIAL START
-// ============================================
-window.onload = () => {
-    injectEditModal();
-    navigate('dashboard', document.querySelector('.nav-item'));
-};
