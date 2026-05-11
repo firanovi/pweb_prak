@@ -18,10 +18,10 @@ let subtotal = 540000;
 let tax = 10000;
 let finalCheckoutTotal = 540000;
 
-// Load cart dari database
 const userId = localStorage.getItem('userId');
 let cartItems = [];
 
+// Load cart dari database
 async function loadCartData() {
     try {
         if (userId) {
@@ -29,11 +29,9 @@ async function loadCartData() {
             const cart = await res.json();
             cartItems = cart.items || [];
 
-            // Hitung subtotal dari database
             subtotal = cartItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
             finalCheckoutTotal = subtotal;
 
-            // Update tampilan item
             const cartContainer = document.querySelector('.cart-items');
             if (cartContainer && cartItems.length > 0) {
                 cartContainer.innerHTML = '';
@@ -55,7 +53,6 @@ async function loadCartData() {
                 document.querySelector('.item-count').textContent = `${cartItems.length} items`;
             }
         } else {
-            // Fallback ke localStorage kalau belum login
             const cartData = JSON.parse(localStorage.getItem('sakamadura_cart') || '{}');
             cartItems = cartData.items || [];
             subtotal = cartData.subtotal || 540000;
@@ -65,6 +62,23 @@ async function loadCartData() {
         console.error('Error load cart:', err);
     }
     updateTotalDisplay();
+}
+
+// Load data user untuk auto-fill alamat & nama
+async function loadUserData() {
+    if (!userId) return;
+    try {
+        const res = await fetch(`/api/auth/user/${userId}`);
+        const user = await res.json();
+        if (res.ok) {
+            const namaParts = user.nama.split(' ');
+            firstNameInp.value = namaParts[0] || '';
+            lastNameInp.value = namaParts.slice(1).join(' ') || '';
+            addressInp.value = user.alamat || '';
+        }
+    } catch (err) {
+        console.error('Error load user:', err);
+    }
 }
 
 function updateTotalDisplay() {
@@ -180,7 +194,6 @@ async function confirmOrder() {
     const address = addressInp.value.trim();
     const alamatPengiriman = `${firstName} ${lastName}, ${address}`;
 
-    // Format items untuk dikirim ke database
     const items = cartItems.map(item => ({
         produk: item.produk?._id || item.produk,
         jumlah: item.jumlah,
@@ -283,3 +296,4 @@ window.onclick = function(e) {
 initShipping();
 initPayment();
 loadCartData();
+loadUserData();

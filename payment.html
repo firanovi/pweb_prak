@@ -36,7 +36,10 @@
     <a href="./homepage.html">About</a>
     <a href="./sejarah.html">Heritage</a>
     <a href="./store.html">Shop</a>
-    <div style="display: flex; gap: 20px; margin-top: 12px;"><i class="fas fa-heart"></i><i class="fas fa-shopping-cart"></i></div>
+    <div style="display: flex; gap: 20px; margin-top: 12px;">
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-shopping-cart"></i>
+    </div>
 </div>
 
 <div class="container">
@@ -44,34 +47,24 @@
         <!-- LEFT COLUMN (items + summary) -->
         <div class="checkout-left">
             <h2 class="checkout-title">Checkout</h2>
-            <p class="item-count">2 items</p>
-            <div class="cart-items">
-                <div class="cart-item">
-                    <div class="item-left">
-                        <img src="./img/rengginang lorjuk 2.png" alt="Rengginang Lorjuk" class="cart-item-image">
-                        <div class="item-info">
-                            <div class="item-name"><strong>Rengginang Lorjuk</strong></div>
-                            <div class="item-quantity">Quantity: 2</div>
-                        </div>
-                    </div>
-                    <div class="item-price">Rp60.000</div>
-                </div>
-                <div class="cart-item">
-                    <div class="item-left">
-                        <img src="./gambar/batik sumenep.jpg" alt="Batik Sumenep" class="cart-item-image">
-                        <div class="item-info">
-                            <div class="item-name"><strong>Batik Sumenep</strong></div>
-                            <div class="item-quantity">Quantity: 1</div>
-                        </div>
-                    </div>
-                    <div class="item-price">Rp30.000</div>
-                </div>
-            </div>
+            <p class="item-count">0 items</p>
+
+            <!-- Diisi otomatis dari database oleh payment.js -->
+            <div class="cart-items"></div>
 
             <div class="price-summary">
-                <div class="price-row"><span>Subtotal</span><span id="displaySubtotal">Rp540.000</span></div>
-                <div class="price-row"><span>Tax</span><span>Rp10.000</span></div>
-                <div class="price-row total-row"><span><strong>Total</strong></span><span id="displayTotal">Rp540.000</span></div>
+                <div class="price-row">
+                    <span>Subtotal</span>
+                    <span id="displaySubtotal">Rp0</span>
+                </div>
+                <div class="price-row">
+                    <span>Tax</span>
+                    <span>Rp10.000</span>
+                </div>
+                <div class="price-row total-row">
+                    <span><strong>Total</strong></span>
+                    <span id="displayTotal">Rp0</span>
+                </div>
             </div>
 
             <button class="place-order-btn" id="placeOrderBtn">Place Order</button>
@@ -92,21 +85,38 @@
                 <h3 class="section-title">Shipping Address</h3>
                 <div class="address-form">
                     <div class="form-row">
-                        <div class="form-group"><label>First Name</label><input type="text" id="firstName" placeholder="First Name"></div>
-                        <div class="form-group"><label>Last Name</label><input type="text" id="lastName" placeholder="Last Name"></div>
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="firstName" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="lastName" placeholder="Last Name">
+                        </div>
                     </div>
-                    <div class="form-group"><label>Address</label><input type="text" id="address" placeholder="Address"></div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="address" placeholder="Address">
+                    </div>
                 </div>
             </div>
 
             <div class="section-card">
                 <h3 class="section-title">Shipping Options</h3>
                 <div class="shipping-option" data-shipping="free">
-                    <div class="option-left"><i class="far fa-circle radio-unchecked"></i><i class="fas fa-check-circle radio-checked" style="display:none;"></i><span>Free Shipping</span></div>
+                    <div class="option-left">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <span>Free Shipping</span>
+                    </div>
                     <span class="option-price">0</span>
                 </div>
                 <div class="shipping-option" data-shipping="express">
-                    <div class="option-left"><i class="far fa-circle radio-unchecked"></i><i class="fas fa-check-circle radio-checked" style="display:none;"></i><span>Express Shipping</span></div>
+                    <div class="option-left">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <span>Express Shipping</span>
+                    </div>
                     <span class="option-price">30,000</span>
                 </div>
             </div>
@@ -114,67 +124,65 @@
             <div class="section-card">
                 <h3 class="section-title">Payment Methods</h3>
                 <div class="payment-grid">
-                    <div class="payment-grid">
-                        <div class="payment-item" data-payment="credit">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/cc.jfif" alt="Credit Card" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=💳'">
-                            <span>Credit/Debit Card</span>
-                        </div>
-                        <div class="payment-item" data-payment="bni">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/bni.png" alt="BNI" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=BNI'">
-                            <span>BNI</span>
-                        </div>
-                        <div class="payment-item" data-payment="mandiri">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/mandiri.png" alt="Mandiri" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=Mandiri'">
-                            <span>Mandiri</span>
-                        </div>
-                        <div class="payment-item" data-payment="bca">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/bca.png" alt="BCA" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=BCA'">
-                            <span>BCA</span>
-                        </div>
-                        <div class="payment-item" data-payment="bri">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/bri.png" alt="BRI" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=BRI'">
-                            <span>BRI</span>
-                        </div>
-                        <div class="payment-item" data-payment="seabank">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="bank/sea ban.png" alt="Seabank" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=SeaBank'">
-                            <span>Seabank</span>
-                        </div>
-                        <div class="payment-item" data-payment="shopeepay">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/spay.png" alt="ShopeePay" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=Shopee'">
-                            <span>ShopeePay</span>
-                        </div>
-                        <div class="payment-item" data-payment="gopay">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/gpay.png" alt="Gopay" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=GoPay'">
-                            <span>Gopay</span>
-                        </div>
-                        <div class="payment-item" data-payment="dana">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/dana.png" alt="Dana" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=Dana'">
-                            <span>Dana</span>
-                        </div>
-                        <div class="payment-item" data-payment="ovo">
-                            <i class="far fa-circle radio-unchecked"></i>
-                            <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
-                            <img src="./bank/ovo.png" alt="OVO" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=OVO'">
-                            <span>OVO</span>
-                        </div>
+                    <div class="payment-item" data-payment="credit">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/cc.jfif" alt="Credit Card" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=💳'">
+                        <span>Credit/Debit Card</span>
+                    </div>
+                    <div class="payment-item" data-payment="bni">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/bni.png" alt="BNI" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=BNI'">
+                        <span>BNI</span>
+                    </div>
+                    <div class="payment-item" data-payment="mandiri">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/mandiri.png" alt="Mandiri" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=Mandiri'">
+                        <span>Mandiri</span>
+                    </div>
+                    <div class="payment-item" data-payment="bca">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/bca.png" alt="BCA" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=BCA'">
+                        <span>BCA</span>
+                    </div>
+                    <div class="payment-item" data-payment="bri">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/bri.png" alt="BRI" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=BRI'">
+                        <span>BRI</span>
+                    </div>
+                    <div class="payment-item" data-payment="seabank">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="bank/sea ban.png" alt="Seabank" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=SeaBank'">
+                        <span>Seabank</span>
+                    </div>
+                    <div class="payment-item" data-payment="shopeepay">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/spay.png" alt="ShopeePay" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=Shopee'">
+                        <span>ShopeePay</span>
+                    </div>
+                    <div class="payment-item" data-payment="gopay">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/gpay.png" alt="Gopay" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=GoPay'">
+                        <span>Gopay</span>
+                    </div>
+                    <div class="payment-item" data-payment="dana">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/dana.png" alt="Dana" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=Dana'">
+                        <span>Dana</span>
+                    </div>
+                    <div class="payment-item" data-payment="ovo">
+                        <i class="far fa-circle radio-unchecked"></i>
+                        <i class="fas fa-check-circle radio-checked" style="display:none;"></i>
+                        <img src="./bank/ovo.png" alt="OVO" class="payment-icon" onerror="this.src='https://placehold.co/28x28?text=OVO'">
+                        <span>OVO</span>
                     </div>
                 </div>
             </div>
@@ -185,30 +193,116 @@
 <!-- QR Popup -->
 <div id="qrPopup" class="qr-popup">
     <div class="qr-popup-content">
-        <div class="qr-header"><h3 id="paymentMethodName">Payment</h3><button class="close-btn" onclick="closeQR()">&times;</button></div>
-        <div class="qr-body">
-            <div class="qr-code-container"><div class="qr-placeholder"><img id="qrImage" src="" alt="QR Code" style="width:180px; border-radius: 18px;"></div><p>Scan QR menggunakan <span id="methodName">Bank</span></p></div>
-            <div class="payment-details"><div class="detail-row"><strong>Total: </strong><span id="qrTotalAmount">Rp540.000</span></div><div>No. Order: <span id="orderNumber">#ORD-001</span></div></div>
-            <div class="countdown"><p>Selesaikan dalam:</p><div class="timer" id="countdown">15:00</div></div>
+        <div class="qr-header">
+            <h3 id="paymentMethodName">Payment</h3>
+            <button class="close-btn" onclick="closeQR()">&times;</button>
         </div>
-        <div class="qr-footer"><button class="btn-check-status" onclick="checkPaymentStatus()"><i class="fas fa-check-circle"></i> Saya Sudah Bayar</button><button class="btn-cancel" onclick="closeQR()">Batal</button></div>
+        <div class="qr-body">
+            <div class="qr-code-container">
+                <div class="qr-placeholder">
+                    <img id="qrImage" src="" alt="QR Code" style="width:180px; border-radius: 18px;">
+                </div>
+                <p>Scan QR menggunakan <span id="methodName">Bank</span></p>
+            </div>
+            <div class="payment-details">
+                <div class="detail-row"><strong>Total: </strong><span id="qrTotalAmount">Rp0</span></div>
+                <div>No. Order: <span id="orderNumber">#ORD-001</span></div>
+            </div>
+            <div class="countdown">
+                <p>Selesaikan dalam:</p>
+                <div class="timer" id="countdown">15:00</div>
+            </div>
+        </div>
+        <div class="qr-footer">
+            <button class="btn-check-status" onclick="checkPaymentStatus()">
+                <i class="fas fa-check-circle"></i> Saya Sudah Bayar
+            </button>
+            <button class="btn-cancel" onclick="closeQR()">Batal</button>
+        </div>
     </div>
 </div>
 
 <!-- Success Popup -->
-<div id="successPopup" class="success-popup"><div class="success-content"><div class="success-icon"><i class="fas fa-check-circle"></i></div><h3>Pembayaran Berhasil!</h3><p>Pesanan Anda sedang diproses</p><button class="btn-check-status" onclick="goToOrders()">Lihat Pesanan</button></div></div>
+<div id="successPopup" class="success-popup">
+    <div class="success-content">
+        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+        <h3>Pembayaran Berhasil!</h3>
+        <p>Pesanan Anda sedang diproses</p>
+        <button class="btn-check-status" onclick="goToOrders()">Lihat Pesanan</button>
+    </div>
+</div>
 
 <!-- Order Summary Popup -->
-<div id="orderPopup" class="order-popup"><div class="order-popup-content"><div class="qr-header"><h3>Ringkasan Pesanan</h3><button class="close-btn" onclick="closeOrderPopup()">&times;</button></div><div class="order-body"><div class="order-items"><div>Rengginang Lorjuk (2 pcs) - Rp60.000</div><div>Batik Sumenep (1 pcs) - Rp30.000</div></div><div class="order-total" style="margin:16px 0"><div>Subtotal: Rp540.000</div><div>Tax: Rp10.000</div><div><strong>Total: Rp540.000</strong></div></div><div><strong>Alamat:</strong> <span id="orderAddressDisplay">-</span></div><div><strong>Pengiriman:</strong> <span id="orderShippingDisplay">-</span></div><div><strong>Pembayaran:</strong> <span id="orderPaymentDisplay">-</span></div></div><div class="order-footer" style="margin-top: 24px;"><button class="btn-confirm" onclick="confirmOrder()">Konfirmasi & Bayar</button><button class="btn-cancel-order" onclick="closeOrderPopup()">Batal</button></div></div></div>
+<div id="orderPopup" class="order-popup">
+    <div class="order-popup-content">
+        <div class="qr-header">
+            <h3>Ringkasan Pesanan</h3>
+            <button class="close-btn" onclick="closeOrderPopup()">&times;</button>
+        </div>
+        <div class="order-body">
+            <!-- Diisi otomatis oleh payment.js -->
+            <div class="order-items" id="orderItemsDisplay"></div>
+            <div class="order-total" style="margin:16px 0">
+                <div>Subtotal: <span id="orderSubtotalDisplay">Rp0</span></div>
+                <div>Tax: Rp10.000</div>
+                <div><strong>Total: <span id="orderTotalDisplay">Rp0</span></strong></div>
+            </div>
+            <div><strong>Alamat:</strong> <span id="orderAddressDisplay">-</span></div>
+            <div><strong>Pengiriman:</strong> <span id="orderShippingDisplay">-</span></div>
+            <div><strong>Pembayaran:</strong> <span id="orderPaymentDisplay">-</span></div>
+        </div>
+        <div class="order-footer" style="margin-top: 24px;">
+            <button class="btn-confirm" onclick="confirmOrder()">Konfirmasi & Bayar</button>
+            <button class="btn-cancel-order" onclick="closeOrderPopup()">Batal</button>
+        </div>
+    </div>
+</div>
 
 <footer class="footer">
     <div class="footer-content-wrapper">
-        <div class="footer-left"><h3 class="footer-logo">SakaMadura</h3><div class="social-links"><a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a><a href="#" class="social-link"><i class="fab fa-tiktok"></i></a><a href="#" class="social-link"><i class="fab fa-instagram"></i></a></div></div>
-        <div class="footer-middle"><h4>Navigasi</h4><ul><li><a href="#">About</a></li><li><a href="#">Heritage</a></li><li><a href="#">Shop</a></li><li><a href="#">Account</a></li></ul></div>
-        <div class="footer-middle"><h4>Lainnya</h4><ul><li><a href="#">Syarat & Ketentuan</a></li><li><a href="#">Kebijakan Privasi</a></li><li><a href="#">Kerjasama</a></li></ul></div>
-        <div class="footer-right"><h4>Hubungi Kami</h4><div class="contact-info"><div class="contact-item"><i class="fas fa-phone"></i><span>(0123) 15734</span></div><div class="contact-item"><i class="fas fa-envelope"></i><span>sakaMadura@gmail.com</span></div></div></div>
+        <div class="footer-left">
+            <h3 class="footer-logo">SakaMadura</h3>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-middle">
+            <h4>Navigasi</h4>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Heritage</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">Account</a></li>
+            </ul>
+        </div>
+        <div class="footer-middle">
+            <h4>Lainnya</h4>
+            <ul>
+                <li><a href="#">Syarat & Ketentuan</a></li>
+                <li><a href="#">Kebijakan Privasi</a></li>
+                <li><a href="#">Kerjasama</a></li>
+            </ul>
+        </div>
+        <div class="footer-right">
+            <h4>Hubungi Kami</h4>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>(0123) 15734</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>sakaMadura@gmail.com</span>
+                </div>
+            </div>
+        </div>
     </div>
-    <hr class="divider"><div class="copyright"><p>&copy; 2026 SakaMadura. All rights reserved.</p></div>
+    <hr class="divider">
+    <div class="copyright">
+        <p>&copy; 2026 SakaMadura. All rights reserved.</p>
+    </div>
 </footer>
 <script src="payment.js"></script>
 </body>

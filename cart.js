@@ -1,5 +1,5 @@
 const SHIPPING_COST = 30000;
-const userId = "USER_ID_DARI_SESSION"; // Nanti diganti setelah login dibuat
+const userId = localStorage.getItem('userId');
 
 // Format Rupiah
 function formatIDR(amount) {
