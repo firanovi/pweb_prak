@@ -16,31 +16,41 @@ router.get('/:userId', async (req, res) => {
 
 // POST - Tambah item ke cart
 router.post('/add', async (req, res) => {
-  const { userId, produkId, jumlah, harga } = req.body;
-  try {
-    let cart = await Cart.findOne({ user: userId });
-    if (!cart) {
-      cart = new Cart({ user: userId, items: [] });
+    try {
+        const { userId, produkId, jumlah, harga } = req.body;
+
+        let cart = await Cart.findOne({ user: userId });
+
+        if (!cart) {
+            cart = new Cart({
+                user: userId,
+                items: []
+            });
+        }
+
+        const existingItem = cart.items.find(
+            item => item.produk.toString() === produkId
+        );
+
+        if (existingItem) {
+            existingItem.jumlah += jumlah;
+        } else {
+            cart.items.push({
+                produk: produkId,
+                jumlah,
+                harga
+            });
+        }
+
+        await cart.save();
+
+        res.status(200).json({
+            message: 'Produk berhasil ditambahkan ke cart'
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
-
-    // Cek apakah produk sudah ada di cart
-    const itemIndex = cart.items.findIndex(
-      item => item.produk.toString() === produkId
-    );
-
-    if (itemIndex > -1) {
-      // Kalau sudah ada, tambah jumlahnya
-      cart.items[itemIndex].jumlah += jumlah;
-    } else {
-      // Kalau belum ada, tambah item baru
-      cart.items.push({ produk: produkId, jumlah, harga });
-    }
-
-    await cart.save();
-    res.json(cart);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
 });
 
 // PUT - Update jumlah item di cart

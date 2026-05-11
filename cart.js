@@ -1,6 +1,12 @@
 const SHIPPING_COST = 30000;
 const userId = localStorage.getItem('userId');
 
+//validasi login
+if (!userId) {
+    alert('Silakan login terlebih dahulu!');
+    window.location.href = './loginuser.html';
+}
+
 // Format Rupiah
 function formatIDR(amount) {
     return new Intl.NumberFormat('id-ID', { 
