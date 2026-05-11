@@ -5,7 +5,8 @@
 // ============================================
 // CONFIG
 // ============================================
-const userId = "USER_ID_DARI_SESSION"; // Ganti setelah login dibuat
+const userId = localStorage.getItem("userId");
+const sellerId = localStorage.getItem("sellerId");
 
 // ============================================
 // DATA PRODUCTS - FETCH DARI DATABASE

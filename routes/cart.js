@@ -43,6 +43,29 @@ router.post('/add', async (req, res) => {
   }
 });
 
+// PUT - Update jumlah item di cart
+router.put('/update', async (req, res) => {
+  const { userId, produkId, jumlah } = req.body;
+  try {
+    const cart = await Cart.findOne({ user: userId });
+    if (!cart) return res.status(404).json({ message: 'Cart tidak ditemukan' });
+ 
+    const item = cart.items.find(i => i.produk.toString() === produkId);
+    if (!item) return res.status(404).json({ message: 'Item tidak ditemukan' });
+ 
+    if (jumlah <= 0) {
+      cart.items = cart.items.filter(i => i.produk.toString() !== produkId);
+    } else {
+      item.jumlah = jumlah;
+    }
+ 
+    await cart.save();
+    res.json(cart);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // DELETE - Hapus item dari cart
 router.delete('/remove', async (req, res) => {
   const { userId, produkId } = req.body;

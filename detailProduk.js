@@ -1,102 +1,198 @@
-// detailProduk.js
-// Hubungkan halaman detail produk ke backend MongoDB
-// Cara pakai: di setiap HTML, sebelum </body> tambahkan:
-//   <script>const PRODUK_NAMA = 'Batik Sumenep';</script>
-//   <script src="./detailProduk.js"></script>
+// ============================================================
+// DETAIL PRODUK - SakaMadura
+// Script ini dipakai oleh semua halaman detail produk
+// ============================================================
 
-const API_BASE = 'http://localhost:3000/api';
+// Mapping nama produk ke data (untuk halaman statis)
+const produkData = {
+  "Batik Sumenep":          { harga: 500000, id: "batik-sumenep" },
+  "Kue Macho":              { harga: 20000,  id: "kue-macho" },
+  "Kacang Otok":            { harga: 15000,  id: "kacang-otok" },
+  "Buah Siwalan":           { harga: 35000,  id: "buah-siwalan" },
+  "Odheng":                 { harga: 25000,  id: "odheng" },
+  "Miniatur Karapan Sapi":  { harga: 400000, id: "miniatur-karapan-sapi" },
+  "Keripik Tette":          { harga: 25000,  id: "keripik-tette" },
+  "Petis Madura":           { harga: 20000,  id: "petis-madura" },
+  "Rengginang Lorjuk":      { harga: 30000,  id: "rengginang-lorjuk" },
+  "Bolu Jubada":            { harga: 15000,  id: "bolu-jubada" },
+  "Keripik Terung":         { harga: 40000,  id: "keripik-terung" },
+  "Kaos Sakera":            { harga: 40000,  id: "kaos-sakera" },
+};
 
-let produkData = null;
-let qty = 1;
+let jumlah = 1;
 
-// ── Ambil data produk dari backend ─────────────────────────────────────────
-async function getProduk() {
-  const res = await fetch(`${API_BASE}/produk`);
-  const list = await res.json();
-  produkData = list.find(p => p.nama === PRODUK_NAMA);
-  if (!produkData) return console.error('Produk tidak ditemukan:', PRODUK_NAMA);
-
-  // Sinkron harga dari DB ke tampilan
-  document.querySelector('.price').textContent =
-    'Rp' + produkData.harga.toLocaleString('id-ID');
+function formatIDR(amount) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+  }).format(amount);
 }
 
-// ── Qty counter ─────────────────────────────────────────────────────────────
+// Ambil nama produk dari h2 di halaman
+function getNamaProduk() {
+  const h2 = document.querySelector('.product-right h2');
+  return h2 ? h2.textContent.trim() : null;
+}
+
+function getHargaProduk() {
+  const priceEl = document.querySelector('.product-right .price');
+  if (!priceEl) return 0;
+  const angka = priceEl.textContent.replace(/[^0-9]/g, '');
+  return parseInt(angka) || 0;
+}
+
+// ── QUANTITY ──────────────────────────────────────────────────
 function initQty() {
-  const btns = document.querySelectorAll('.qty button');
-  const span = document.querySelector('.qty span');
-  btns[0].addEventListener('click', () => { if (qty > 1) span.textContent = --qty; });
-  btns[1].addEventListener('click', () => { span.textContent = ++qty; });
+  const qtySpan = document.querySelector('.qty span');
+  const btnMinus = document.querySelector('.qty button:first-child');
+  const btnPlus  = document.querySelector('.qty button:last-child');
+
+  if (!qtySpan || !btnMinus || !btnPlus) return;
+
+  qtySpan.textContent = jumlah;
+
+  btnMinus.addEventListener('click', () => {
+    if (jumlah > 1) {
+      jumlah--;
+      qtySpan.textContent = jumlah;
+    }
+  });
+
+  btnPlus.addEventListener('click', () => {
+    jumlah++;
+    qtySpan.textContent = jumlah;
+  });
 }
 
-// ── Toast notifikasi ─────────────────────────────────────────────────────────
-function toast(msg) {
-  let el = document.getElementById('toast');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'toast';
-    el.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#333;color:#fff;padding:12px 20px;border-radius:8px;z-index:9999;font-size:14px;transition:opacity .3s';
-    document.body.appendChild(el);
-  }
-  el.textContent = msg;
-  el.style.opacity = '1';
-  setTimeout(() => el.style.opacity = '0', 3000);
-}
-
-// ── Add to Cart ──────────────────────────────────────────────────────────────
+// ── ADD TO CART ───────────────────────────────────────────────
 async function addToCart() {
   const userId = localStorage.getItem('userId');
-  if (!userId) return (window.location.href = './loginuser.html');
-  if (!produkData) return toast('Produk belum termuat');
 
-  const res = await fetch(`${API_BASE}/cart/add`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, produkId: produkData._id, jumlah: qty, harga: produkData.harga })
-  });
+  if (!userId) {
+    alert('Kamu harus login dulu untuk menambahkan ke cart!');
+    window.location.href = './loginuser.html';
+    return;
+  }
 
-  const data = await res.json();
-  res.ok ? toast('Berhasil ditambahkan ke keranjang 🛒') : toast('Gagal: ' + data.message);
+  const nama  = getNamaProduk();
+  const harga = getHargaProduk();
+
+  // Coba cari produk dari DB berdasarkan nama
+  try {
+    const res = await fetch('/api/produk');
+    const semuaProduk = await res.json();
+    const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
+
+    if (produkDB) {
+      // Produk ada di DB, tambah pakai ID dari DB
+      const cartRes = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, produkId: produkDB._id, jumlah, harga: produkDB.harga })
+      });
+
+      if (cartRes.ok) {
+        alert(`✅ ${jumlah}x ${nama} berhasil ditambahkan ke cart!`);
+      } else {
+        const err = await cartRes.json();
+        alert(err.message || 'Gagal menambahkan ke cart.');
+      }
+    } else {
+      // Produk statis belum di DB, simpan ke localStorage sebagai fallback
+      let localCart = JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
+      const existing = localCart.find(i => i.nama === nama);
+      if (existing) {
+        existing.jumlah += jumlah;
+      } else {
+        localCart.push({ nama, harga, jumlah, gambar: document.querySelector('.main-img')?.src || '' });
+      }
+      localStorage.setItem('sakamadura_cart_local', JSON.stringify(localCart));
+      alert(`✅ ${jumlah}x ${nama} ditambahkan ke cart!`);
+    }
+  } catch (err) {
+    console.error('Error add to cart:', err);
+    alert('Gagal terhubung ke server. Pastikan server berjalan.');
+  }
 }
 
-// ── Wishlist ─────────────────────────────────────────────────────────────────
-async function toggleWishlist() {
+// ── ADD TO WISHLIST ───────────────────────────────────────────
+async function addToWishlist() {
   const userId = localStorage.getItem('userId');
-  if (!userId) return (window.location.href = './loginuser.html');
-  if (!produkData) return toast('Produk belum termuat');
 
-  const res = await fetch(`${API_BASE}/wishlist/add`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, produkId: produkData._id })
-  });
+  if (!userId) {
+    alert('Kamu harus login dulu untuk menambahkan ke wishlist!');
+    window.location.href = './loginuser.html';
+    return;
+  }
 
-  const data = await res.json();
-  res.ok ? toast('Ditambahkan ke wishlist ❤️') : toast(data.message);
+  const nama = getNamaProduk();
+
+  try {
+    const res = await fetch('/api/produk');
+    const semuaProduk = await res.json();
+    const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
+
+    if (produkDB) {
+      const wRes = await fetch('/api/wishlist/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, produkId: produkDB._id })
+      });
+
+      const data = await wRes.json();
+      if (wRes.ok) {
+        alert(`❤️ ${nama} ditambahkan ke wishlist!`);
+      } else {
+        alert(data.message || 'Gagal menambahkan ke wishlist.');
+      }
+    } else {
+      // Fallback ke localStorage
+      let localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
+      const sudahAda = localWish.find(i => i.nama === nama);
+      if (sudahAda) {
+        alert('Produk sudah ada di wishlist!');
+      } else {
+        localWish.push({ nama, harga: getHargaProduk(), gambar: document.querySelector('.main-img')?.src || '' });
+        localStorage.setItem('sakamadura_wishlist_local', JSON.stringify(localWish));
+        alert(`❤️ ${nama} ditambahkan ke wishlist!`);
+      }
+    }
+  } catch (err) {
+    alert('Gagal terhubung ke server.');
+  }
 }
 
-// ── Buy Now ──────────────────────────────────────────────────────────────────
+// ── BUY NOW ───────────────────────────────────────────────────
 async function buyNow() {
   const userId = localStorage.getItem('userId');
-  if (!userId) return (window.location.href = './loginuser.html');
-  if (!produkData) return toast('Produk belum termuat');
 
-  await fetch(`${API_BASE}/cart/add`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, produkId: produkData._id, jumlah: qty, harga: produkData.harga })
-  });
+  if (!userId) {
+    alert('Kamu harus login dulu untuk melakukan pembelian!');
+    window.location.href = './loginuser.html';
+    return;
+  }
 
-  window.location.href = './order.html';
+  // Tambah ke cart dulu lalu redirect ke payment
+  await addToCart();
+  window.location.href = './payment.html';
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
-  await getProduk();
+// ── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   initQty();
 
-  const buttons = document.querySelectorAll('.buttons .outline');
-  buttons[0]?.addEventListener('click', addToCart);
-  buttons[1]?.addEventListener('click', toggleWishlist);
-  document.querySelector('.buy')?.addEventListener('click', buyNow);
+  // Pasang event listener ke tombol
+  const buttons = document.querySelectorAll('.buttons button');
+  buttons.forEach(btn => {
+    const text = btn.textContent.toLowerCase();
+    if (text.includes('cart')) {
+      btn.addEventListener('click', addToCart);
+    } else if (text.includes('wishlist')) {
+      btn.addEventListener('click', addToWishlist);
+    }
+  });
+
+  const buyBtn = document.querySelector('.buy');
+  if (buyBtn) {
+    buyBtn.addEventListener('click', buyNow);
+  }
 });

@@ -28,74 +28,91 @@ function registerFunction() {
   registerTitle.style.opacity = 1;
 }
 
-// ── LOGIN ────────────────────────────────────────────────────────────────────
+// ── LOGIN ─────────────────────────────────────────────────────
 loginForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const email = document.getElementById("log-email").value;
+  const email = document.getElementById("log-email").value.trim();
   const password = document.getElementById("log-pass").value;
 
   // Coba login seller dulu
-  const sellerRes = await fetch("http://localhost:3000/api/seller/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
+  try {
+    const sellerRes = await fetch("http://localhost:3000/api/seller/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
 
-  if (sellerRes.ok) {
-    const data = await sellerRes.json();
-    localStorage.setItem("userId", data.userId);
-    localStorage.setItem("sellerId", data.sellerId);
-    localStorage.setItem("nama", data.nama);
-    localStorage.setItem("namaToko", data.namaToko);
-    localStorage.setItem("role", "seller");
-    alert("Login Seller Berhasil!");
-    window.location.href = "dashboardseller.html";
-    return;
+    if (sellerRes.ok) {
+      const data = await sellerRes.json();
+      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("sellerId", data.sellerId);
+      localStorage.setItem("nama", data.nama);
+      localStorage.setItem("namaToko", data.namaToko);
+      localStorage.setItem("role", "seller");
+      alert("Login Seller Berhasil! Selamat datang, " + data.nama);
+      window.location.href = "dashboardseller.html";
+      return;
+    }
+  } catch (err) {
+    console.warn("Seller login gagal, coba user biasa...");
   }
 
   // Kalau bukan seller, coba login user biasa
-  const userRes = await fetch("http://localhost:3000/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
+  try {
+    const userRes = await fetch("http://localhost:3000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
 
-  const userData = await userRes.json();
+    const userData = await userRes.json();
 
-  if (userRes.ok) {
-    localStorage.setItem("userId", userData.userId);
-    localStorage.setItem("nama", userData.nama);
-    localStorage.setItem("role", "user");
-    alert("Login User Berhasil!");
-    window.location.href = "dashboarduser.html";
-  } else {
-    alert(userData.message || "Email atau Password salah!");
+    if (userRes.ok) {
+      localStorage.setItem("userId", userData.userId);
+      localStorage.setItem("nama", userData.nama);
+      localStorage.setItem("role", "user");
+      alert("Login Berhasil! Selamat datang, " + userData.nama);
+      window.location.href = "dashboarduser.html";
+    } else {
+      alert(userData.message || "Email atau Password salah!");
+    }
+  } catch (err) {
+    alert("Gagal terhubung ke server. Pastikan server berjalan.");
   }
 });
 
-// ── REGISTER ─────────────────────────────────────────────────────────────────
+// ── REGISTER ──────────────────────────────────────────────────
 if (registerForm) {
   registerForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const nama = document.getElementById("reg-name").value;
-    const email = document.getElementById("reg-email").value;
+    const nama = document.getElementById("reg-name").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
     const password = document.getElementById("reg-pass").value;
 
-    const res = await fetch("http://localhost:3000/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nama, email, password })
-    });
+    if (!nama || !email || !password) {
+      alert("Semua field wajib diisi!");
+      return;
+    }
 
-    const data = await res.json();
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nama, email, password })
+      });
 
-    if (res.ok) {
-      alert("Registrasi Berhasil! Silakan login.");
-      loginFunction();
-    } else {
-      alert(data.message || "Registrasi gagal!");
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registrasi Berhasil! Silakan login.");
+        loginFunction();
+      } else {
+        alert(data.message || "Registrasi gagal!");
+      }
+    } catch (err) {
+      alert("Gagal terhubung ke server. Pastikan server berjalan.");
     }
   });
 }
