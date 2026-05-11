@@ -1,6 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const Seller = require('../models/Seller');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+
+// POST - Login Seller
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email, role: 'seller' });
+    if (!user) return res.status(404).json({ message: 'Akun seller tidak ditemukan!' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Password salah!' });
+
+    const seller = await Seller.findOne({ user: user._id });
+
+    res.json({
+      message: 'Login seller berhasil!',
+      userId: user._id,
+      sellerId: seller?._id,
+      nama: user.nama,
+      email: user.email,
+      namaToko: seller?.namaToko
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // GET - Ambil semua seller
 router.get('/', async (req, res) => {
@@ -31,15 +58,7 @@ router.post('/register', async (req, res) => {
     const existing = await Seller.findOne({ user: userId });
     if (existing) return res.status(400).json({ message: 'User sudah memiliki toko' });
 
-    const seller = new Seller({
-      user: userId,
-      namaToko,
-      deskripsiToko,
-      alamatToko,
-      noHp,
-      fotoProfil
-    });
-
+    const seller = new Seller({ user: userId, namaToko, deskripsiToko, alamatToko, noHp, fotoProfil });
     await seller.save();
     res.status(201).json(seller);
   } catch (err) {

@@ -3,61 +3,99 @@ const registerForm = document.querySelector(".register-form");
 const wrapper = document.querySelector(".wrapper");
 const loginTitle = document.querySelector(".title-login");
 const registerTitle = document.querySelector(".title-register");
-const signUpBtn = document.querySelector("#SignUpBtn");
-const signInBtn = document.querySelector("#SignInBtn");
 
-function loginFunction(){
-    loginForm.style.left = "50%";
-    loginForm.style.opacity = 1;
-    registerForm.style.left = "150%";
-    registerForm.style.opacity = 0;
-    wrapper.style.height = "500px";
-    loginTitle.style.top = "50%";
-    loginTitle.style.opacity = 1;
-    registerTitle.style.top = "50px";
-    registerTitle.style.opacity = 0;
+function loginFunction() {
+  loginForm.style.left = "50%";
+  loginForm.style.opacity = 1;
+  registerForm.style.left = "150%";
+  registerForm.style.opacity = 0;
+  wrapper.style.height = "500px";
+  loginTitle.style.top = "50%";
+  loginTitle.style.opacity = 1;
+  registerTitle.style.top = "50px";
+  registerTitle.style.opacity = 0;
 }
 
-function registerFunction(){
-    loginForm.style.left = "-50%";
-    loginForm.style.opacity = 0;
-    registerForm.style.left = "50%";
-    registerForm.style.opacity = 1;
-    wrapper.style.height = "580px";
-    loginTitle.style.top = "-60%";
-    loginTitle.style.opacity = 0;
-    registerTitle.style.top = "50%";
-    registerTitle.style.opacity = 1;
+function registerFunction() {
+  loginForm.style.left = "-50%";
+  loginForm.style.opacity = 0;
+  registerForm.style.left = "50%";
+  registerForm.style.opacity = 1;
+  wrapper.style.height = "580px";
+  loginTitle.style.top = "-60%";
+  loginTitle.style.opacity = 0;
+  registerTitle.style.top = "50%";
+  registerTitle.style.opacity = 1;
 }
 
-// LOGIN LOGIC (User Biasa vs Seller)
-const form = document.querySelector(".login-form");
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+loginForm.addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-form.addEventListener("submit", function(e){
-    e.preventDefault(); // biar ga reload
+  const email = document.getElementById("log-email").value;
+  const password = document.getElementById("log-pass").value;
 
-    const email = document.getElementById("log-email").value;
-    const password = document.getElementById("log-pass").value;
+  // Coba login seller dulu
+  const sellerRes = await fetch("http://localhost:3000/api/seller/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
 
-    // Credentials Seller
-    const sellerEmail = "seller@maduraweb.com";
-    const sellerPassword = "123456";
+  if (sellerRes.ok) {
+    const data = await sellerRes.json();
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("sellerId", data.sellerId);
+    localStorage.setItem("nama", data.nama);
+    localStorage.setItem("namaToko", data.namaToko);
+    localStorage.setItem("role", "seller");
+    alert("Login Seller Berhasil!");
+    window.location.href = "dashboardseller.html";
+    return;
+  }
 
-    // Credentials User Biasa (contoh - bisa diganti dengan database)
-    const userEmail = "user@example.com";
-    const userPassword = "user123";
+  // Kalau bukan seller, coba login user biasa
+  const userRes = await fetch("http://localhost:3000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
 
-    if(email === sellerEmail && password === sellerPassword){
-        alert("Login Seller Berhasil!");
-        // redirect ke dashboard seller
-        window.location.href = "dashboardseller.html";
-    } 
-    else if(email === userEmail && password === userPassword){
-        alert("Login User Berhasil!");
-        // redirect ke dashboard user biasa
-        window.location.href = "dashboarduser.html";
-    }
-    else {
-        alert("Email atau Password salah!");
-    }
+  const userData = await userRes.json();
+
+  if (userRes.ok) {
+    localStorage.setItem("userId", userData.userId);
+    localStorage.setItem("nama", userData.nama);
+    localStorage.setItem("role", "user");
+    alert("Login User Berhasil!");
+    window.location.href = "dashboarduser.html";
+  } else {
+    alert(userData.message || "Email atau Password salah!");
+  }
 });
+
+// ── REGISTER ─────────────────────────────────────────────────────────────────
+if (registerForm) {
+  registerForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const nama = document.getElementById("reg-name").value;
+    const email = document.getElementById("reg-email").value;
+    const password = document.getElementById("reg-pass").value;
+
+    const res = await fetch("http://localhost:3000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nama, email, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Registrasi Berhasil! Silakan login.");
+      loginFunction();
+    } else {
+      alert(data.message || "Registrasi gagal!");
+    }
+  });
+}
