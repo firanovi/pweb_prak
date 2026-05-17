@@ -543,3 +543,45 @@ body {
     font-size: 16px;
     color: #333;
 }
+/* ── Tambahan untuk wishlist dinamis ── */
+.wishlist-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.remove-wish {
+    background: none;
+    border: 1px solid #ccc;
+    color: #888;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.remove-wish:hover {
+    background: #f8d7da;
+    border-color: #c0392b;
+    color: #c0392b;
+}
+
+.add-cart:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.wishlist-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 16px;
+}
+
+.wishlist-empty a {
+    color: #8B4513;
+    font-weight: bold;
+    text-decoration: underline;
+}
