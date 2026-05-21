@@ -5,7 +5,7 @@
 // ============================================
 // CONFIG
 // ============================================
-const userId = localStorage.getItem("userId");
+const userId   = localStorage.getItem("userId");
 const sellerId = localStorage.getItem("sellerId");
 
 // ============================================
@@ -15,16 +15,16 @@ let productsData = [];
 
 async function loadProducts() {
     try {
-        const res = await fetch(`/api/produk?seller=${userId}`);
+        const res  = await fetch(`/api/produk?seller=${userId}`);
         const data = await res.json();
         productsData = data.map(p => ({
-            id: p._id,
-            name: p.nama,
-            price: p.harga,
-            stock: p.stok,
-            type: p.kategori,
+            id:     p._id,
+            name:   p.nama,
+            price:  p.harga,
+            stock:  p.stok,
+            type:   p.kategori,
             status: p.status || 'Active',
-            image: p.gambar || 'https://via.placeholder.com/40'
+            image:  p.gambar || 'https://via.placeholder.com/40'
         }));
         renderProductsTable();
     } catch (err) {
@@ -36,31 +36,31 @@ async function loadProducts() {
 // ============================================
 // DATA ORDERS - FETCH DARI DATABASE
 // ============================================
-let ordersData = [];
+let ordersData         = [];
 let originalOrdersData = [];
 
 async function loadOrders() {
     try {
-        const res = await fetch(`/api/order?seller=${userId}`);
+        const res  = await fetch(`/api/order?seller=${userId}`);
         const data = await res.json();
         ordersData = data.map(o => ({
             id: o._id,
             customer: {
-                name: o.user?.nama || 'Unknown',
-                email: o.user?.email || '-',
-                phone: o.user?.noHp || '-',
-                address: o.alamatPengiriman || '-'
+                name:    o.user?.nama           || 'Unknown',
+                email:   o.user?.email          || '-',
+                phone:   o.user?.noHp           || '-',
+                address: o.alamatPengiriman     || '-'
             },
-            date: new Date(o.createdAt).toLocaleDateString('id-ID'),
+            date:  new Date(o.createdAt).toLocaleDateString('id-ID'),
             items: o.items.map(i => ({
-                name: i.produk?.nama || '-',
+                name:     i.produk?.nama || '-',
                 quantity: i.jumlah,
-                price: i.harga
+                price:    i.harga
             })),
             shipping: {
-                courier: o.kurir || 'JNE',
+                courier:  o.kurir  || 'JNE',
                 tracking: o.noResi || '-',
-                cost: o.ongkir || 0
+                cost:     o.ongkir || 0
             },
             payment: {
                 method: o.metodePembayaran || '-',
@@ -256,10 +256,10 @@ function getProductStatusDropdownStyle(status) {
 // PAGINATION VARIABLES
 // ============================================
 let currentPageProducts = 0;
-const productsPerPage = 4;
-let currentPageOrders = 0;
-const ordersPerPage = 5;
-const statusOptions = ["Pending", "Processing", "Shipping", "Completed", "Cancelled"];
+const productsPerPage   = 4;
+let currentPageOrders   = 0;
+const ordersPerPage     = 5;
+const statusOptions     = ["Pending", "Processing", "Shipping", "Completed", "Cancelled"];
 
 // ============================================
 // RENDER PRODUCTS TABLE (WITH PAGINATION)
@@ -268,8 +268,8 @@ function renderProductsTable() {
     const tbody = document.getElementById('productTableBody');
     if (!tbody) return;
 
-    const totalPages = Math.ceil(productsData.length / productsPerPage);
-    const start = currentPageProducts * productsPerPage;
+    const totalPages   = Math.ceil(productsData.length / productsPerPage);
+    const start        = currentPageProducts * productsPerPage;
     const pageProducts = productsData.slice(start, start + productsPerPage);
 
     tbody.innerHTML = '';
@@ -310,9 +310,9 @@ function renderProductsTable() {
 
 function updateProductPaginationButtons() {
     const totalPages = Math.ceil(productsData.length / productsPerPage);
-    const prevBtn  = document.getElementById('prevProductBtn');
-    const nextBtn  = document.getElementById('nextProductBtn');
-    const pageInfo = document.getElementById('product-page-info');
+    const prevBtn    = document.getElementById('prevProductBtn');
+    const nextBtn    = document.getElementById('nextProductBtn');
+    const pageInfo   = document.getElementById('product-page-info');
 
     if (prevBtn)  prevBtn.disabled  = currentPageProducts === 0;
     if (nextBtn)  nextBtn.disabled  = currentPageProducts >= totalPages - 1 || totalPages === 0;
@@ -321,7 +321,7 @@ function updateProductPaginationButtons() {
 
 function changeProductPage(direction) {
     const totalPages = Math.ceil(productsData.length / productsPerPage);
-    const newPage = currentPageProducts + direction;
+    const newPage    = currentPageProducts + direction;
     if (newPage >= 0 && newPage < totalPages) {
         currentPageProducts = newPage;
         renderProductsTable();
@@ -335,23 +335,21 @@ async function updateProductStatus(productId, selectEl) {
     const newStatus = selectEl.value;
     try {
         const res = await fetch(`/api/produk/${productId}`, {
-            method: 'PUT',
+            method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus })
+            body:    JSON.stringify({ status: newStatus })
         });
 
         if (!res.ok) throw new Error('Gagal update status');
 
-        // Update local data
         const product = productsData.find(p => p.id === productId);
         if (product) product.status = newStatus;
-        
+
         selectEl.style.cssText = getProductStatusDropdownStyle(newStatus);
         showToast(`Status "${product?.name}" diubah menjadi ${newStatus}`, 'success');
     } catch (err) {
         console.error(err);
         showToast('Gagal mengubah status', 'error');
-        // Revert select value
         const product = productsData.find(p => p.id === productId);
         if (product) selectEl.value = product.status;
     }
@@ -399,16 +397,16 @@ async function saveEditProduct(e) {
 
     try {
         const res = await fetch(`/api/produk/${productId}`, {
-            method: 'PUT',
+            method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body:    JSON.stringify(data)
         });
 
         if (!res.ok) throw new Error('Gagal update produk');
 
-        showToast(`Produk berhasil diperbarui`, 'success');
+        showToast('Produk berhasil diperbarui', 'success');
         closeEditModal();
-        await loadProducts(); // Refresh dari database
+        await loadProducts();
     } catch (err) {
         console.error(err);
         showToast('Gagal memperbarui produk', 'error');
@@ -451,9 +449,9 @@ function renderOrdersTable() {
 
 function updateOrderPaginationButtons() {
     const totalPages = Math.ceil(ordersData.length / ordersPerPage);
-    const prevBtn  = document.getElementById('prevPageBtn');
-    const nextBtn  = document.getElementById('nextPageBtn');
-    const pageInfo = document.getElementById('page-info');
+    const prevBtn    = document.getElementById('prevPageBtn');
+    const nextBtn    = document.getElementById('nextPageBtn');
+    const pageInfo   = document.getElementById('page-info');
     if (prevBtn)  prevBtn.disabled  = currentPageOrders === 0;
     if (nextBtn)  nextBtn.disabled  = currentPageOrders >= totalPages - 1 || totalPages === 0;
     if (pageInfo) pageInfo.textContent = `${(currentPageOrders + 1).toString().padStart(2, '0')} / ${Math.max(totalPages, 1).toString().padStart(2, '0')}`;
@@ -465,15 +463,15 @@ function updateOrderPaginationButtons() {
 async function updateOrderStatus(orderId, newStatus) {
     try {
         const res = await fetch(`/api/order/${orderId}`, {
-            method: 'PUT',
+            method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus })
+            body:    JSON.stringify({ status: newStatus })
         });
 
         if (!res.ok) throw new Error('Gagal update status');
 
         showToast(`Status order diubah menjadi ${newStatus}`, 'success');
-        await loadOrders(); // Refresh dari database
+        await loadOrders();
     } catch (err) {
         console.error(err);
         showToast('Gagal mengubah status order', 'error');
@@ -486,8 +484,8 @@ async function deleteOrder(orderId) {
         const res = await fetch(`/api/order/${orderId}`, { method: 'DELETE' });
         if (!res.ok) throw new Error('Gagal hapus order');
 
-        showToast(`Order berhasil dihapus`, 'success');
-        await loadOrders(); // Refresh dari database
+        showToast('Order berhasil dihapus', 'success');
+        await loadOrders();
     } catch (err) {
         console.error(err);
         showToast('Gagal menghapus order', 'error');
@@ -601,21 +599,22 @@ function closeDetailModal() {
 // ============================================
 function filterOrders() {
     const searchTerm = prompt("Cari berdasarkan Order ID atau Nama Customer:");
-    if (searchTerm && searchTerm.trim()) {
+    if (searchTerm === null) return;
+    if (searchTerm.trim()) {
         const filtered = originalOrdersData.filter(o =>
             o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
             o.customer.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
         if (filtered.length > 0) {
-            ordersData = filtered;
+            ordersData        = filtered;
             currentPageOrders = 0;
             renderOrdersTable();
             showToast(`Menampilkan ${filtered.length} hasil`, 'info');
         } else {
             showToast("Order tidak ditemukan", 'error');
         }
-    } else if (searchTerm === "") {
-        ordersData = [...originalOrdersData];
+    } else {
+        ordersData        = [...originalOrdersData];
         currentPageOrders = 0;
         renderOrdersTable();
         showToast("Menampilkan semua order", 'info');
@@ -629,7 +628,7 @@ function exportOrders() {
     });
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
+    link.href     = URL.createObjectURL(blob);
     link.download = `orders_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
@@ -641,13 +640,17 @@ function exportProducts() {
 }
 
 // ============================================
-// ADD NEW PRODUCT (WITH API)
+// ADD NEW PRODUCT
 // ============================================
 function openModal() {
     const modal = document.getElementById('productModal');
-    if (modal) modal.style.display = 'block';
+    if (!modal) {
+        console.error('Modal dengan id="productModal" tidak ditemukan di HTML');
+        return;
+    }
     const productForm = document.getElementById('productForm');
-    if (productForm) productForm.onsubmit = e => { e.preventDefault(); addNewProduct(); };
+    if (productForm) productForm.reset();
+    modal.style.display = 'flex';
 }
 
 function closeModal() {
@@ -655,53 +658,65 @@ function closeModal() {
     if (modal) modal.style.display = 'none';
 }
 
+// FIX UTAMA: field "seller" (bukan "sellerId"), hapus "_id" custom
+// Pastikan tombol di HTML: <button type="button" onclick="addNewProduct()">Simpan</button>
 async function addNewProduct() {
-    const name      = document.getElementById('p-name').value.trim();
-    const id        = document.getElementById('p-id').value.trim();
-    const price     = parseInt(document.getElementById('p-price').value);
-    const stock     = parseInt(document.getElementById('p-stock').value);
-    const type      = document.getElementById('p-type').value;
-    const fileInput = document.getElementById('p-image');
+    const nameEl  = document.getElementById('p-name');
+    const priceEl = document.getElementById('p-price');
+    const stockEl = document.getElementById('p-stock');
+    const typeEl  = document.getElementById('p-type');
+    const fileEl  = document.getElementById('p-image');
 
-    if (!name || !id || isNaN(price) || isNaN(stock)) {
+    if (!nameEl || !priceEl || !stockEl || !typeEl) {
+        showToast('Form tidak lengkap, cek id elemen HTML', 'error');
+        console.error('Pastikan elemen form memiliki id: p-name, p-price, p-stock, p-type');
+        return;
+    }
+
+    const name  = nameEl.value.trim();
+    const price = parseInt(priceEl.value);
+    const stock = parseInt(stockEl.value);
+    const type  = typeEl.value;
+
+    if (!name || isNaN(price) || isNaN(stock) || price < 0 || stock < 0) {
         showToast('Semua field harus diisi dengan benar', 'error');
         return;
     }
 
     let image = 'https://via.placeholder.com/40';
-    if (fileInput.files && fileInput.files[0]) {
-        image = URL.createObjectURL(fileInput.files[0]);
+    if (fileEl && fileEl.files && fileEl.files[0]) {
+        image = URL.createObjectURL(fileEl.files[0]);
     }
 
     try {
         const res = await fetch('/api/produk', {
-            method: 'POST',
+            method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                sellerId: userId,
-                _id: id,
-                nama: name,
-                harga: price,
-                stok: stock,
+            body:    JSON.stringify({
+                seller:   userId,   // FIX: pakai "seller" sesuai field di backend
+                nama:     name,
+                harga:    price,
+                stok:     stock,
                 kategori: type,
-                gambar: image,
-                status: 'Active'
+                gambar:   image,
+                // FIX: tidak kirim _id, biarkan MongoDB generate otomatis
             })
         });
 
-        if (!res.ok) throw new Error('Gagal tambah produk');
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || 'Gagal tambah produk');
+        }
 
         showToast(`Produk "${name}" berhasil ditambahkan`, 'success');
         closeModal();
-        document.getElementById('productForm').reset();
-        await loadProducts(); // Refresh dari database
-        
-        // Reset pagination to last page
-        currentPageProducts = Math.ceil(productsData.length / productsPerPage) - 1;
+        await loadProducts();
+
+        currentPageProducts = Math.max(0, Math.ceil(productsData.length / productsPerPage) - 1);
         renderProductsTable();
     } catch (err) {
-        console.error(err);
-        showToast('Gagal menambah produk', 'error');
+        console.error('addNewProduct error:', err);
+        showToast(err.message || 'Gagal menambah produk', 'error');
     }
 }
 
@@ -711,11 +726,13 @@ async function addNewProduct() {
 function showToast(message, type = 'success') {
     const existing = document.querySelector('.toast');
     if (existing) existing.remove();
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
     toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
     document.body.appendChild(toast);
+
     setTimeout(() => {
         toast.classList.add('toast-hide');
         setTimeout(() => toast.remove(), 300);
@@ -736,12 +753,10 @@ function navigate(viewName, element) {
         renderDashboardChart();
     } else if (viewName === 'orders') {
         currentPageOrders = 0;
-        loadOrders(); // Fetch dari DB
+        loadOrders();
     } else if (viewName === 'product') {
         currentPageProducts = 0;
-        loadProducts(); // Fetch dari DB
-        const productForm = document.getElementById('productForm');
-        if (productForm) productForm.onsubmit = e => { e.preventDefault(); addNewProduct(); };
+        loadProducts();
     }
 }
 
@@ -751,7 +766,7 @@ function renderDashboardChart() {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            labels:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             datasets: [{ label: 'Revenue', data: [5, 10, 6, 11, 13, 2, 8], backgroundColor: '#99D5FF', borderRadius: 10 }]
         }
     });
@@ -766,24 +781,62 @@ function initAnalyticsCharts() {
     if (financialChart) new Chart(financialChart, {
         type: 'bar',
         data: {
-            labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            labels:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             datasets: [{ label: 'Revenue (Rp)', data: [5000000, 10000000, 6500000, 11000000, 13500000, 2500000, 8000000], backgroundColor: '#99D5FF', borderRadius: 10, barPercentage: 0.6 }]
         },
-        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => 'Rp ' + (v / 1000000) + 'M' } } } }
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales:  { y: { beginAtZero: true, ticks: { callback: v => 'Rp ' + (v / 1000000) + 'M' } } }
+        }
     });
 
     if (locationChart) new Chart(locationChart, {
         type: 'bar',
         data: {
-            labels: ['Surabaya', 'Banyuwangi', 'Jogja', 'Malang', 'Semarang', 'Bandung'],
+            labels:   ['Surabaya', 'Banyuwangi', 'Jogja', 'Malang', 'Semarang', 'Bandung'],
             datasets: [{ label: 'Jumlah Penjualan (pcs)', data: [400, 50, 50, 120, 80, 200], backgroundColor: '#4D96FF', borderRadius: 8 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } }
+        }
     });
 
-    if (targetChart) new Chart(targetChart), {
+    // FIX: syntax error targetChart diperbaiki
+    if (targetChart) new Chart(targetChart, {
         type: 'doughnut',
-        data: { datasets: [{ data: [66, 34], backgroundColor: ['#4D96FF', '#D9E9FF'], borderWidth: 0, circumference: 180, rotation: 270 }] },
-        options: { cutout: '85%', plugins}
-    }
+        data: {
+            datasets: [{
+                data:            [66, 34],
+                backgroundColor: ['#4D96FF', '#D9E9FF'],
+                borderWidth:     0,
+                circumference:   180,
+                rotation:        270
+            }]
+        },
+        options: {
+            cutout:  '85%',
+            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+        }
+    });
+
+    // FIX: salesDonut sebelumnya tidak dirender
+    if (salesDonut) new Chart(salesDonut, {
+        type: 'doughnut',
+        data: {
+            labels:   ['Miniatur Karapan Sapi', 'Kaos Sakera', 'Odheng', 'Buah Siwalan', 'Kue Macho', 'Kacang Otok', 'Batik Sumenep'],
+            datasets: [{
+                data:            [1200000, 300000, 500000, 600000, 700000, 1000000, 3000000],
+                backgroundColor: ['#6BCB77', '#4ECDC4', '#FF6B6B', '#FF8E72', '#FFCC5C', '#A29BFE', '#4D96FF'],
+                borderWidth:     2
+            }]
+        },
+        options: {
+            cutout:  '65%',
+            plugins: { legend: { display: false } }
+        }
+    });
 }
