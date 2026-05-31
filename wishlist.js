@@ -1,294 +1,159 @@
 // ============================================================
 // WISHLIST - SakaMadura
-// Menampilkan wishlist dari backend dan menghubungkan tombol
-// "ADD TO CART" agar memindahkan produk ke cart
 // ============================================================
 
-function toggleMenu() {
-  document.querySelector('.mobile-menu').classList.toggle('show');
-}
+const userId = localStorage.getItem('userId');
 
 function formatIDR(amount) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency', currency: 'IDR', minimumFractionDigits: 0
-  }).format(amount);
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+    }).format(amount);
 }
 
-// ── RENDER WISHLIST ──────────────────────────────────────────
-async function loadWishlist() {
-  const userId = localStorage.getItem('userId');
-  const container = document.querySelector('.wishlist-box');
-  if (!container) return;
-
-  if (!userId) {
-    container.innerHTML = `
-      <div class="wishlist-header"><h2>My Wishlist</h2></div>
-      <p class="wishlist-empty">Kamu belum login. <a href="./loginuser.html">Login dulu</a> untuk melihat wishlist.</p>
-    `;
-    return;
-  }
-
-  // Coba ambil dari server
-  try {
-    const res = await fetch(`/api/wishlist/${userId}`);
-    const data = await res.json();
-
-    const items = data.items || [];
-
-    // Gabungkan dengan localStorage fallback
-    const localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
-
-    renderWishlist(container, items, localWish, userId);
-  } catch (err) {
-    console.warn('Server tidak tersedia, pakai localStorage:', err);
-
-    const localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
-    renderWishlistLocal(container, localWish);
-  }
+// Ambil wishlist dari localStorage
+function getLocalWishlist() {
+    return JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
 }
 
-// Render item dari DB (ada produkId)
-function renderWishlist(container, dbItems, localItems, userId) {
-  const total = dbItems.length + localItems.length;
+// Ambil wishlist: coba server, fallback localStorage
+async function fetchWishlist() {
+    if (!userId) return getLocalWishlist().map(i => ({ ...i, sumber: 'local' }));
 
-  let html = `
-    <div class="wishlist-header">
-      <h2>My Wishlist</h2>
-      <span>${total} item${total !== 1 ? 's' : ''}</span>
-    </div>
-  `;
+    try {
+        const res = await fetch(`/api/wishlist/${userId}`);
+        if (!res.ok) throw new Error('server error');
+        const data = await res.json();
+        const serverItems = (data.items || []).map(item => ({
+            _id: item.produk?._id || item.produk,
+            nama: item.produk?.nama || 'Produk',
+            gambar: item.produk?.gambar || './img/default.jpg',
+            harga: item.produk?.harga || 0,
+            sumber: 'server'
+        }));
 
-  if (total === 0) {
-    html += `<p class="wishlist-empty">Wishlist kamu masih kosong. <a href="./store.html">Mulai belanja!</a></p>`;
-    container.innerHTML = html;
-    return;
-  }
-
-  // Item dari DB
-  dbItems.forEach(item => {
-    const p = item.produk;
-    if (!p) return;
-    const gambar = p.gambar || `img/${p.nama ? p.nama.toLowerCase().replace(/ /g, ' ') : 'default'}.png`;
-    html += `
-      <div class="wishlist-item" data-produk-id="${p._id}">
-        <img src="${gambar}" alt="${p.nama}" onerror="this.src='img/batik sumenep.jpg'">
-        <div class="wishlist-info">
-          <h3>${p.nama}</h3>
-          <p>Harga: ${formatIDR(p.harga)}</p>
-          <span class="stock">IN STOCK</span>
-        </div>
-        <div class="wishlist-actions">
-          <button class="add-cart" data-produk-id="${p._id}" data-source="db">ADD TO CART</button>
-          <button class="remove-wish" data-produk-id="${p._id}" data-source="db">✕ Hapus</button>
-        </div>
-      </div>
-    `;
-  });
-
-  // Item dari localStorage
-  localItems.forEach((item, idx) => {
-    html += `
-      <div class="wishlist-item" data-local-idx="${idx}">
-        <img src="${item.gambar || ''}" alt="${item.nama}" onerror="this.src='img/batik sumenep.jpg'">
-        <div class="wishlist-info">
-          <h3>${item.nama}</h3>
-          <p>Harga: ${formatIDR(item.harga)}</p>
-          <span class="stock">IN STOCK</span>
-        </div>
-        <div class="wishlist-actions">
-          <button class="add-cart" data-local-idx="${idx}" data-source="local">ADD TO CART</button>
-          <button class="remove-wish" data-local-idx="${idx}" data-source="local">✕ Hapus</button>
-        </div>
-      </div>
-    `;
-  });
-
-  container.innerHTML = html;
-  attachEvents(userId);
-}
-
-// Render hanya dari localStorage (server offline)
-function renderWishlistLocal(container, localItems) {
-  const total = localItems.length;
-
-  let html = `
-    <div class="wishlist-header">
-      <h2>My Wishlist</h2>
-      <span>${total} item${total !== 1 ? 's' : ''}</span>
-    </div>
-  `;
-
-  if (total === 0) {
-    html += `<p class="wishlist-empty">Wishlist kamu masih kosong. <a href="./store.html">Mulai belanja!</a></p>`;
-    container.innerHTML = html;
-    return;
-  }
-
-  localItems.forEach((item, idx) => {
-    html += `
-      <div class="wishlist-item" data-local-idx="${idx}">
-        <img src="${item.gambar || ''}" alt="${item.nama}" onerror="this.src='img/batik sumenep.jpg'">
-        <div class="wishlist-info">
-          <h3>${item.nama}</h3>
-          <p>Harga: ${formatIDR(item.harga)}</p>
-          <span class="stock">IN STOCK</span>
-        </div>
-        <div class="wishlist-actions">
-          <button class="add-cart" data-local-idx="${idx}" data-source="local">ADD TO CART</button>
-          <button class="remove-wish" data-local-idx="${idx}" data-source="local">✕ Hapus</button>
-        </div>
-      </div>
-    `;
-  });
-
-  container.innerHTML = html;
-  attachEventsLocal();
-}
-
-// ── EVENT LISTENERS ──────────────────────────────────────────
-function attachEvents(userId) {
-  // Tombol ADD TO CART
-  document.querySelectorAll('.add-cart').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const source = btn.dataset.source;
-
-      if (source === 'db') {
-        const produkId = btn.dataset.produkId;
-        await addToCartFromWishlist(userId, produkId, btn);
-      } else {
-        const idx = parseInt(btn.dataset.localIdx);
-        addToCartLocal(idx, btn);
-      }
-    });
-  });
-
-  // Tombol Hapus
-  document.querySelectorAll('.remove-wish').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const source = btn.dataset.source;
-
-      if (source === 'db') {
-        await removeFromWishlist(userId, btn.dataset.produkId);
-      } else {
-        removeFromWishlistLocal(parseInt(btn.dataset.localIdx));
-      }
-      loadWishlist(); // re-render
-    });
-  });
-}
-
-function attachEventsLocal() {
-  document.querySelectorAll('.add-cart').forEach(btn => {
-    btn.addEventListener('click', () => {
-      addToCartLocal(parseInt(btn.dataset.localIdx), btn);
-    });
-  });
-
-  document.querySelectorAll('.remove-wish').forEach(btn => {
-    btn.addEventListener('click', () => {
-      removeFromWishlistLocal(parseInt(btn.dataset.localIdx));
-      loadWishlist();
-    });
-  });
-}
-
-// ── ADD TO CART (dari DB item) ────────────────────────────────
-async function addToCartFromWishlist(userId, produkId, btn) {
-  btn.disabled = true;
-  btn.textContent = 'Memproses...';
-
-  try {
-    // Coba endpoint move-to-cart (pindah sekaligus hapus dari wishlist)
-    const res = await fetch('/api/wishlist/move-to-cart', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, produkId })
-    });
-
-    if (res.ok) {
-      showToast('✅ Produk berhasil dipindahkan ke cart!');
-      // Hapus item dari tampilan
-      const item = btn.closest('.wishlist-item');
-      item.style.transition = 'opacity 0.3s';
-      item.style.opacity = '0';
-      setTimeout(() => { loadWishlist(); }, 300);
-    } else {
-      const err = await res.json();
-      showToast(err.message || 'Gagal menambahkan ke cart.', 'error');
-      btn.disabled = false;
-      btn.textContent = 'ADD TO CART';
+        // Gabungkan dengan local
+        const localItems = getLocalWishlist().map(i => ({ ...i, sumber: 'local' }));
+        const serverNames = serverItems.map(i => i.nama.toLowerCase());
+        const uniqueLocal = localItems.filter(i => !serverNames.includes(i.nama.toLowerCase()));
+        return [...serverItems, ...uniqueLocal];
+    } catch (err) {
+        console.warn('Server tidak tersedia, pakai localStorage:', err);
+        return getLocalWishlist().map(i => ({ ...i, sumber: 'local' }));
     }
-  } catch (e) {
-    // Server tidak tersedia, fallback localStorage cart
-    addToCartLocalFallback({ produkId }, btn);
-  }
 }
 
-// ── ADD TO CART (dari localStorage item) ─────────────────────
-function addToCartLocal(idx, btn) {
-  const localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
-  const item = localWish[idx];
-  if (!item) return;
+// Tambah item ke cart dari wishlist
+async function addToCartFromWishlist(nama, harga, gambar, produkId) {
+    if (!userId) {
+        alert('Kamu harus login dulu!');
+        window.location.href = './loginuser.html';
+        return;
+    }
 
-  let localCart = JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
-  const existing = localCart.find(c => c.nama === item.nama);
-  if (existing) {
-    existing.jumlah += 1;
-  } else {
-    localCart.push({ ...item, jumlah: 1 });
-  }
-  localStorage.setItem('sakamadura_cart_local', JSON.stringify(localCart));
+    if (produkId && produkId !== 'null') {
+        // Coba tambah via server
+        try {
+            const res = await fetch('/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, produkId, jumlah: 1, harga })
+            });
+            if (res.ok) {
+                alert(`✅ ${nama} ditambahkan ke cart!`);
+                return;
+            }
+        } catch (err) {
+            console.warn('Gagal tambah ke cart server:', err);
+        }
+    }
 
-  // Hapus dari wishlist local
-  localWish.splice(idx, 1);
-  localStorage.setItem('sakamadura_wishlist_local', JSON.stringify(localWish));
-
-  showToast('✅ Produk berhasil ditambahkan ke cart!');
-  setTimeout(() => loadWishlist(), 500);
+    // Fallback: localStorage
+    let localCart = JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
+    const existing = localCart.find(i => i.nama === nama);
+    if (existing) {
+        existing.jumlah += 1;
+    } else {
+        localCart.push({ nama, harga, jumlah: 1, gambar });
+    }
+    localStorage.setItem('sakamadura_cart_local', JSON.stringify(localCart));
+    alert(`✅ ${nama} ditambahkan ke cart!`);
 }
 
-// ── REMOVE FROM WISHLIST ─────────────────────────────────────
-async function removeFromWishlist(userId, produkId) {
-  try {
-    await fetch('/api/wishlist/remove', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, produkId })
+// Hapus dari wishlist
+async function removeFromWishlist(nama, produkId) {
+    if (userId && produkId && produkId !== 'null') {
+        try {
+            await fetch('/api/wishlist/remove', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, produkId })
+            });
+        } catch (err) {
+            console.warn('Gagal hapus dari server:', err);
+        }
+    }
+
+    // Hapus dari localStorage juga
+    let local = getLocalWishlist();
+    local = local.filter(i => i.nama !== nama);
+    localStorage.setItem('sakamadura_wishlist_local', JSON.stringify(local));
+
+    renderWishlist();
+}
+
+// Render wishlist
+async function renderWishlist() {
+    const container = document.getElementById('wishlistContainer');
+    const countEl = document.getElementById('wishlistCount');
+    if (!container) return;
+
+    container.innerHTML = '<p style="padding:20px;color:#888;">Memuat wishlist...</p>';
+
+    if (!userId) {
+        container.innerHTML = `
+            <div style="padding:30px;text-align:center;">
+                <p style="margin-bottom:12px;">Kamu belum login.</p>
+                <a href="./loginuser.html" style="color:#8B4513;font-weight:600;">Login sekarang →</a>
+            </div>`;
+        if (countEl) countEl.textContent = '0 items';
+        return;
+    }
+
+    const items = await fetchWishlist();
+    if (countEl) countEl.textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
+
+    container.innerHTML = '';
+
+    if (items.length === 0) {
+        container.innerHTML = '<p style="padding:20px;color:#888;">Wishlist kamu kosong!</p>';
+        return;
+    }
+
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'wishlist-item';
+        div.innerHTML = `
+            <img src="${item.gambar || './img/default.jpg'}" alt="${item.nama}"
+                 onerror="this.src='./img/default.jpg'">
+            <div class="wishlist-info">
+                <h3>${item.nama}</h3>
+                <p>Harga: ${formatIDR(item.harga || 0)}</p>
+                <span class="stock">IN STOCK</span>
+            </div>
+            <div class="wishlist-actions">
+                <button class="add-cart" 
+                    onclick="addToCartFromWishlist('${item.nama}', ${item.harga || 0}, '${item.gambar || ''}', '${item._id || null}')">
+                    ADD TO CART
+                </button>
+                <button class="remove-wishlist"
+                    onclick="removeFromWishlist('${item.nama}', '${item._id || null}')"
+                    title="Hapus dari wishlist">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(div);
     });
-  } catch (e) {
-    console.warn('Gagal hapus dari server:', e);
-  }
 }
 
-function removeFromWishlistLocal(idx) {
-  const localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
-  localWish.splice(idx, 1);
-  localStorage.setItem('sakamadura_wishlist_local', JSON.stringify(localWish));
-}
-
-// ── TOAST NOTIFICATION ───────────────────────────────────────
-function showToast(msg, type = 'success') {
-  let toast = document.getElementById('wl-toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'wl-toast';
-    toast.style.cssText = `
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: ${type === 'error' ? '#c0392b' : '#2d6a4f'};
-      color: #fff; padding: 12px 24px; border-radius: 8px;
-      font-size: 14px; z-index: 9999; opacity: 0;
-      transition: opacity 0.3s; pointer-events: none;
-    `;
-    document.body.appendChild(toast);
-  }
-  toast.style.background = type === 'error' ? '#c0392b' : '#2d6a4f';
-  toast.textContent = msg;
-  toast.style.opacity = '1';
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
-}
-
-// ── INIT ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  loadWishlist();
-});
+document.addEventListener('DOMContentLoaded', renderWishlist);
