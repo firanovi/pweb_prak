@@ -9,6 +9,24 @@ const userId   = localStorage.getItem("userId");
 const sellerId = localStorage.getItem("sellerId");
 
 // ============================================
+// MAPPING GAMBAR LOKAL
+// ============================================
+const gambarProdukMap = {
+    'Batik Sumenep':         './gambar/batiksumenep.jpg',
+    'Kue Macho':             './img/kuemacho.png',
+    'Kacang Otok':           './gambar/kacangotok.jpeg',
+    'Buah Siwalan':          './gambar/buahsiwalan.jpg',
+    'Odheng':                './gambar/odheng.png',
+    'Miniatur Karapan Sapi': './img/miniaturkarapansapi.png',
+    'Keripik Tette':         './img/keripiktette.jpeg',
+    'Petis Madura':          './img/petismadura.png',
+    'Rengginang Lorjuk':     './img/rengginanglorjuk.png',
+    'Bolu Jubada':           './img/bolujubada.png',
+    'Keripik Terung':        './img/keripikterung.png',
+    'Kaos Sakera':           './gambar/kaossakera.jpeg',
+};
+
+// ============================================
 // DATA PRODUCTS - FETCH DARI DATABASE
 // ============================================
 let productsData = [];
@@ -24,7 +42,7 @@ async function loadProducts() {
             stock:  p.stok,
             type:   p.kategori,
             status: p.status || 'Active',
-            image:  p.gambar || 'https://via.placeholder.com/40'
+            image:  gambarProdukMap[p.nama] || p.gambar || 'https://via.placeholder.com/40'
         }));
         renderProductsTable();
     } catch (err) {
@@ -279,7 +297,8 @@ function renderProductsTable() {
         tr.innerHTML = `
             <td>
                 <div class="product-info">
-                    <img src="${product.image}" class="prod-thumb" onerror="this.src='https://via.placeholder.com/40'">
+                    <img src="${product.image}" class="prod-thumb"
+                         onerror="this.src='https://via.placeholder.com/40'">
                     <strong>${product.name}</strong>
                 </div>
             </td>
@@ -658,8 +677,6 @@ function closeModal() {
     if (modal) modal.style.display = 'none';
 }
 
-// FIX UTAMA: field "seller" (bukan "sellerId"), hapus "_id" custom
-// Pastikan tombol di HTML: <button type="button" onclick="addNewProduct()">Simpan</button>
 async function addNewProduct() {
     const nameEl  = document.getElementById('p-name');
     const priceEl = document.getElementById('p-price');
@@ -669,7 +686,6 @@ async function addNewProduct() {
 
     if (!nameEl || !priceEl || !stockEl || !typeEl) {
         showToast('Form tidak lengkap, cek id elemen HTML', 'error');
-        console.error('Pastikan elemen form memiliki id: p-name, p-price, p-stock, p-type');
         return;
     }
 
@@ -683,7 +699,8 @@ async function addNewProduct() {
         return;
     }
 
-    let image = 'https://via.placeholder.com/40';
+    // Pakai mapping lokal kalau nama cocok, fallback ke placeholder
+    let image = gambarProdukMap[name] || 'https://via.placeholder.com/40';
     if (fileEl && fileEl.files && fileEl.files[0]) {
         image = URL.createObjectURL(fileEl.files[0]);
     }
@@ -693,13 +710,12 @@ async function addNewProduct() {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({
-                seller:   userId,   // FIX: pakai "seller" sesuai field di backend
+                seller:   userId,
                 nama:     name,
                 harga:    price,
                 stok:     stock,
                 kategori: type,
                 gambar:   image,
-                // FIX: tidak kirim _id, biarkan MongoDB generate otomatis
             })
         });
 
@@ -805,7 +821,6 @@ function initAnalyticsCharts() {
         }
     });
 
-    // FIX: syntax error targetChart diperbaiki
     if (targetChart) new Chart(targetChart, {
         type: 'doughnut',
         data: {
@@ -823,7 +838,6 @@ function initAnalyticsCharts() {
         }
     });
 
-    // FIX: salesDonut sebelumnya tidak dirender
     if (salesDonut) new Chart(salesDonut, {
         type: 'doughnut',
         data: {
