@@ -157,7 +157,7 @@ body {
 /* ================= HERO ================= */
 .hero {
     height: 550px;
-    background: url('./gambar/background1.jpg') center/cover no-repeat;
+    background: url('./img/background1.jpg') center/cover no-repeat;
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;

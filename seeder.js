@@ -10,7 +10,7 @@ const produkData = [
     deskripsi: 'Batik Sumenep is a traditional batik craft originating from Sumenep in the region of Madura. This batik is known for its bright colors and distinctive motifs that reflect the culture and daily life of the Madurese people. The motifs of Batik Sumenep are often inspired by nature, plants, and local cultural symbols, such as flowers, leaves, and geometric patterns. Common colors used include red, yellow, blue, and green, which symbolize the cheerfulness and bravery of the Madurese community.',
     harga: 500000,
     stok: 50,
-    gambar: 'img/batik sumenep.jpg',
+    gambar: 'img/batiksumenep.jpg',
     kategori: 'Fashion'
   },
   {
@@ -18,7 +18,7 @@ const produkData = [
     deskripsi: 'Bolu Jubada is a traditional cake from Madura that is well known as a sweet snack and a typical regional souvenir. The cake has a soft and light texture with a distinctive sweet flavor, making it popular among both local people and visitors.',
     harga: 15000,
     stok: 200,
-    gambar: 'img/bolu jubada.png',
+    gambar: 'img/bolujubada.png',
     kategori: 'Makanan'
   },
   {
@@ -26,7 +26,7 @@ const produkData = [
     deskripsi: 'Siwalan is a fruit that comes from the lontar palm tree, which grows widely in hot regions such as Madura. This fruit is very popular in Madura because it tastes sweet and refreshing and has a soft, jelly-like texture.',
     harga: 36000,
     stok: 100,
-    gambar: 'img/buah siwalan.jpg',
+    gambar: 'img/buahsiwalan.jpg',
     kategori: 'Makanan'
   },
   {
@@ -34,7 +34,7 @@ const produkData = [
     deskripsi: 'Kacang Otok is a traditional snack from Madura that is popular as a local delicacy and souvenir. It is usually made from peanuts that are boiled or roasted with special spices, producing a savory, slightly salty, and fragrant taste. The name "otok" comes from the Madurese language and refers to the method of cooking the peanuts with spices until the flavor is fully absorbed.',
     harga: 15000,
     stok: 300,
-    gambar: 'img/kacang otok.png',
+    gambar: 'img/kacangotok.png',
     kategori: 'Makanan'
   },
   {
@@ -42,7 +42,7 @@ const produkData = [
     deskripsi: "Sakera Shirt is inspired by a legendary figure from Madura named Sakera, who is known as a folk hero from Bangkalan. Sakera lived during the Dutch colonial period and was famous for his bravery in fighting against injustice and oppression toward the people. This shirt was originally created as a typical souvenir from Madura and as a way to preserve the story and the spirit of Sakera's struggle for younger generations.",
     harga: 40000,
     stok: 150,
-    gambar: 'img/kaos sakera.jpeg',
+    gambar: 'img/kaossakera.jpeg',
     kategori: 'Fashion'
   },
   {
@@ -50,7 +50,7 @@ const produkData = [
     deskripsi: 'Keripik Terung is a traditional snack made from eggplant that is thinly sliced and fried until crispy. This snack is quite popular in several regions of Indonesia, including Madura, and is often enjoyed as a light snack or a regional souvenir.',
     harga: 40000,
     stok: 250,
-    gambar: 'img/keripik terung.png',
+    gambar: 'img/keripikterung.png',
     kategori: 'Makanan'
   },
   {
@@ -58,7 +58,7 @@ const produkData = [
     deskripsi: 'Keripik Tette is a traditional snack from Madura, especially from Sumenep. It is made from cassava that is first boiled, then flattened (tette or pressed), and finally fried until crispy. The word "tette" comes from the Madurese language and means "to pound or flatten."',
     harga: 25000,
     stok: 300,
-    gambar: 'img/keripik tette.jpeg',
+    gambar: 'img/keripiktette.jpeg',
     kategori: 'Makanan'
   },
   {
@@ -66,7 +66,7 @@ const produkData = [
     deskripsi: 'Kue Macho is a traditional cake from Sumenep on Madura. This cake is known for its sweet taste and soft texture, and it is often sold as a typical souvenir from Madura. Besides being enjoyed as a daily snack, Kue Macho is also sometimes served at family gatherings, celebrations, or when welcoming guests.',
     harga: 20000,
     stok: 200,
-    gambar: 'img/kue macho.png',
+    gambar: 'img/kuemacho.png',
     kategori: 'Makanan'
   },
   {
@@ -74,7 +74,7 @@ const produkData = [
     deskripsi: 'A Miniature Karapan Sapi is a handicraft in the form of a small model representing the famous Karapan Sapi from Madura. It is commonly produced as a souvenir or local gift. The miniature usually depicts a pair of bulls pulling a small carriage (kaleles), similar to the real race. These crafts are typically made from wood, bamboo, or other materials and decorated with bright colors and traditional Madurese ornaments.',
     harga: 400000,
     stok: 30,
-    gambar: 'img/miniatur karapan sapi.png',
+    gambar: 'img/miniaturkarapansapi.png',
     kategori: 'Kerajinan'
   },
   {
@@ -90,7 +90,7 @@ const produkData = [
     deskripsi: 'Petis Madura is a traditional specialty from Madura. It is a thick paste that is dark brown or black in color, made by boiling shrimp or fish water until it thickens, then adding sugar, salt, and other seasonings, resulting in a savory and slightly sweet flavor.',
     harga: 20000,
     stok: 200,
-    gambar: 'img/petis madura.png',
+    gambar: 'img/petismadura.png',
     kategori: 'Makanan'
   },
   {
@@ -98,7 +98,7 @@ const produkData = [
     deskripsi: 'Rengginang Lorjuk is a traditional snack from Madura, especially from Sumenep and Pamekasan. It is a type of cracker made from glutinous rice mixed with lorjuk, a small sea clam that lives in the sandy coastal areas of Madura.',
     harga: 30000,
     stok: 150,
-    gambar: 'img/rengginang lorjuk.png',
+    gambar: 'img/rengginanglorjuk.png',
     kategori: 'Makanan'
   }
 ];

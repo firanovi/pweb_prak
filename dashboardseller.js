@@ -12,18 +12,18 @@ const sellerId = localStorage.getItem("sellerId");
 // MAPPING GAMBAR LOKAL
 // ============================================
 const gambarProdukMap = {
-    'Batik Sumenep':         './gambar/batiksumenep.jpg',
+    'Batik Sumenep':         './img/batiksumenep.jpg',
     'Kue Macho':             './img/kuemacho.png',
-    'Kacang Otok':           './gambar/kacangotok.jpeg',
-    'Buah Siwalan':          './gambar/buahsiwalan.jpg',
-    'Odheng':                './gambar/odheng.png',
+    'Kacang Otok':           './img/kacangotok.jpeg',
+    'Buah Siwalan':          './img/buahsiwalan.jpg',
+    'Odheng':                './img/odheng.png',
     'Miniatur Karapan Sapi': './img/miniaturkarapansapi.png',
     'Keripik Tette':         './img/keripiktette.jpeg',
     'Petis Madura':          './img/petismadura.png',
     'Rengginang Lorjuk':     './img/rengginanglorjuk.png',
     'Bolu Jubada':           './img/bolujubada.png',
     'Keripik Terung':        './img/keripikterung.png',
-    'Kaos Sakera':           './gambar/kaossakera.jpeg',
+    'Kaos Sakera':           './img/kaossakera.jpeg',
 };
 
 // ============================================

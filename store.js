@@ -1,10 +1,10 @@
 // ================= DATA PRODUK (FALLBACK) =================
 const productsSection1Fallback = [
-    { name: "Batik Sumenep",         price: 500000, img: "./gambar/batiksumenep.jpg",     href: "detailBatikSumenep.html" },
+    { name: "Batik Sumenep",         price: 500000, img: "./img/batiksumenep.jpg",     href: "detailBatikSumenep.html" },
     { name: "Kue Macho",             price: 20000,  img: "./img/kuemacho.png",            href: "detailKueMacho.html" },
-    { name: "Kacang Otok",           price: 15000,  img: "./gambar/kacangotok.jpeg",        href: "detailKacangOtok.html" },
-    { name: "Buah Siwalan",          price: 35000,  img: "./gambar/buahsiwalan.jpg",        href: "detailBuahSiwalan.html" },
-    { name: "Odheng",                price: 25000,  img: "./gambar/odheng.png",             href: "detailOdheng.html" },
+    { name: "Kacang Otok",           price: 15000,  img: "./img/kacangotok.jpeg",        href: "detailKacangOtok.html" },
+    { name: "Buah Siwalan",          price: 35000,  img: "./img/buahsiwalan.jpg",        href: "detailBuahSiwalan.html" },
+    { name: "Odheng",                price: 25000,  img: "./img/odheng.png",             href: "detailOdheng.html" },
     { name: "Miniatur Karapan Sapi", price: 400000, img: "./img/miniaturkarapansapi.png", href: "detailMiniaturKarapanSapi.html" },
 ];
 
@@ -14,7 +14,7 @@ const productsSection2Fallback = [
     { name: "Rengginang Lorjuk", price: 30000, img: "./img/rengginanglorjuk.png",   href: "detailRengginangLorjuk.html" },
     { name: "Bolu Jubada",       price: 15000, img: "./img/bolujubada.png",         href: "detailBoluJubada.html" },
     { name: "Keripik Terung",    price: 40000, img: "./img/keripikterung.png",      href: "detailKeripikTerung.html" },
-    { name: "Kaos Sakera",       price: 40000, img: "./gambar/kaossakera.jpeg",     href: "detailKausSakera.html" },
+    { name: "Kaos Sakera",       price: 40000, img: "./img/kaossakera.jpeg",     href: "detailKausSakera.html" },
 ];
 
 // ================= FETCH PRODUK DARI DATABASE =================

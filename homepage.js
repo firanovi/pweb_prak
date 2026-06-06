@@ -1,23 +1,32 @@
-// Load 3 produk terbaru untuk ditampilkan di homepage
+// Load produk tertentu untuk ditampilkan di homepage
 async function loadFeaturedProducts() {
     try {
-        const res = await fetch('/api/produk?limit=3');
+        const res = await fetch('/api/produk');
         const produk = await res.json();
 
         const grid = document.querySelector('.products-grid');
         if (!grid || produk.length === 0) return;
 
+        // Produk yang ingin ditampilkan di homepage
+        const featured = ['Batik Sumenep', 'Kacang Otok', 'Keripik Terung'];
+
+        const filtered = featured
+            .map(nama => produk.find(p => p.nama === nama))
+            .filter(Boolean);
+
+        if (filtered.length === 0) return;
+
         grid.innerHTML = '';
 
-        produk.forEach(item => {
+        filtered.forEach(item => {
             grid.innerHTML += `
-                <div class="product-card">
+                <a href="detail${item.nama.replace(/\s+/g, '')}.html" class="product-card">
                     <div class="product-image">
                         <img src="${item.gambar || './img/default.jpg'}" alt="${item.nama}">
                     </div>
                     <h3>${item.nama}</h3>
                     <p class="price">${new Intl.NumberFormat('id-ID').format(item.harga)},00</p>
-                </div>
+                </a>
             `;
         });
 
