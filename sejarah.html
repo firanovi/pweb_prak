@@ -15,26 +15,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Sacramento&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
 
-    <header>
-        <div class="container navbar">
-            <div class="logo">SakaMadura</div>
-            <nav>
-                <ul>
-                    <li><a href="./homepage.html">About</a></li>
-                    <li><a href="#" class="active">Heritage</a></li>
-                    <li><a href="./store.html">Shop</a></li>
-                </ul>
-            </nav>
-            <div class="search-login">
-                <input type="text" placeholder="Search">
-                <a href="./loginuser.html" class="login-btn">Log in</a>
-            </div>
+    <!-- Navbar - struktur sama dengan homepage -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="./homepage.html" class="logo">SakaMadura</a>
+            <ul class="nav-links">
+                <li><a href="./homepage.html">About</a></li>
+                <li><a href="#" class="active">Heritage</a></li>
+                <li><a href="./store.html">Shop</a></li>
+            </ul>
         </div>
-    </header>
+        <div class="nav-right">
+            <div class="search-box">
+                <input type="text" placeholder="Search">
+                <i class="fas fa-search"></i>
+            </div>
+            <a href="./loginuser.html" class="login-btn">Log in</a>
+        </div>
+    </nav>
 
     <section class="hero">
         <div class="hero-content">
@@ -74,7 +75,7 @@
             </section>
             <section class="story-row">
                 <div class="text-box">
-                    <p>During the period between 1500 and 1624, the rulers of Madura largely depended on Islamic kingdoms located on the northern coast of Java, such as Demak, Gresik, and Surabaya. This shows the strong influence of Islamic political powers in shaping the government and social life of Madura. In 1624, Madura was eventually conquered by the Mataram Sultanate, which was at the peak of its power at that time, marking an important turning point in the island’s political history.</p>
+                    <p>During the period between 1500 and 1624, the rulers of Madura largely depended on Islamic kingdoms located on the northern coast of Java, such as Demak, Gresik, and Surabaya. This shows the strong influence of Islamic political powers in shaping the government and social life of Madura. In 1624, Madura was eventually conquered by the Mataram Sultanate, which was at the peak of its power at that time, marking an important turning point in the island's political history.</p>
                 </div>
                 <div class="image-box img-hist-3"></div>
             </section>
@@ -90,7 +91,7 @@
             <section class="story-row">
                 <div class="text-box">
                     <h2>Mamapar Gigi</h2>
-                    <p>the word “mapar” means to straighten or arrange neatly. Therefore, mapar gigi refers to the process of aligning the teeth of a bride using a special tool. However, its meaning goes beyond aesthetics; it also symbolizes the removal of negative elements or bad influences before entering married life.</p>
+                    <p>the word "mapar" means to straighten or arrange neatly. Therefore, mapar gigi refers to the process of aligning the teeth of a bride using a special tool. However, its meaning goes beyond aesthetics; it also symbolizes the removal of negative elements or bad influences before entering married life.</p>
                 </div>
                 <div class="image-box img-cult-1"></div>
             </section>
@@ -104,7 +105,7 @@
             <section class="story-row">
                 <div class="text-box">
                     <h2>Karapan Sapi</h2>
-                    <p>Karapan Sapi is a traditional bull racing competition originating from Madura, East Java. The event is generally held in August and September, with the final round usually taking place in Pamekasan to compete for the President’s Rolling Trophy.</p>
+                    <p>Karapan Sapi is a traditional bull racing competition originating from Madura, East Java. The event is generally held in August and September, with the final round usually taking place in Pamekasan to compete for the President's Rolling Trophy.</p>
                 </div>
                 <div class="image-box img-cult-3"></div>
             </section>
@@ -125,11 +126,10 @@
             <section class="story-row reverse">
                 <div class="text-box">
                     <h2>Rokat Tase</h2>
-                    <p>Rokat Tase’ is a traditional ritual practiced by coastal communities in Madura, especially among fishing communities. It is performed as an expression of gratitude for the abundance of marine resources and as a prayer for safety before going out to sea. This tradition is understood as a form of thanksgiving to the Creator for the blessings and protection that have been given.</p>
+                    <p>Rokat Tase' is a traditional ritual practiced by coastal communities in Madura, especially among fishing communities. It is performed as an expression of gratitude for the abundance of marine resources and as a prayer for safety before going out to sea. This tradition is understood as a form of thanksgiving to the Creator for the blessings and protection that have been given.</p>
                 </div>
                 <div class="image-box img-cult-6"></div>
             </section>
-
             <section class="story-row">
                 <div class="text-box">
                     <h2>Moang Sangkal</h2>
@@ -137,7 +137,6 @@
                 </div>
                 <div class="image-box img-cult-7"></div>
             </section>
-
             <section class="story-row reverse">
                 <div class="text-box">
                     <h2>Gambu</h2>
@@ -160,7 +159,6 @@
                 <div class="image-box img-cult-10"></div>
             </section>
         </div>
-       
 
         <div id="destination" class="tab-content">
             <section class="story-row">
@@ -227,7 +225,6 @@
                 <div class="image-box img-dest-9"></div>
             </section>
         </div>
-        
 
     </main>
 
@@ -281,6 +278,7 @@
             <p>&copy; 2026 SakaMadura. All rights reserved.</p>
         </div>
     </footer>
-<script src="sejarah.js"></script>
+
+    <script src="sejarah.js"></script>
 </body>
 </html>
