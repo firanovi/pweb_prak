@@ -32,7 +32,6 @@
 
 <div class="container">
     <div class="dashboard">
-        <!-- Sidebar navigasi (tetap ada, tapi tidak mengganggu) -->
         <aside class="sidebar">
             <a href="./dashboarduser.html" class="menu-item"><i class="far fa-user"></i><span>Account</span></a>
             <a href="" class="menu-item active"><i class="fas fa-shopping-cart"></i><span>Cart</span></a>
@@ -40,11 +39,9 @@
             <a href="./historyorder.html" class="menu-item"><i class="far fa-file-alt"></i><span>History Order</span></a>
         </aside>
 
-        <!-- KONTEN UTAMA CART: tanpa kupon, tanpa gambar tambahan, hanya daftar item + summary dan tombol checkout -->
         <div class="cart-content">
             <h1 class="page-title">Cart</h1>
             
-            <!-- Tabel produk -->
             <div class="cart-table">
                 <div class="table-header">
                     <span>Product</span>
@@ -57,35 +54,23 @@
                 </div>
             </div>
 
-            <!-- Ringkasan belanja (tanpa kupon, tanpa elemen kanan tambahan) dan HANYA TOMBOL CHECKOUT -->
             <div class="cart-summary" id="summaryPanel">
                 <h3>Cart summary</h3>
                 <div class="summary-row">
-                    <span>Free Shipping</span>
-                    <span class="price">Rp0</span>
-                </div>
-                <div class="summary-row">
-                    <span>Express Shipping</span>
-                    <span class="price" id="shippingCost">Rp30.000</span>
+                    <span>Subtotal</span>
+                    <span class="price" id="subtotalDisplay">Rp0</span>
                 </div>
                 <div class="summary-divider"></div>
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span class="price" id="subtotalDisplay">Rp80.000,00</span>
-                </div>
-                <!-- Tidak ada baris diskon karena kupon dihapus total -->
                 <div class="summary-row total">
                     <span>Total</span>
-                    <span class="price" id="totalDisplay">Rp110.000,00</span>
+                    <span class="price" id="totalDisplay">Rp0</span>
                 </div>
-                <!-- TOMBOL CHECKOUT MURNI tanpa hiasan, gambar, atau apapun -->
                 <button class="checkout-btn" id="checkoutBtn">Checkout →</button>
             </div>
         </div>
     </div>
 </div>
 
-    <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-bg">
             <img src="./img/background footer 2.png" alt="Background">

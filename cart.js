@@ -1,5 +1,3 @@
-const SHIPPING_COST = 30000;
-
 const userId = localStorage.getItem('userId');
 
 function formatIDR(amount) {
@@ -128,14 +126,11 @@ async function renderCartItems() {
 }
 
 function updateSummary(subtotal) {
-    const finalTotal = subtotal + SHIPPING_COST;
     const subtotalElem = document.getElementById('subtotalDisplay');
-    const totalElem = document.getElementById('totalDisplay');
-    const shippingSpan = document.getElementById('shippingCost');
+    const totalElem    = document.getElementById('totalDisplay');
 
     if (subtotalElem) subtotalElem.innerHTML = formatIDR(subtotal);
-    if (totalElem) totalElem.innerHTML = formatIDR(finalTotal);
-    if (shippingSpan) shippingSpan.innerHTML = formatIDR(SHIPPING_COST);
+    if (totalElem)    totalElem.innerHTML    = formatIDR(subtotal);
 }
 
 // ================= CHECKOUT =================
@@ -149,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Simpan cart ke localStorage sebelum pindah ke payment
             const items = await fetchCart();
             if (items.length === 0) {
                 alert('Cart kamu kosong!');
