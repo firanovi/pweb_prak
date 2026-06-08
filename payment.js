@@ -37,7 +37,6 @@ async function loadCartData() {
     const itemCountEl = document.querySelector('.item-count');
 
     try {
-        // Baca langsung dari localStorage (sama seperti cart.html)
         const localRaw = localStorage.getItem('sakamadura_cart_local');
         const localItems = JSON.parse(localRaw || '[]');
 
@@ -214,7 +213,6 @@ function initPlaceOrder() {
         if (!selectedShipping)        { alert('Pilih metode pengiriman!');           return; }
         if (!selectedPayment)         { alert('Pilih metode pembayaran!');           return; }
 
-        // Isi order summary popup
         const orderItemsDisplay = document.getElementById('orderItemsDisplay');
         if (orderItemsDisplay) {
             orderItemsDisplay.innerHTML = cartItems.map(item => `
@@ -267,19 +265,23 @@ window.confirmOrder = async function () {
     const alamatPengiriman = `${firstName} ${lastName}, ${address}`;
 
     try {
-        // Fetch semua produk untuk mapping nama -> _id
-        const produkRes = await fetch('/api/produk');
+        // Fetch semua produk untuk mapping nama -> _id & seller
+        const produkRes   = await fetch('/api/produk');
         const semuaProduk = await produkRes.json();
 
         const items = cartItems.map(item => {
             const nama = item.produk?.nama || item.nama;
             const produkDitemukan = semuaProduk.find(p => p.nama === nama);
             return {
-                produk: produkDitemukan?._id || null,
+                produk: produkDitemukan?._id   || null,
+                seller: produkDitemukan?.seller || null,  // ← FIX: ambil seller dari produk
                 jumlah: item.jumlah,
-                harga: item.harga
+                harga:  item.harga
             };
         }).filter(i => i.produk !== null);
+
+        // Ambil sellerId dari item pertama
+        const sellerIdFromProduct = items[0]?.seller || null;
 
         // Cek kalau ada produk yang tidak ketemu di DB
         if (items.length !== cartItems.length) {
@@ -298,14 +300,15 @@ window.confirmOrder = async function () {
         }
 
         const res = await fetch('/api/order', {
-            method: 'POST',
+            method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId,
                 items,
-                totalHarga: finalCheckoutTotal,
+                totalHarga:        finalCheckoutTotal,
                 alamatPengiriman,
-                metodePembayaran: getPaymentName(selectedPayment)
+                metodePembayaran:  getPaymentName(selectedPayment),
+                seller:            sellerIdFromProduct  // ← FIX: kirim seller ke backend
             })
         });
 
@@ -394,7 +397,7 @@ window.onclick = function (e) {
     if (e.target === document.getElementById('orderPopup'))   window.closeOrderPopup();
 };
 
-// ================= INIT — tunggu DOM siap =================
+// ================= INIT =================
 document.addEventListener('DOMContentLoaded', () => {
     initShipping();
     initPayment();

@@ -551,16 +551,16 @@ function showDetail(orderId) {
 
     const itemsHtml = order.items.map(item => `
         <tr>
-            <td style="padding:10px 0;">${item.name}</td>
-            <td style="padding:10px 0;text-align:center;">${item.quantity}</td>
-            <td style="padding:10px 0;text-align:right;">${formatRupiah(item.price)}</td>
-            <td style="padding:10px 0;text-align:right;">${formatRupiah(calculateSubtotal(item))}</td>
+            <td>${item.name}</td>
+            <td style="text-align:center;">${item.quantity}</td>
+            <td style="text-align:right;">${formatRupiah(item.price)}</td>
+            <td style="text-align:right;">${formatRupiah(calculateSubtotal(item))}</td>
         </tr>
     `).join('');
 
     document.getElementById('detail-body').innerHTML = `
         <div class="detail-section">
-            <h4 class="section-title">Informasi Order</h4>
+            <p class="section-title">Informasi Order</p>
             <div class="info-grid">
                 <div><span class="label">Order ID</span><span class="value">${order.id}</span></div>
                 <div><span class="label">Tanggal Order</span><span class="value">${order.date}</span></div>
@@ -568,7 +568,7 @@ function showDetail(orderId) {
             </div>
         </div>
         <div class="detail-section">
-            <h4 class="section-title">Data Customer</h4>
+            <p class="section-title">Data Customer</p>
             <div class="info-grid">
                 <div><span class="label">Nama Lengkap</span><span class="value">${order.customer.name}</span></div>
                 <div><span class="label">Email</span><span class="value">${order.customer.email}</span></div>
@@ -577,14 +577,21 @@ function showDetail(orderId) {
             </div>
         </div>
         <div class="detail-section">
-            <h4 class="section-title">Daftar Produk</h4>
+            <p class="section-title">Daftar Produk</p>
             <table class="detail-table">
-                <thead><tr><th>Produk</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Harga</th><th style="text-align:right;">Subtotal</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Produk</th>
+                        <th style="text-align:center">Qty</th>
+                        <th style="text-align:right">Harga</th>
+                        <th style="text-align:right">Subtotal</th>
+                    </tr>
+                </thead>
                 <tbody>${itemsHtml}</tbody>
             </table>
         </div>
         <div class="detail-section">
-            <h4 class="section-title">Informasi Pengiriman</h4>
+            <p class="section-title">Informasi Pengiriman</p>
             <div class="info-grid">
                 <div><span class="label">Kurir</span><span class="value">${order.shipping.courier}</span></div>
                 <div><span class="label">No. Resi</span><span class="value">${order.shipping.tracking}</span></div>
@@ -592,14 +599,18 @@ function showDetail(orderId) {
             </div>
         </div>
         <div class="detail-section">
-            <h4 class="section-title">Informasi Pembayaran</h4>
+            <p class="section-title">Informasi Pembayaran</p>
             <div class="info-grid">
                 <div><span class="label">Metode Pembayaran</span><span class="value">${order.payment.method}</span></div>
-                <div><span class="label">Status Pembayaran</span><span class="value"><span class="payment-status ${order.payment.status === 'Lunas' ? 'paid' : 'unpaid'}">${order.payment.status}</span></span></div>
+                <div><span class="label">Status Pembayaran</span>
+                    <span class="value">
+                        <span class="payment-status ${order.payment.status === 'Lunas' ? 'paid' : 'unpaid'}">${order.payment.status}</span>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="detail-section summary-section">
-            <h4 class="section-title">Ringkasan Total</h4>
+            <p class="section-title">Ringkasan Total</p>
             <div class="summary-row"><span>Total Produk</span><span>${formatRupiah(totalProduct)}</span></div>
             <div class="summary-row"><span>Biaya Pengiriman</span><span>${formatRupiah(shippingCost)}</span></div>
             <div class="summary-row total-row"><span>Total Akhir</span><span>${formatRupiah(totalAmount)}</span></div>
@@ -607,10 +618,6 @@ function showDetail(orderId) {
     `;
 
     document.getElementById('detailModal').style.display = 'flex';
-}
-
-function closeDetailModal() {
-    document.getElementById('detailModal').style.display = 'none';
 }
 
 // ============================================
