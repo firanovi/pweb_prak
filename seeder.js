@@ -103,6 +103,8 @@ const produkData = [
   }
 ];
 
+const SELLER_ID = '6a0eaa064dc611687b4b8b65';
+
 async function seed() {
   await mongoose.connect(MONGO_URL);
   console.log('Database terhubung!');
@@ -110,7 +112,10 @@ async function seed() {
   await Produk.deleteMany({});
   console.log('Data lama dihapus.');
 
-  const inserted = await Produk.insertMany(produkData);
+  // Tambahkan seller ID ke semua produk
+  const produkDenganSeller = produkData.map(p => ({ ...p, seller: SELLER_ID }));
+
+  const inserted = await Produk.insertMany(produkDenganSeller);
   console.log(`${inserted.length} produk berhasil dimasukkan:\n`);
   inserted.forEach(p => console.log(`  ${p.nama} — ID: ${p._id}`));
 

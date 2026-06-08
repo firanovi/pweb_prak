@@ -33,7 +33,7 @@ let productsData = [];
 
 async function loadProducts() {
     try {
-        const res  = await fetch(`/api/produk?seller=${userId}`);
+        const res  = await fetch(`/api/produk?seller=${sellerId}`);
         const data = await res.json();
         productsData = data.map(p => ({
             id:     p._id,
@@ -59,7 +59,7 @@ let originalOrdersData = [];
 
 async function loadOrders() {
     try {
-        const res  = await fetch(`/api/order?seller=${userId}`);
+        const res  = await fetch(`/api/order?seller=${sellerId}`);
         const data = await res.json();
         ordersData = data.map(o => ({
             id: o._id,
