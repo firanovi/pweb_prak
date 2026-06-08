@@ -5,20 +5,9 @@ let countdownInterval = null;
 let timeLeft = 900;
 let appliedDiscount = false;
 
-const firstNameInp = document.getElementById('firstName');
-const lastNameInp = document.getElementById('lastName');
-const addressInp = document.getElementById('address');
-const applyCouponBtn = document.getElementById('applyCouponBtn');
-const couponCodeInput = document.getElementById('couponCode');
-const placeOrderBtn = document.getElementById('placeOrderBtn');
-const displayTotalSpan = document.getElementById('displayTotal');
-const displaySubtotalSpan = document.getElementById('displaySubtotal');
-
 let subtotal = 0;
 let tax = 10000;
 let finalCheckoutTotal = 0;
-
-const userId = localStorage.getItem('userId');
 let cartItems = [];
 
 // ================= MAPPING GAMBAR LOKAL =================
@@ -38,71 +27,87 @@ const gambarProdukMap = {
 };
 
 function getGambar(item) {
-    const nama = item.produk?.nama || '';
-    return gambarProdukMap[nama] || item.produk?.gambar || './img/default.jpg';
+    const nama = item.produk?.nama || item.nama || '';
+    return gambarProdukMap[nama] || item.produk?.gambar || item.gambar || './img/default.jpg';
 }
 
 // ================= LOAD CART =================
 async function loadCartData() {
+    const cartContainer = document.querySelector('.cart-items');
+    const itemCountEl = document.querySelector('.item-count');
+
     try {
-        if (userId) {
-            const res = await fetch(`/api/cart/${userId}`);
-            const cart = await res.json();
-            cartItems = cart.items || [];
+        // Baca langsung dari localStorage (sama seperti cart.html)
+        const localRaw = localStorage.getItem('sakamadura_cart_local');
+        const localItems = JSON.parse(localRaw || '[]');
 
-            subtotal = cartItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
-            finalCheckoutTotal = subtotal + tax;
+        cartItems = localItems.map(i => ({
+            produk: { nama: i.nama, gambar: i.gambar },
+            harga: i.harga,
+            jumlah: i.jumlah
+        }));
 
-            const cartContainer = document.querySelector('.cart-items');
-            if (cartContainer && cartItems.length > 0) {
+        subtotal = cartItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
+        finalCheckoutTotal = subtotal + tax;
+
+        if (cartContainer) {
+            if (cartItems.length > 0) {
                 cartContainer.innerHTML = '';
                 cartItems.forEach(item => {
+                    const nama   = item.produk?.nama || '-';
+                    const harga  = item.harga || 0;
+                    const jumlah = item.jumlah || 1;
                     cartContainer.innerHTML += `
                         <div class="cart-item">
                             <div class="item-left">
                                 <img 
                                     src="${getGambar(item)}" 
-                                    alt="${item.produk?.nama || 'Produk'}" 
+                                    alt="${nama}" 
                                     class="cart-item-image"
                                     onerror="this.src='./img/default.jpg'"
                                 >
                                 <div class="item-info">
-                                    <div class="item-name"><strong>${item.produk?.nama || '-'}</strong></div>
-                                    <div class="item-quantity">Quantity: ${item.jumlah}</div>
+                                    <div class="item-name"><strong>${nama}</strong></div>
+                                    <div class="item-quantity">Quantity: ${jumlah}</div>
                                 </div>
                             </div>
-                            <div class="item-price">Rp${item.harga.toLocaleString('id-ID')}</div>
+                            <div class="item-price">Rp${harga.toLocaleString('id-ID')}</div>
                         </div>
                     `;
                 });
-                document.querySelector('.item-count').textContent = `${cartItems.length} items`;
-            } else if (cartContainer) {
+                if (itemCountEl) itemCountEl.textContent = `${cartItems.length} items`;
+            } else {
                 cartContainer.innerHTML = '<p style="text-align:center; color:#999;">Keranjang kosong</p>';
-                document.querySelector('.item-count').textContent = '0 items';
+                if (itemCountEl) itemCountEl.textContent = '0 items';
             }
-        } else {
-            const cartData = JSON.parse(localStorage.getItem('sakamadura_cart') || '{}');
-            cartItems = cartData.items || [];
-            subtotal = cartData.subtotal || 0;
-            finalCheckoutTotal = subtotal + tax;
         }
     } catch (err) {
         console.error('Error load cart:', err);
+        if (cartContainer) {
+            cartContainer.innerHTML = '<p style="text-align:center; color:red;">Gagal memuat cart.</p>';
+        }
     }
+
     updateTotalDisplay();
 }
 
 // ================= LOAD USER =================
 async function loadUserData() {
+    const userId = localStorage.getItem('userId');
     if (!userId) return;
+
+    const firstNameInp = document.getElementById('firstName');
+    const lastNameInp  = document.getElementById('lastName');
+    const addressInp   = document.getElementById('address');
+
     try {
         const res = await fetch(`/api/auth/user/${userId}`);
         const user = await res.json();
         if (res.ok) {
             const namaParts = (user.nama || '').split(' ');
             firstNameInp.value = namaParts[0] || '';
-            lastNameInp.value = namaParts.slice(1).join(' ') || '';
-            addressInp.value = user.alamat || '';
+            lastNameInp.value  = namaParts.slice(1).join(' ') || '';
+            addressInp.value   = user.alamat || '';
         }
     } catch (err) {
         console.error('Error load user:', err);
@@ -111,8 +116,10 @@ async function loadUserData() {
 
 // ================= UPDATE TOTAL =================
 function updateTotalDisplay() {
-    displaySubtotalSpan.innerText = `Rp${subtotal.toLocaleString('id-ID')}`;
-    displayTotalSpan.innerText = `Rp${Math.round(finalCheckoutTotal).toLocaleString('id-ID')}`;
+    const displaySubtotalSpan = document.getElementById('displaySubtotal');
+    const displayTotalSpan    = document.getElementById('displayTotal');
+    if (displaySubtotalSpan) displaySubtotalSpan.innerText = `Rp${subtotal.toLocaleString('id-ID')}`;
+    if (displayTotalSpan)    displayTotalSpan.innerText    = `Rp${Math.round(finalCheckoutTotal).toLocaleString('id-ID')}`;
 }
 
 // ================= SHIPPING =================
@@ -129,9 +136,9 @@ function initShipping() {
             });
             this.style.background = '#faf3ec';
             const uncheck = this.querySelector('.radio-unchecked');
-            const check = this.querySelector('.radio-checked');
+            const check   = this.querySelector('.radio-checked');
             if (uncheck) uncheck.style.display = 'none';
-            if (check) check.style.display = 'inline-block';
+            if (check)   check.style.display   = 'inline-block';
 
             selectedShipping = this.getAttribute('data-shipping');
             let base = subtotal + tax + (selectedShipping === 'express' ? 30000 : 0);
@@ -147,14 +154,14 @@ function initPayment() {
     payments.forEach(pay => {
         pay.addEventListener('click', function () {
             payments.forEach(p => {
-                p.style.background = 'transparent';
+                p.style.background  = 'transparent';
                 p.style.borderColor = '#e0cfc2';
                 const un = p.querySelector('.radio-unchecked');
                 const ch = p.querySelector('.radio-checked');
                 if (un) un.style.display = 'inline-block';
                 if (ch) ch.style.display = 'none';
             });
-            this.style.background = '#faf3ec';
+            this.style.background  = '#faf3ec';
             this.style.borderColor = '#b87c4f';
             const un = this.querySelector('.radio-unchecked');
             const ch = this.querySelector('.radio-checked');
@@ -166,54 +173,68 @@ function initPayment() {
 }
 
 // ================= COUPON =================
-applyCouponBtn.addEventListener('click', () => {
-    const code = couponCodeInput.value.trim();
-    if (code === 'DISKON10') {
-        if (!appliedDiscount) {
-            appliedDiscount = true;
-            alert('✓ Kode berhasil! Diskon 10% diterapkan.');
-            let base = subtotal + tax + (selectedShipping === 'express' ? 30000 : 0);
-            finalCheckoutTotal = base * 0.9;
-            updateTotalDisplay();
+function initCoupon() {
+    const applyCouponBtn  = document.getElementById('applyCouponBtn');
+    const couponCodeInput = document.getElementById('couponCode');
+
+    applyCouponBtn.addEventListener('click', () => {
+        const code = couponCodeInput.value.trim();
+        if (code === 'DISKON10') {
+            if (!appliedDiscount) {
+                appliedDiscount = true;
+                alert('✓ Kode berhasil! Diskon 10% diterapkan.');
+                let base = subtotal + tax + (selectedShipping === 'express' ? 30000 : 0);
+                finalCheckoutTotal = base * 0.9;
+                updateTotalDisplay();
+            } else {
+                alert('Diskon sudah diterapkan');
+            }
+        } else if (code === '') {
+            alert('Masukkan kode kupon');
         } else {
-            alert('Diskon sudah diterapkan');
+            alert('Kode kupon tidak valid');
         }
-    } else if (code === '') {
-        alert('Masukkan kode kupon');
-    } else {
-        alert('Kode kupon tidak valid');
-    }
-});
+    });
+}
 
 // ================= PLACE ORDER =================
-placeOrderBtn.addEventListener('click', () => {
-    const first = firstNameInp.value.trim();
-    const last = lastNameInp.value.trim();
-    const addr = addressInp.value.trim();
-    if (!first || !last || !addr) { alert('Mohon lengkapi alamat pengiriman!'); return; }
-    if (!selectedShipping) { alert('Pilih metode pengiriman!'); return; }
-    if (!selectedPayment) { alert('Pilih metode pembayaran!'); return; }
+function initPlaceOrder() {
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
 
-    // Isi order summary popup
-    const orderItemsDisplay = document.getElementById('orderItemsDisplay');
-    if (orderItemsDisplay) {
-        orderItemsDisplay.innerHTML = cartItems.map(item => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <span>${item.produk?.nama || '-'} x${item.jumlah}</span>
-                <span>Rp${(item.harga * item.jumlah).toLocaleString('id-ID')}</span>
-            </div>
-        `).join('');
-    }
+    placeOrderBtn.addEventListener('click', () => {
+        const firstNameInp = document.getElementById('firstName');
+        const lastNameInp  = document.getElementById('lastName');
+        const addressInp   = document.getElementById('address');
 
-    document.getElementById('orderSubtotalDisplay').innerText = `Rp${subtotal.toLocaleString('id-ID')}`;
-    document.getElementById('orderTotalDisplay').innerText = `Rp${Math.round(finalCheckoutTotal).toLocaleString('id-ID')}`;
-    document.getElementById('orderAddressDisplay').innerHTML = `${first} ${last}<br>${addr}`;
-    document.getElementById('orderShippingDisplay').innerText =
-        selectedShipping === 'free' ? 'Free Shipping' : 'Express Shipping (+Rp30.000)';
-    document.getElementById('orderPaymentDisplay').innerText = getPaymentName(selectedPayment);
+        const first = firstNameInp.value.trim();
+        const last  = lastNameInp.value.trim();
+        const addr  = addressInp.value.trim();
 
-    document.getElementById('orderPopup').style.display = 'flex';
-});
+        if (!first || !last || !addr) { alert('Mohon lengkapi alamat pengiriman!'); return; }
+        if (!selectedShipping)        { alert('Pilih metode pengiriman!');           return; }
+        if (!selectedPayment)         { alert('Pilih metode pembayaran!');           return; }
+
+        // Isi order summary popup
+        const orderItemsDisplay = document.getElementById('orderItemsDisplay');
+        if (orderItemsDisplay) {
+            orderItemsDisplay.innerHTML = cartItems.map(item => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>${item.produk?.nama || item.nama || '-'} x${item.jumlah}</span>
+                    <span>Rp${(item.harga * item.jumlah).toLocaleString('id-ID')}</span>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('orderSubtotalDisplay').innerText = `Rp${subtotal.toLocaleString('id-ID')}`;
+        document.getElementById('orderTotalDisplay').innerText    = `Rp${Math.round(finalCheckoutTotal).toLocaleString('id-ID')}`;
+        document.getElementById('orderAddressDisplay').innerHTML  = `${first} ${last}<br>${addr}`;
+        document.getElementById('orderShippingDisplay').innerText =
+            selectedShipping === 'free' ? 'Free Shipping' : 'Express Shipping (+Rp30.000)';
+        document.getElementById('orderPaymentDisplay').innerText  = getPaymentName(selectedPayment);
+
+        document.getElementById('orderPopup').style.display = 'flex';
+    });
+}
 
 // ================= HELPERS =================
 function getPaymentName(pay) {
@@ -225,32 +246,57 @@ function getPaymentName(pay) {
     return map[pay] || pay;
 }
 
-function closeOrderPopup() {
+window.closeOrderPopup = function () {
     document.getElementById('orderPopup').style.display = 'none';
-}
+};
 
 // ================= CONFIRM ORDER =================
-async function confirmOrder() {
-    closeOrderPopup();
+window.confirmOrder = async function () {
+    window.closeOrderPopup();
 
+    const userId = localStorage.getItem('userId');
     if (!userId) {
         alert('Silakan login terlebih dahulu!');
         window.location.href = './loginuser.html';
         return;
     }
 
-    const firstName = firstNameInp.value.trim();
-    const lastName = lastNameInp.value.trim();
-    const address = addressInp.value.trim();
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const address   = document.getElementById('address').value.trim();
     const alamatPengiriman = `${firstName} ${lastName}, ${address}`;
 
-    const items = cartItems.map(item => ({
-        produk: item.produk?._id || item.produk,
-        jumlah: item.jumlah,
-        harga: item.harga
-    }));
-
     try {
+        // Fetch semua produk untuk mapping nama -> _id
+        const produkRes = await fetch('/api/produk');
+        const semuaProduk = await produkRes.json();
+
+        const items = cartItems.map(item => {
+            const nama = item.produk?.nama || item.nama;
+            const produkDitemukan = semuaProduk.find(p => p.nama === nama);
+            return {
+                produk: produkDitemukan?._id || null,
+                jumlah: item.jumlah,
+                harga: item.harga
+            };
+        }).filter(i => i.produk !== null);
+
+        // Cek kalau ada produk yang tidak ketemu di DB
+        if (items.length !== cartItems.length) {
+            const tidakKetemu = cartItems
+                .filter(item => {
+                    const nama = item.produk?.nama || item.nama;
+                    return !semuaProduk.find(p => p.nama === nama);
+                })
+                .map(item => item.produk?.nama || item.nama);
+            console.warn('Produk tidak ditemukan di DB:', tidakKetemu);
+        }
+
+        if (items.length === 0) {
+            alert('Produk tidak ditemukan di database. Coba logout dan login ulang.');
+            return;
+        }
+
         const res = await fetch('/api/order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -264,9 +310,9 @@ async function confirmOrder() {
         });
 
         const order = await res.json();
-
         if (res.ok) {
             localStorage.removeItem('sakamadura_cart');
+            localStorage.removeItem('sakamadura_cart_local');
             showQRPayment(selectedPayment);
         } else {
             alert('Gagal membuat order: ' + (order.message || 'Unknown error'));
@@ -275,18 +321,18 @@ async function confirmOrder() {
         console.error('Error:', err);
         alert('Terjadi kesalahan, coba lagi!');
     }
-}
+};
 
 // ================= QR PAYMENT =================
 function showQRPayment(method) {
-    const popup = document.getElementById('qrPopup');
-    const methodSpan = document.getElementById('methodName');
-    const titleSpan = document.getElementById('paymentMethodName');
+    const popup        = document.getElementById('qrPopup');
+    const methodSpan   = document.getElementById('methodName');
+    const titleSpan    = document.getElementById('paymentMethodName');
     const orderNumSpan = document.getElementById('orderNumber');
-    const qrImg = document.getElementById('qrImage');
+    const qrImg        = document.getElementById('qrImage');
 
     const displayPay = getPaymentName(method);
-    titleSpan.innerText = `Pembayaran ${displayPay}`;
+    titleSpan.innerText  = `Pembayaran ${displayPay}`;
     methodSpan.innerText = displayPay;
 
     const orderNum = '#ORD-' + Date.now().toString().slice(-8);
@@ -310,7 +356,7 @@ function startCountdown() {
         if (timeLeft <= 0) {
             clearInterval(countdownInterval);
             alert('Waktu pembayaran habis!');
-            closeQR();
+            window.closeQR();
         } else {
             timeLeft--;
             const mins = Math.floor(timeLeft / 60);
@@ -329,7 +375,7 @@ window.closeQR = function () {
 };
 
 window.checkPaymentStatus = function () {
-    closeQR();
+    window.closeQR();
     document.getElementById('successPopup').style.display = 'flex';
 };
 
@@ -342,17 +388,18 @@ window.toggleMobileMenu = function () {
     document.getElementById('mobileMenu').classList.toggle('show');
 };
 
-window.confirmOrder = confirmOrder;
-window.closeOrderPopup = closeOrderPopup;
-
 window.onclick = function (e) {
-    if (e.target === document.getElementById('qrPopup')) closeQR();
-    if (e.target === document.getElementById('successPopup')) goToOrders();
-    if (e.target === document.getElementById('orderPopup')) closeOrderPopup();
+    if (e.target === document.getElementById('qrPopup'))      window.closeQR();
+    if (e.target === document.getElementById('successPopup')) window.goToOrders();
+    if (e.target === document.getElementById('orderPopup'))   window.closeOrderPopup();
 };
 
-// ================= INIT =================
-initShipping();
-initPayment();
-loadCartData();
-loadUserData();
+// ================= INIT — tunggu DOM siap =================
+document.addEventListener('DOMContentLoaded', () => {
+    initShipping();
+    initPayment();
+    initCoupon();
+    initPlaceOrder();
+    loadCartData();
+    loadUserData();
+});

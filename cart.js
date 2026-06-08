@@ -1,9 +1,7 @@
 const SHIPPING_COST = 30000;
 
-// Ambil userId dari localStorage (sama seperti detailProduk.js)
 const userId = localStorage.getItem('userId');
 
-// Format Rupiah
 function formatIDR(amount) {
     return new Intl.NumberFormat('id-ID', { 
         style: 'currency', 
@@ -12,10 +10,8 @@ function formatIDR(amount) {
     }).format(amount);
 }
 
-// Ambil cart: coba dari server dulu, fallback ke localStorage
 async function fetchCart() {
     if (!userId) {
-        // Belum login, pakai localStorage
         return getLocalCart();
     }
     try {
@@ -23,7 +19,6 @@ async function fetchCart() {
         if (!res.ok) throw new Error('server error');
         const cart = await res.json();
         const serverItems = cart.items || [];
-        // Gabungkan dengan local cart jika ada
         const localItems = getLocalCart();
         return mergeCartItems(serverItems, localItems);
     } catch (err) {
@@ -32,14 +27,11 @@ async function fetchCart() {
     }
 }
 
-// Ambil cart dari localStorage
 function getLocalCart() {
     return JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
 }
 
-// Gabungkan cart server (format DB) dan cart lokal (format sederhana)
 function mergeCartItems(serverItems, localItems) {
-    // Konversi server items ke format seragam
     const serverFormatted = serverItems.map(item => ({
         _id: item.produk?._id || item.produk,
         nama: item.produk?.nama || 'Produk',
@@ -48,7 +40,6 @@ function mergeCartItems(serverItems, localItems) {
         jumlah: item.jumlah,
         sumber: 'server'
     }));
-    // Konversi local items ke format seragam
     const localFormatted = localItems.map(item => ({
         _id: null,
         nama: item.nama,
@@ -57,16 +48,13 @@ function mergeCartItems(serverItems, localItems) {
         jumlah: item.jumlah,
         sumber: 'local'
     }));
-    // Gabungkan: hindari duplikat nama
     const serverNames = serverFormatted.map(i => i.nama.toLowerCase());
     const uniqueLocal = localFormatted.filter(i => !serverNames.includes(i.nama.toLowerCase()));
     return [...serverFormatted, ...uniqueLocal];
 }
 
-// Hapus item dari cart
 async function removeItem(itemNama, itemId) {
     if (userId && itemId) {
-        // Hapus dari server
         try {
             await fetch('/api/cart/remove', {
                 method: 'DELETE',
@@ -77,15 +65,13 @@ async function removeItem(itemNama, itemId) {
             console.warn('Gagal hapus dari server:', err);
         }
     }
-    // Hapus dari localStorage juga
     let localCart = getLocalCart();
     localCart = localCart.filter(i => i.nama !== itemNama);
     localStorage.setItem('sakamadura_cart_local', JSON.stringify(localCart));
 
-    renderCartItems(); // Refresh
+    renderCartItems();
 }
 
-// Render cart items
 async function renderCartItems() {
     const container = document.getElementById('cartItemsContainer');
     if (!container) return;
@@ -141,7 +127,6 @@ async function renderCartItems() {
     updateSummary(subtotal);
 }
 
-// Update summary
 function updateSummary(subtotal) {
     const finalTotal = subtotal + SHIPPING_COST;
     const subtotalElem = document.getElementById('subtotalDisplay');
@@ -153,16 +138,32 @@ function updateSummary(subtotal) {
     if (shippingSpan) shippingSpan.innerHTML = formatIDR(SHIPPING_COST);
 }
 
-// Checkout
+// ================= CHECKOUT =================
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', () => {
+        checkoutBtn.addEventListener('click', async () => {
             if (!userId) {
                 alert('Kamu harus login dulu!');
                 window.location.href = './loginuser.html';
                 return;
             }
+
+            // Simpan cart ke localStorage sebelum pindah ke payment
+            const items = await fetchCart();
+            if (items.length === 0) {
+                alert('Cart kamu kosong!');
+                return;
+            }
+
+            const cartToSave = items.map(i => ({
+                nama: i.nama,
+                harga: i.harga,
+                jumlah: i.jumlah,
+                gambar: i.gambar
+            }));
+            localStorage.setItem('sakamadura_cart_local', JSON.stringify(cartToSave));
+
             window.location.href = './payment.html';
         });
     }
