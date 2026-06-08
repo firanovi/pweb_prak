@@ -128,7 +128,7 @@ const views = {
         <h2>Product</h2>
         <div>
             <button class="btn-white" onclick="exportProducts()">📤 Export</button>
-            <button class="btn-blue" onclick="openModal()">＋ Add New Product</button>
+            <button class="btn-blue" onclick="openModal()">＋ Update Product</button>
         </div>
     </div>
     <div class="main-card">
