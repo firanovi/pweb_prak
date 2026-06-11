@@ -2,17 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Wishlist = require('../models/Wishlist');
 
-// GET - Ambil wishlist user
-router.get('/:userId', async (req, res) => {
-  try {
-    const wishlist = await Wishlist.findOne({ user: req.params.userId })
-      .populate('items.produk');
-    if (!wishlist) return res.json({ items: [] });
-    res.json(wishlist);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+// ✅ Semua route STATIS di atas route DINAMIS /:userId
 
 // POST - Tambah produk ke wishlist
 router.post('/add', async (req, res) => {
@@ -23,7 +13,6 @@ router.post('/add', async (req, res) => {
       wishlist = new Wishlist({ user: userId, items: [] });
     }
 
-    // Cek apakah produk sudah ada di wishlist
     const sudahAda = wishlist.items.some(
       item => item.produk.toString() === produkId
     );
@@ -68,7 +57,6 @@ router.post('/move-to-cart', async (req, res) => {
     const produk = await Produk.findById(produkId);
     if (!produk) return res.status(404).json({ message: 'Produk tidak ditemukan' });
 
-    // Tambah ke cart
     let cart = await Cart.findOne({ user: userId });
     if (!cart) cart = new Cart({ user: userId, items: [] });
 
@@ -80,7 +68,6 @@ router.post('/move-to-cart', async (req, res) => {
     }
     await cart.save();
 
-    // Hapus dari wishlist
     const wishlist = await Wishlist.findOne({ user: userId });
     if (wishlist) {
       wishlist.items = wishlist.items.filter(i => i.produk.toString() !== produkId);
@@ -101,6 +88,18 @@ router.delete('/clear/:userId', async (req, res) => {
       { items: [] }
     );
     res.json({ message: 'Wishlist berhasil dikosongkan' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ✅ GET /:userId — paling bawah
+router.get('/:userId', async (req, res) => {
+  try {
+    const wishlist = await Wishlist.findOne({ user: req.params.userId })
+      .populate('items.produk');
+    if (!wishlist) return res.json({ items: [] });
+    res.json(wishlist);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

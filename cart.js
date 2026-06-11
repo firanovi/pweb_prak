@@ -8,6 +8,15 @@ function formatIDR(amount) {
     }).format(amount);
 }
 
+function normalizeImagePath(gambar) {
+    if (!gambar) return './img/default.jpg';
+    if (gambar.startsWith('http')) return gambar;
+    if (gambar.startsWith('./')) return gambar;
+    if (gambar.startsWith('/img/')) return '.' + gambar;
+    if (gambar.startsWith('img/')) return './' + gambar;
+    return `./img/${gambar}`;
+}
+
 async function fetchCart() {
     if (!userId) {
         return getLocalCart();
@@ -33,7 +42,7 @@ function mergeCartItems(serverItems, localItems) {
     const serverFormatted = serverItems.map(item => ({
         _id: item.produk?._id || item.produk,
         nama: item.produk?.nama || 'Produk',
-        gambar: item.produk?.gambar || './img/default.jpg',
+        gambar: normalizeImagePath(item.produk?.gambar),
         harga: item.harga,
         jumlah: item.jumlah,
         sumber: 'server'
@@ -41,7 +50,7 @@ function mergeCartItems(serverItems, localItems) {
     const localFormatted = localItems.map(item => ({
         _id: null,
         nama: item.nama,
-        gambar: item.gambar || './img/default.jpg',
+        gambar: normalizeImagePath(item.gambar), // ✅ fix path
         harga: item.harga,
         jumlah: item.jumlah,
         sumber: 'local'
@@ -104,6 +113,7 @@ async function renderCartItems() {
 
         const itemDiv = document.createElement('div');
         itemDiv.className = 'cart-item';
+        itemDiv.style.gridTemplateColumns = '2.5fr 1fr 1fr 1.2fr auto';
         itemDiv.innerHTML = `
             <div class="col-product">
                 <img src="${item.gambar}" 

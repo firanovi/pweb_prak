@@ -2,17 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Cart = require('../models/Cart');
 
-// GET - Ambil cart user
-router.get('/:userId', async (req, res) => {
-  try {
-    const cart = await Cart.findOne({ user: req.params.userId })
-      .populate('items.produk');
-    if (!cart) return res.json({ items: [] });
-    res.json(cart);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+// ✅ Fix 1: semua route STATIS di atas route DINAMIS /:userId
+// Urutan ini kritis — /:userId akan "menelan" path seperti /remove, /add, /update
+// jika diletakkan lebih dulu.
 
 // POST - Tambah item ke cart
 router.post('/add', async (req, res) => {
@@ -55,56 +47,68 @@ router.post('/add', async (req, res) => {
 
 // PUT - Update jumlah item di cart
 router.put('/update', async (req, res) => {
-  const { userId, produkId, jumlah } = req.body;
-  try {
-    const cart = await Cart.findOne({ user: userId });
-    if (!cart) return res.status(404).json({ message: 'Cart tidak ditemukan' });
- 
-    const item = cart.items.find(i => i.produk.toString() === produkId);
-    if (!item) return res.status(404).json({ message: 'Item tidak ditemukan' });
- 
-    if (jumlah <= 0) {
-      cart.items = cart.items.filter(i => i.produk.toString() !== produkId);
-    } else {
-      item.jumlah = jumlah;
+    const { userId, produkId, jumlah } = req.body;
+    try {
+        const cart = await Cart.findOne({ user: userId });
+        if (!cart) return res.status(404).json({ message: 'Cart tidak ditemukan' });
+
+        const item = cart.items.find(i => i.produk.toString() === produkId);
+        if (!item) return res.status(404).json({ message: 'Item tidak ditemukan' });
+
+        if (jumlah <= 0) {
+            cart.items = cart.items.filter(i => i.produk.toString() !== produkId);
+        } else {
+            item.jumlah = jumlah;
+        }
+
+        await cart.save();
+        res.json(cart);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
- 
-    await cart.save();
-    res.json(cart);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
 });
 
 // DELETE - Hapus item dari cart
 router.delete('/remove', async (req, res) => {
-  const { userId, produkId } = req.body;
-  try {
-    const cart = await Cart.findOne({ user: userId });
-    if (!cart) return res.status(404).json({ message: 'Cart tidak ditemukan' });
+    const { userId, produkId } = req.body;
+    try {
+        const cart = await Cart.findOne({ user: userId });
+        if (!cart) return res.status(404).json({ message: 'Cart tidak ditemukan' });
 
-    cart.items = cart.items.filter(
-      item => item.produk.toString() !== produkId
-    );
+        cart.items = cart.items.filter(
+            item => item.produk.toString() !== produkId
+        );
 
-    await cart.save();
-    res.json(cart);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+        await cart.save();
+        res.json(cart);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 // DELETE - Kosongkan cart
 router.delete('/clear/:userId', async (req, res) => {
-  try {
-    await Cart.findOneAndUpdate(
-      { user: req.params.userId },
-      { items: [] }
-    );
-    res.json({ message: 'Cart berhasil dikosongkan' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+    try {
+        await Cart.findOneAndUpdate(
+            { user: req.params.userId },
+            { items: [] }
+        );
+        res.json({ message: 'Cart berhasil dikosongkan' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// ✅ GET /:userId — paling bawah supaya tidak mengganggu route statis di atas
+router.get('/:userId', async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ user: req.params.userId })
+            .populate('items.produk');
+        if (!cart) return res.json({ items: [] });
+        res.json(cart);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 module.exports = router;

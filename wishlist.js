@@ -10,12 +10,20 @@ function formatIDR(amount) {
     }).format(amount);
 }
 
-// Ambil wishlist dari localStorage
+// Normalisasi path gambar (sama seperti cart.js)
+function normalizeImagePath(gambar) {
+    if (!gambar) return './img/default.jpg';
+    if (gambar.startsWith('http')) return gambar;
+    if (gambar.startsWith('./')) return gambar;
+    if (gambar.startsWith('/img/')) return '.' + gambar;
+    if (gambar.startsWith('img/')) return './' + gambar;
+    return `./img/${gambar}`;
+}
+
 function getLocalWishlist() {
     return JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
 }
 
-// Ambil wishlist: coba server, fallback localStorage
 async function fetchWishlist() {
     if (!userId) return getLocalWishlist().map(i => ({ ...i, sumber: 'local' }));
 
@@ -26,12 +34,11 @@ async function fetchWishlist() {
         const serverItems = (data.items || []).map(item => ({
             _id: item.produk?._id || item.produk,
             nama: item.produk?.nama || 'Produk',
-            gambar: item.produk?.gambar || './img/default.jpg',
+            gambar: normalizeImagePath(item.produk?.gambar),
             harga: item.produk?.harga || 0,
             sumber: 'server'
         }));
 
-        // Gabungkan dengan local
         const localItems = getLocalWishlist().map(i => ({ ...i, sumber: 'local' }));
         const serverNames = serverItems.map(i => i.nama.toLowerCase());
         const uniqueLocal = localItems.filter(i => !serverNames.includes(i.nama.toLowerCase()));
@@ -42,7 +49,6 @@ async function fetchWishlist() {
     }
 }
 
-// Tambah item ke cart dari wishlist
 async function addToCartFromWishlist(nama, harga, gambar, produkId) {
     if (!userId) {
         alert('Kamu harus login dulu!');
@@ -51,7 +57,6 @@ async function addToCartFromWishlist(nama, harga, gambar, produkId) {
     }
 
     if (produkId && produkId !== 'null') {
-        // Coba tambah via server
         try {
             const res = await fetch('/api/cart/add', {
                 method: 'POST',
@@ -59,7 +64,7 @@ async function addToCartFromWishlist(nama, harga, gambar, produkId) {
                 body: JSON.stringify({ userId, produkId, jumlah: 1, harga })
             });
             if (res.ok) {
-                alert(`✅ ${nama} ditambahkan ke cart!`);
+                alert(`${nama} ditambahkan ke cart!`);
                 return;
             }
         } catch (err) {
@@ -67,7 +72,6 @@ async function addToCartFromWishlist(nama, harga, gambar, produkId) {
         }
     }
 
-    // Fallback: localStorage
     let localCart = JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
     const existing = localCart.find(i => i.nama === nama);
     if (existing) {
@@ -76,10 +80,9 @@ async function addToCartFromWishlist(nama, harga, gambar, produkId) {
         localCart.push({ nama, harga, jumlah: 1, gambar });
     }
     localStorage.setItem('sakamadura_cart_local', JSON.stringify(localCart));
-    alert(`✅ ${nama} ditambahkan ke cart!`);
+    alert(`${nama} ditambahkan ke cart!`);
 }
 
-// Hapus dari wishlist
 async function removeFromWishlist(nama, produkId) {
     if (userId && produkId && produkId !== 'null') {
         try {
@@ -93,7 +96,6 @@ async function removeFromWishlist(nama, produkId) {
         }
     }
 
-    // Hapus dari localStorage juga
     let local = getLocalWishlist();
     local = local.filter(i => i.nama !== nama);
     localStorage.setItem('sakamadura_wishlist_local', JSON.stringify(local));
@@ -101,7 +103,6 @@ async function removeFromWishlist(nama, produkId) {
     renderWishlist();
 }
 
-// Render wishlist
 async function renderWishlist() {
     const container = document.getElementById('wishlistContainer');
     const countEl = document.getElementById('wishlistCount');
@@ -125,7 +126,7 @@ async function renderWishlist() {
     container.innerHTML = '';
 
     if (items.length === 0) {
-        container.innerHTML = '<p style="padding:20px;color:#888;">Wishlist kamu kosong!</p>';
+        container.innerHTML = '<p class="wishlist-empty">Wishlist kamu kosong! <a href="./store.html">Belanja sekarang →</a></p>';
         return;
     }
 
@@ -133,7 +134,7 @@ async function renderWishlist() {
         const div = document.createElement('div');
         div.className = 'wishlist-item';
         div.innerHTML = `
-            <img src="${item.gambar || './img/default.jpg'}" alt="${item.nama}"
+            <img src="${item.gambar}" alt="${item.nama}"
                  onerror="this.src='./img/default.jpg'">
             <div class="wishlist-info">
                 <h3>${item.nama}</h3>
@@ -141,8 +142,8 @@ async function renderWishlist() {
                 <span class="stock">IN STOCK</span>
             </div>
             <div class="wishlist-actions">
-                <button class="add-cart" 
-                    onclick="addToCartFromWishlist('${item.nama}', ${item.harga || 0}, '${item.gambar || ''}', '${item._id || null}')">
+                <button class="add-cart"
+                    onclick="addToCartFromWishlist('${item.nama}', ${item.harga || 0}, '${item.gambar}', '${item._id || null}')">
                     ADD TO CART
                 </button>
                 <button class="remove-wishlist"
