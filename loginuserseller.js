@@ -28,16 +28,34 @@ function registerFunction() {
   registerTitle.style.opacity = 1;
 }
 
+// ── TOGGLE PASSWORD ───────────────────────────────────────────
+document.querySelectorAll('.toggle-pass').forEach(icon => {
+  icon.addEventListener('click', () => {
+    const targetId = icon.getAttribute('data-target');
+    const input = document.getElementById(targetId);
+    if (!input) return;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('bx-hide');
+      icon.classList.add('bx-show');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('bx-show');
+      icon.classList.add('bx-hide');
+    }
+  });
+});
+
 // ── LOGIN ─────────────────────────────────────────────────────
 loginForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const email = document.getElementById("log-email").value.trim();
+  const email    = document.getElementById("log-email").value.trim();
   const password = document.getElementById("log-pass").value;
 
-  // Coba login seller dulu
   try {
-    const sellerRes = await fetch("http://localhost:3000/api/seller/login", {
+    const sellerRes = await fetch("/api/seller/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -58,9 +76,8 @@ loginForm.addEventListener("submit", async function (e) {
     console.warn("Seller login gagal, coba user biasa...");
   }
 
-  // Kalau bukan seller, coba login user biasa
   try {
-    const userRes = await fetch("http://localhost:3000/api/auth/login", {
+    const userRes = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -87,8 +104,8 @@ if (registerForm) {
   registerForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const nama = document.getElementById("reg-name").value.trim();
-    const email = document.getElementById("reg-email").value.trim();
+    const nama     = document.getElementById("reg-name").value.trim();
+    const email    = document.getElementById("reg-email").value.trim();
     const password = document.getElementById("reg-pass").value;
 
     if (!nama || !email || !password) {
@@ -97,7 +114,7 @@ if (registerForm) {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nama, email, password })
