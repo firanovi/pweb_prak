@@ -1,9 +1,7 @@
 // ============================================================
 // DETAIL PRODUK - SakaMadura
-// Script ini dipakai oleh semua halaman detail produk
 // ============================================================
 
-// Mapping nama produk ke data (untuk halaman statis)
 const produkData = {
   "Batik Sumenep":          { harga: 500000, id: "batik-sumenep" },
   "Kue Macho":              { harga: 20000,  id: "kue-macho" },
@@ -27,7 +25,6 @@ function formatIDR(amount) {
   }).format(amount);
 }
 
-// Ambil nama produk dari h2 di halaman
 function getNamaProduk() {
   const h2 = document.querySelector('.product-right h2');
   return h2 ? h2.textContent.trim() : null;
@@ -42,31 +39,23 @@ function getHargaProduk() {
 
 // ── QUANTITY ──────────────────────────────────────────────────
 function initQty() {
-  const qtySpan = document.querySelector('.qty span');
+  const qtySpan  = document.querySelector('.qty span');
   const btnMinus = document.querySelector('.qty button:first-child');
   const btnPlus  = document.querySelector('.qty button:last-child');
-
   if (!qtySpan || !btnMinus || !btnPlus) return;
 
   qtySpan.textContent = jumlah;
-
   btnMinus.addEventListener('click', () => {
-    if (jumlah > 1) {
-      jumlah--;
-      qtySpan.textContent = jumlah;
-    }
+    if (jumlah > 1) { jumlah--; qtySpan.textContent = jumlah; }
   });
-
   btnPlus.addEventListener('click', () => {
-    jumlah++;
-    qtySpan.textContent = jumlah;
+    jumlah++; qtySpan.textContent = jumlah;
   });
 }
 
 // ── ADD TO CART ───────────────────────────────────────────────
 async function addToCart() {
   const userId = localStorage.getItem('userId');
-
   if (!userId) {
     alert('Kamu harus login dulu untuk menambahkan ke cart!');
     window.location.href = './loginuser.html';
@@ -76,20 +65,17 @@ async function addToCart() {
   const nama  = getNamaProduk();
   const harga = getHargaProduk();
 
-  // Coba cari produk dari DB berdasarkan nama
   try {
     const res = await fetch('/api/produk');
     const semuaProduk = await res.json();
     const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
 
     if (produkDB) {
-      // Produk ada di DB, tambah pakai ID dari DB
       const cartRes = await fetch('/api/cart/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, produkId: produkDB._id, jumlah, harga: produkDB.harga })
       });
-
       if (cartRes.ok) {
         alert(`✅ ${jumlah}x ${nama} berhasil ditambahkan ke cart!`);
       } else {
@@ -97,7 +83,6 @@ async function addToCart() {
         alert(err.message || 'Gagal menambahkan ke cart.');
       }
     } else {
-      // Produk statis belum di DB, simpan ke localStorage sebagai fallback
       let localCart = JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
       const existing = localCart.find(i => i.nama === nama);
       if (existing) {
@@ -117,7 +102,6 @@ async function addToCart() {
 // ── ADD TO WISHLIST ───────────────────────────────────────────
 async function addToWishlist() {
   const userId = localStorage.getItem('userId');
-
   if (!userId) {
     alert('Kamu harus login dulu untuk menambahkan ke wishlist!');
     window.location.href = './loginuser.html';
@@ -137,7 +121,6 @@ async function addToWishlist() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, produkId: produkDB._id })
       });
-
       const data = await wRes.json();
       if (wRes.ok) {
         alert(`❤️ ${nama} ditambahkan ke wishlist!`);
@@ -145,7 +128,6 @@ async function addToWishlist() {
         alert(data.message || 'Gagal menambahkan ke wishlist.');
       }
     } else {
-      // Fallback ke localStorage
       let localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
       const sudahAda = localWish.find(i => i.nama === nama);
       if (sudahAda) {
@@ -164,23 +146,51 @@ async function addToWishlist() {
 // ── BUY NOW ───────────────────────────────────────────────────
 async function buyNow() {
   const userId = localStorage.getItem('userId');
-
   if (!userId) {
     alert('Kamu harus login dulu untuk melakukan pembelian!');
     window.location.href = './loginuser.html';
     return;
   }
 
-  // Tambah ke cart dulu lalu redirect ke payment
-  await addToCart();
-  window.location.href = './payment.html';
+  const nama   = getNamaProduk();
+  const harga  = getHargaProduk();
+  const gambar = document.querySelector('.main-img')?.src || '';
+
+  try {
+    const res = await fetch('/api/produk');
+    const semuaProduk = await res.json();
+    const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
+
+    if (produkDB) {
+      // Tambah ke server cart
+      await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, produkId: produkDB._id, jumlah, harga: produkDB.harga })
+      });
+    }
+
+    // Simpan ke localStorage sebelum redirect ke payment
+    const cartToSave = [{
+      nama:   produkDB?.nama  || nama,
+      harga:  produkDB?.harga || harga,
+      jumlah,
+      gambar
+    }];
+    localStorage.setItem('sakamadura_cart_local', JSON.stringify(cartToSave));
+
+    window.location.href = './payment.html';
+
+  } catch (err) {
+    console.error('Error buy now:', err);
+    alert('Gagal terhubung ke server.');
+  }
 }
 
 // ── INIT ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initQty();
 
-  // Pasang event listener ke tombol
   const buttons = document.querySelectorAll('.buttons button');
   buttons.forEach(btn => {
     const text = btn.textContent.toLowerCase();

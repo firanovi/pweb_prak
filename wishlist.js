@@ -12,7 +12,7 @@ function formatIDR(amount) {
 
 // Normalisasi path gambar (sama seperti cart.js)
 function normalizeImagePath(gambar) {
-    if (!gambar) return './img/default.jpg';
+    if (!gambar) return 'https://placehold.co/80x80?text=?';
     if (gambar.startsWith('http')) return gambar;
     if (gambar.startsWith('./')) return gambar;
     if (gambar.startsWith('/img/')) return '.' + gambar;
@@ -135,7 +135,7 @@ async function renderWishlist() {
         div.className = 'wishlist-item';
         div.innerHTML = `
             <img src="${item.gambar}" alt="${item.nama}"
-                 onerror="this.src='./img/default.jpg'">
+                 onerror="this.onerror=null; this.style.display='none'">
             <div class="wishlist-info">
                 <h3>${item.nama}</h3>
                 <p>Harga: ${formatIDR(item.harga || 0)}</p>

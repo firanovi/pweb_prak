@@ -118,7 +118,7 @@ async function renderCartItems() {
             <div class="col-product">
                 <img src="${item.gambar}" 
                      alt="${item.nama}" class="product-image"
-                     onerror="this.src='./img/default.jpg'">
+                     onerror="this.onerror=null; this.style.display='none'">
                 <span>${item.nama}</span>
             </div>
             <span class="col-price">${formatIDR(harga)}</span>
