@@ -1,0 +1,234 @@
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f5f5f0;
+            min-height: 100vh;
+        }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar .logo {
+            font-family: 'Sacramento', cursive;
+            font-size: 28px;
+            color: #222;
+            text-decoration: none;
+            margin-right: auto;
+        }
+        .btn-back {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-back:hover { background: #f5f5f5; }
+
+        /* ── PAGE WRAPPER ── */
+        .page-wrapper {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 24px;
+        }
+
+        /* ── PROFILE CARD ── */
+        .profile-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e5e5e5;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .profile-card-header {
+            background: #f0f4ff;
+            padding: 28px 28px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .avatar-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #DBEAFE;
+            color: #1E40AF;
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-card-header .info h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111;
+        }
+        .profile-card-header .info p {
+            font-size: 13px;
+            color: #777;
+            margin-top: 4px;
+        }
+        .seller-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 10px;
+            background: #D4F8E2;
+            color: #27AE60;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ── FORM FIELDS ── */
+        .profile-fields {
+            padding: 24px 28px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+        .field-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .field-group .field-value {
+            font-size: 15px;
+            color: #111;
+            font-weight: 500;
+        }
+
+        .field-group input,
+        .field-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            color: #111;
+            background: #fafafa;
+            display: none;
+        }
+        .field-group input:focus,
+        .field-group textarea:focus {
+            outline: none;
+            border-color: #99D5FF;
+            background: #fff;
+        }
+        .field-group textarea { resize: vertical; min-height: 80px; }
+
+        /* Mode edit: tampilkan input, sembunyikan value */
+        body.edit-mode .field-value { display: none; }
+        body.edit-mode .field-group input,
+        body.edit-mode .field-group textarea { display: block; }
+
+        .divider { height: 1px; background: #f0f0f0; margin: 4px 0 20px; }
+
+        /* ── ACTION BUTTONS ── */
+        .action-row {
+            padding: 0 28px 24px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-edit-prof {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #333;
+        }
+        .btn-edit-prof:hover { background: #f5f5f5; }
+
+        .btn-save-prof {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            background: #4D96FF;
+            color: #fff;
+            display: none;
+        }
+        .btn-save-prof:hover { background: #2d7ef0; }
+        .btn-cancel-prof {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #555;
+            display: none;
+        }
+        .btn-cancel-prof:hover { background: #f5f5f5; }
+
+        /* Saat edit mode */
+        body.edit-mode .btn-edit-prof   { display: none; }
+        body.edit-mode .btn-save-prof,
+        body.edit-mode .btn-cancel-prof { display: inline-block; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #222;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 9999;
+            animation: slideUp 0.3s ease;
+        }
+        .toast-success { background: #27AE60; }
+        .toast-error   { background: #EB5757; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .toast-hide { opacity: 0; transition: opacity 0.3s; }

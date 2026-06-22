@@ -4,6 +4,51 @@ if (!userId) {
     window.location.href = './loginuser.html';
 }
 
+// ============================================
+// MAPPING GAMBAR LOKAL
+// ============================================
+const gambarProdukMap = {
+    'Batik Sumenep':         './img/batiksumenep.jpg',
+    'Kue Macho':             './img/kuemacho.png',
+    'Kacang Otok':           './img/kacangotok.jpeg',
+    'Buah Siwalan':          './img/buahsiwalan.jpg',
+    'Odheng':                './img/odheng.png',
+    'Miniatur Karapan Sapi': './img/miniaturkarapansapi.png',
+    'Keripik Tette':         './img/keripiktette.jpeg',
+    'Petis Madura':          './img/petismadura.png',
+    'Rengginang Lorjuk':     './img/rengginanglorjuk.png',
+    'Bolu Jubada':           './img/bolujubada.png',
+    'Keripik Terung':        './img/keripikterung.png',
+    'Kaos Sakera':           './img/kaossakera.jpeg',
+};
+
+// ============================================
+// HELPER: AMBIL GAMBAR PRODUK
+// Prioritas:
+// 1. gambarProdukMap[nama]       → cocokkan nama ke gambar lokal
+// 2. item.gambarProduk           → snapshot gambar saat order dibuat (order baru)
+// 3. item.produk?.gambar         → dari populate database
+// 4. ./img/batiksumenep.jpg      → fallback order lama yang produk:null
+// ============================================
+function getProductImage(item) {
+    const nama = item.produk?.nama || item.namaProduk || '';
+
+    if (nama && gambarProdukMap[nama])  return gambarProdukMap[nama];
+    if (item.gambarProduk)              return item.gambarProduk;
+    if (item.produk?.gambar)            return item.produk.gambar;
+    return './img/batiksumenep.jpg';
+}
+
+// ============================================
+// HELPER: AMBIL NAMA PRODUK
+// ============================================
+function getProductName(item) {
+    return item.produk?.nama || item.namaProduk || 'Produk';
+}
+
+// ============================================
+// FORMAT HELPERS
+// ============================================
 function formatIDR(amount) {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -20,10 +65,15 @@ function formatDate(dateStr) {
 
 function getStatusClass(status) {
     const map = {
-        'pending': 'pending',
-        'diproses': 'pending',
-        'dikirim': 'pending',
-        'selesai': 'delivered',
+        'Pending':    'pending',
+        'Processing': 'pending',
+        'Shipping':   'pending',
+        'Completed':  'delivered',
+        'Cancelled':  'cancelled',
+        'pending':    'pending',
+        'diproses':   'pending',
+        'dikirim':    'pending',
+        'selesai':    'delivered',
         'dibatalkan': 'cancelled'
     };
     return map[status] || 'pending';
@@ -31,20 +81,27 @@ function getStatusClass(status) {
 
 function getStatusLabel(status) {
     const map = {
-        'pending': 'Pending',
-        'diproses': 'Diproses',
-        'dikirim': 'Dikirim',
-        'selesai': 'Delivered',
+        'Pending':    'Pending',
+        'Processing': 'Diproses',
+        'Shipping':   'Dikirim',
+        'Completed':  'Delivered',
+        'Cancelled':  'Cancelled',
+        'pending':    'Pending',
+        'diproses':   'Diproses',
+        'dikirim':    'Dikirim',
+        'selesai':    'Delivered',
         'dibatalkan': 'Cancelled'
     };
     return map[status] || status;
 }
 
-// ================= VIEW INVOICE =================
+// ============================================
+// VIEW INVOICE
+// ============================================
 function downloadInvoice(order) {
     const itemsHTML = order.items.map(item => `
         <tr>
-            <td>${item.produk?.nama || 'Produk'}</td>
+            <td>${getProductName(item)}</td>
             <td style="text-align:center">${item.jumlah}</td>
             <td style="text-align:right">${formatIDR(item.harga)}</td>
             <td style="text-align:right">${formatIDR(item.harga * item.jumlah)}</td>
@@ -60,36 +117,29 @@ function downloadInvoice(order) {
             <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body { font-family: Arial, sans-serif; color: #333; padding: 40px; }
-                .invoice-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    margin-bottom: 40px;
-                    padding-bottom: 20px;
-                    border-bottom: 2px solid #2c3e50;
-                }
-                .brand-name { font-size: 32px; font-weight: bold; color: #2c3e50; }
-                .brand-sub { font-size: 12px; color: #888; margin-top: 4px; }
-                .invoice-title { text-align: right; }
-                .invoice-title h2 { font-size: 28px; color: #2c3e50; text-transform: uppercase; letter-spacing: 3px; }
-                .invoice-title p { font-size: 13px; color: #888; margin-top: 4px; }
-                .invoice-info { display: flex; justify-content: space-between; margin-bottom: 32px; gap: 20px; }
-                .info-block h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; }
-                .info-block p { font-size: 14px; color: #333; line-height: 1.6; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-                thead tr { background: #2c3e50; color: white; }
-                thead th { padding: 12px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-                thead th:not(:first-child) { text-align: center; }
-                thead th:last-child { text-align: right; }
-                tbody tr { border-bottom: 1px solid #eee; }
-                tbody td { padding: 12px 16px; font-size: 14px; }
-                .total-section { display: flex; justify-content: flex-end; margin-bottom: 40px; }
-                .total-box { width: 280px; }
-                .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee; }
-                .total-row.grand { font-size: 16px; font-weight: bold; color: #2c3e50; border-top: 2px solid #2c3e50; border-bottom: none; padding-top: 12px; margin-top: 4px; }
-                .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; background: #e8f5e9; color: #2e7d32; }
-                .invoice-footer { text-align: center; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #aaa; }
-                @media print { body { padding: 20px; } @page { margin: 1cm; } }
+                .invoice-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:40px; padding-bottom:20px; border-bottom:2px solid #2c3e50; }
+                .brand-name { font-size:32px; font-weight:bold; color:#2c3e50; }
+                .brand-sub { font-size:12px; color:#888; margin-top:4px; }
+                .invoice-title { text-align:right; }
+                .invoice-title h2 { font-size:28px; color:#2c3e50; text-transform:uppercase; letter-spacing:3px; }
+                .invoice-title p { font-size:13px; color:#888; margin-top:4px; }
+                .invoice-info { display:flex; justify-content:space-between; margin-bottom:32px; gap:20px; }
+                .info-block h4 { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#888; margin-bottom:6px; }
+                .info-block p { font-size:14px; color:#333; line-height:1.6; }
+                table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+                thead tr { background:#2c3e50; color:white; }
+                thead th { padding:12px 16px; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+                thead th:not(:first-child) { text-align:center; }
+                thead th:last-child { text-align:right; }
+                tbody tr { border-bottom:1px solid #eee; }
+                tbody td { padding:12px 16px; font-size:14px; }
+                .total-section { display:flex; justify-content:flex-end; margin-bottom:40px; }
+                .total-box { width:280px; }
+                .total-row { display:flex; justify-content:space-between; padding:8px 0; font-size:14px; border-bottom:1px solid #eee; }
+                .total-row.grand { font-size:16px; font-weight:bold; color:#2c3e50; border-top:2px solid #2c3e50; border-bottom:none; padding-top:12px; margin-top:4px; }
+                .status-badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; text-transform:uppercase; background:#e8f5e9; color:#2e7d32; }
+                .invoice-footer { text-align:center; padding-top:20px; border-top:1px solid #eee; font-size:12px; color:#aaa; }
+                @media print { body { padding:20px; } @page { margin:1cm; } }
             </style>
         </head>
         <body>
@@ -105,22 +155,10 @@ function downloadInvoice(order) {
                 </div>
             </div>
             <div class="invoice-info">
-                <div class="info-block">
-                    <h4>No. Order</h4>
-                    <p>${order._id}</p>
-                </div>
-                <div class="info-block">
-                    <h4>Dikirim Ke</h4>
-                    <p>${order.alamatPengiriman}</p>
-                </div>
-                <div class="info-block">
-                    <h4>Metode Pembayaran</h4>
-                    <p>${order.metodePembayaran || '-'}</p>
-                </div>
-                <div class="info-block">
-                    <h4>Tanggal Order</h4>
-                    <p>${formatDate(order.createdAt)}</p>
-                </div>
+                <div class="info-block"><h4>No. Order</h4><p>${order._id}</p></div>
+                <div class="info-block"><h4>Dikirim Ke</h4><p>${order.alamatPengiriman || '-'}</p></div>
+                <div class="info-block"><h4>Metode Pembayaran</h4><p>${order.metodePembayaran || '-'}</p></div>
+                <div class="info-block"><h4>Tanggal Order</h4><p>${formatDate(order.createdAt)}</p></div>
             </div>
             <table>
                 <thead>
@@ -156,24 +194,30 @@ function downloadInvoice(order) {
     setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
 
-// ================= VIEW ORDER (popup detail) =================
+// ============================================
+// VIEW ORDER (popup detail)
+// ============================================
 function viewOrder(order) {
     const existing = document.getElementById('orderDetailPopup');
     if (existing) existing.remove();
 
-    const itemsHTML = order.items.map(item => `
-        <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #eee;">
-            <img src="${item.produk?.gambar || './img/default.jpg'}" 
-                 alt="${item.produk?.nama}"
-                 style="width:56px; height:56px; object-fit:cover; border-radius:8px;"
-                 onerror="this.src='./img/default.jpg'">
-            <div style="flex:1">
-                <div style="font-weight:600; font-size:14px;">${item.produk?.nama || 'Produk'}</div>
-                <div style="font-size:13px; color:#888;">Qty: ${item.jumlah}</div>
+    const itemsHTML = order.items.map(item => {
+        const imgSrc   = getProductImage(item);
+        const namaProd = getProductName(item);
+        return `
+            <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #eee;">
+                <img src="${imgSrc}"
+                     alt="${namaProd}"
+                     style="width:56px; height:56px; object-fit:cover; border-radius:8px;"
+                     onerror="this.src='./img/batiksumenep.jpg'">
+                <div style="flex:1">
+                    <div style="font-weight:600; font-size:14px;">${namaProd}</div>
+                    <div style="font-size:13px; color:#888;">Qty: ${item.jumlah}</div>
+                </div>
+                <div style="font-weight:600; font-size:14px;">${formatIDR(item.harga * item.jumlah)}</div>
             </div>
-            <div style="font-weight:600; font-size:14px;">${formatIDR(item.harga * item.jumlah)}</div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     const popup = document.createElement('div');
     popup.id = 'orderDetailPopup';
@@ -189,7 +233,6 @@ function viewOrder(order) {
                 <button onclick="document.getElementById('orderDetailPopup').remove()"
                     style="background:none; border:none; font-size:22px; cursor:pointer; color:#888;">&times;</button>
             </div>
-
             <div style="background:#f9f6f2; border-radius:10px; padding:16px; margin-bottom:20px; font-size:13px; line-height:2;">
                 <div style="display:flex; justify-content:space-between;">
                     <span style="color:#888;">No. Order</span>
@@ -209,15 +252,13 @@ function viewOrder(order) {
                 </div>
                 <div style="display:flex; justify-content:space-between;">
                     <span style="color:#888;">Dikirim ke</span>
-                    <span style="font-weight:600; text-align:right; max-width:240px;">${order.alamatPengiriman}</span>
+                    <span style="font-weight:600; text-align:right; max-width:240px;">${order.alamatPengiriman || '-'}</span>
                 </div>
             </div>
-
             <div style="margin-bottom:20px;">
                 <h4 style="font-size:14px; font-weight:600; margin-bottom:8px;">Produk</h4>
                 ${itemsHTML}
             </div>
-
             <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:2px solid #2c3e50;">
                 <span style="font-weight:700; font-size:15px;">Total</span>
                 <span style="font-weight:700; font-size:16px; color:#2c3e50;">${formatIDR(order.totalHarga)}</span>
@@ -232,41 +273,53 @@ function viewOrder(order) {
     document.body.appendChild(popup);
 }
 
-// ================= LOAD ORDERS =================
+// ============================================
+// LOAD ORDERS
+// ============================================
 async function loadOrders() {
     try {
-        const res = await fetch(`/api/order/${userId}`);
+        const res    = await fetch(`/api/order/${userId}`);
         const orders = await res.json();
 
         const container = document.querySelector('.orders-content');
         container.innerHTML = '<h1 class="page-title">History Order</h1>';
 
-        if (orders.length === 0) {
-            container.innerHTML += '<p style="padding:20px">Belum ada order!</p>';
+        if (!orders || orders.length === 0) {
+            container.innerHTML += `
+                <div style="text-align:center; padding:60px 20px; color:#888;">
+                    <div style="font-size:48px; margin-bottom:16px;">📦</div>
+                    <p style="font-size:16px;">Belum ada order!</p>
+                    <a href="./store.html" style="display:inline-block; margin-top:16px; padding:10px 24px; background:#2c3e50; color:#fff; border-radius:8px; text-decoration:none; font-size:14px;">
+                        Mulai Belanja
+                    </a>
+                </div>
+            `;
             return;
         }
 
         orders.forEach(order => {
-            const itemsHTML = order.items.map(item => `
-                <div class="item">
-                    <img src="${item.produk?.gambar || './img/default.jpg'}" 
-                         alt="${item.produk?.nama}">
-                    <div class="item-info">
-                        <h4>${item.produk?.nama || 'Produk'}</h4>
-                        <p class="qty">Qty : ${item.jumlah}</p>
-                    </div>
-                    <div class="item-actions">
-                        <span class="price">${formatIDR(item.harga)}</span>
-                        <div class="action-links">
-                            <a href="./store.html">View Product</a> | 
-                            <a href="./store.html">Buy it again</a>
+            const itemsHTML = order.items.map(item => {
+                const imgSrc   = getProductImage(item);
+                const namaProd = getProductName(item);
+                return `
+                    <div class="item">
+                        <img src="${imgSrc}"
+                             alt="${namaProd}"
+                             onerror="this.src='./img/batiksumenep.jpg'">
+                        <div class="item-info">
+                            <h4>${namaProd}</h4>
+                            <p class="qty">Qty : ${item.jumlah}</p>
+                        </div>
+                        <div class="item-actions">
+                            <span class="price">${formatIDR(item.harga)}</span>
+                            <div class="action-links">
+                                <a href="./store.html">View Product</a> | 
+                                <a href="./store.html">Buy it again</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
-
-            // Simpan data order sebagai JSON di data attribute
-            const orderJson = JSON.stringify(order).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                `;
+            }).join('');
 
             const orderCard = `
                 <div class="order-card">
@@ -305,7 +358,15 @@ async function loadOrders() {
         });
 
     } catch (err) {
-        console.error('Error:', err);
+        console.error('Error load orders:', err);
+        const container = document.querySelector('.orders-content');
+        if (container) {
+            container.innerHTML += `
+                <div style="text-align:center; padding:40px; color:#e74c3c;">
+                    <p>Gagal memuat order. Silakan coba lagi.</p>
+                </div>
+            `;
+        }
     }
 }
 

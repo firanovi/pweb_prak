@@ -1,6 +1,6 @@
 // ================= STATE =================
 let selectedShipping = null;
-let selectedPayment = null;
+let selectedPayment  = null;
 let countdownInterval = null;
 let timeLeft = 900;
 let appliedDiscount = false;
@@ -28,25 +28,25 @@ const gambarProdukMap = {
 
 function getGambar(item) {
     const nama = item.produk?.nama || item.nama || '';
-    return gambarProdukMap[nama] || item.produk?.gambar || item.gambar || './img/default.jpg';
+    return gambarProdukMap[nama] || item.produk?.gambar || item.gambar || './img/batiksumenep.jpg';
 }
 
 // ================= LOAD CART =================
 async function loadCartData() {
     const cartContainer = document.querySelector('.cart-items');
-    const itemCountEl = document.querySelector('.item-count');
+    const itemCountEl   = document.querySelector('.item-count');
 
     try {
-        const localRaw = localStorage.getItem('sakamadura_cart_local');
+        const localRaw   = localStorage.getItem('sakamadura_cart_local');
         const localItems = JSON.parse(localRaw || '[]');
 
         cartItems = localItems.map(i => ({
             produk: { nama: i.nama, gambar: i.gambar },
-            harga: i.harga,
+            harga:  i.harga,
             jumlah: i.jumlah
         }));
 
-        subtotal = cartItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
+        subtotal           = cartItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
         finalCheckoutTotal = subtotal + tax;
 
         if (cartContainer) {
@@ -54,16 +54,16 @@ async function loadCartData() {
                 cartContainer.innerHTML = '';
                 cartItems.forEach(item => {
                     const nama   = item.produk?.nama || '-';
-                    const harga  = item.harga || 0;
+                    const harga  = item.harga  || 0;
                     const jumlah = item.jumlah || 1;
                     cartContainer.innerHTML += `
                         <div class="cart-item">
                             <div class="item-left">
-                                <img 
-                                    src="${getGambar(item)}" 
-                                    alt="${nama}" 
+                                <img
+                                    src="${getGambar(item)}"
+                                    alt="${nama}"
                                     class="cart-item-image"
-                                    onerror="this.src='./img/default.jpg'"
+                                    onerror="this.src='./img/batiksumenep.jpg'"
                                 >
                                 <div class="item-info">
                                     <div class="item-name"><strong>${nama}</strong></div>
@@ -100,10 +100,10 @@ async function loadUserData() {
     const addressInp   = document.getElementById('address');
 
     try {
-        const res = await fetch(`/api/auth/user/${userId}`);
+        const res  = await fetch(`/api/auth/user/${userId}`);
         const user = await res.json();
         if (res.ok) {
-            const namaParts = (user.nama || '').split(' ');
+            const namaParts    = (user.nama || '').split(' ');
             firstNameInp.value = namaParts[0] || '';
             lastNameInp.value  = namaParts.slice(1).join(' ') || '';
             addressInp.value   = user.alamat || '';
@@ -265,37 +265,25 @@ window.confirmOrder = async function () {
     const alamatPengiriman = `${firstName} ${lastName}, ${address}`;
 
     try {
-        // Fetch semua produk untuk mapping nama -> _id & seller
+        // Fetch semua produk untuk mapping nama → _id & seller
         const produkRes   = await fetch('/api/produk');
         const semuaProduk = await produkRes.json();
 
+        // ── Buat items dengan seller, TANPA filter produk null ──
         const items = cartItems.map(item => {
-            const nama = item.produk?.nama || item.nama;
+            const nama            = item.produk?.nama || item.nama;
             const produkDitemukan = semuaProduk.find(p => p.nama === nama);
             return {
-                produk: produkDitemukan?._id   || null,
-                seller: produkDitemukan?.seller || null,  // ← FIX: ambil seller dari produk
+                produk: produkDitemukan?._id    || null,
+                seller: produkDitemukan?.seller || null,  // ← seller ikut disimpan
                 jumlah: item.jumlah,
                 harga:  item.harga
             };
-        }).filter(i => i.produk !== null);
-
-        // Ambil sellerId dari item pertama
-        const sellerIdFromProduct = items[0]?.seller || null;
-
-        // Cek kalau ada produk yang tidak ketemu di DB
-        if (items.length !== cartItems.length) {
-            const tidakKetemu = cartItems
-                .filter(item => {
-                    const nama = item.produk?.nama || item.nama;
-                    return !semuaProduk.find(p => p.nama === nama);
-                })
-                .map(item => item.produk?.nama || item.nama);
-            console.warn('Produk tidak ditemukan di DB:', tidakKetemu);
-        }
+        });
+        // ↑ TIDAK ada .filter() — semua item tetap masuk walau produk tidak ketemu
 
         if (items.length === 0) {
-            alert('Produk tidak ditemukan di database. Coba logout dan login ulang.');
+            alert('Keranjang kosong!');
             return;
         }
 
@@ -305,10 +293,9 @@ window.confirmOrder = async function () {
             body: JSON.stringify({
                 userId,
                 items,
-                totalHarga:        finalCheckoutTotal,
+                totalHarga:       finalCheckoutTotal,
                 alamatPengiriman,
-                metodePembayaran:  getPaymentName(selectedPayment),
-                seller:            sellerIdFromProduct  // ← FIX: kirim seller ke backend
+                metodePembayaran: getPaymentName(selectedPayment)
             })
         });
 
@@ -334,17 +321,17 @@ function showQRPayment(method) {
     const orderNumSpan = document.getElementById('orderNumber');
     const qrImg        = document.getElementById('qrImage');
 
-    const displayPay = getPaymentName(method);
+    const displayPay     = getPaymentName(method);
     titleSpan.innerText  = `Pembayaran ${displayPay}`;
     methodSpan.innerText = displayPay;
 
-    const orderNum = '#ORD-' + Date.now().toString().slice(-8);
+    const orderNum         = '#ORD-' + Date.now().toString().slice(-8);
     orderNumSpan.innerText = orderNum;
     document.getElementById('qrTotalAmount').innerText =
         `Rp${Math.round(finalCheckoutTotal).toLocaleString('id-ID')}`;
 
-    const qrData = `${method}-${orderNum}-${Date.now()}`;
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+    const qrData  = `${method}-${orderNum}-${Date.now()}`;
+    qrImg.src     = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
     qrImg.style.display = 'block';
 
     popup.style.display = 'flex';

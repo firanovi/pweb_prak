@@ -2,9 +2,9 @@ require('dotenv').config();
 const dns = require('dns');
 dns.setDefaultResultOrder('ipv4first');
 
-const express = require('express');
+const express  = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors     = require('cors');
 
 const app = express();
 app.use(cors());
@@ -27,13 +27,13 @@ app.use('/api/cart',     require('./routes/cart'));
 app.use('/api/order',    require('./routes/order'));
 app.use('/api/wishlist', require('./routes/Wishlist'));
 
-// Koneksi database
-const url = "mongodb://firapinjam_db_user:DsURkWY2ZkuNRmlI@ac-glkbvvj-shard-00-00.runcguy.mongodb.net:27017,ac-glkbvvj-shard-00-01.runcguy.mongodb.net:27017,ac-glkbvvj-shard-00-02.runcguy.mongodb.net:27017/?ssl=true&replicaSet=atlas-jsi69i-shard-0&authSource=admin&appName=SakaMadura";
-
-mongoose.connect(url)
+// Koneksi database — pakai env variable
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Database Terhubung!'))
   .catch(err => console.error('Gagal konek:', err));
 
-app.listen(3000, () => {
-  console.log('Server jalan di http://localhost:3000');
+// Port — pakai env variable (Railway inject otomatis)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server jalan di port ${PORT}`);
 });

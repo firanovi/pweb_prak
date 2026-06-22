@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Seller - SakaMadura</title>
+    <link rel="stylesheet" href="dashboardseller.css">
+    <link rel="stylesheet" href="./profileseller.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <a href="dashboardseller.html" class="logo">SakaMadura</a>
+        <a href="dashboardseller.html" class="btn-back">← Kembali ke Dashboard</a>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-wrapper">
+        <h1 class="page-title">Profil Seller</h1>
+
+        <div class="profile-card">
+
+            <!-- Header avatar + nama -->
+            <div class="profile-card-header">
+                <div class="avatar-circle" id="prof-avatar">??</div>
+                <div class="info">
+                    <h2 id="prof-header-name">Loading...</h2>
+                    <p  id="prof-header-email">-</p>
+                    <span class="seller-badge">✓ Seller</span>
+                </div>
+            </div>
+
+            <!-- Fields -->
+            <div class="profile-fields">
+
+                <div class="field-group">
+                    <label>Nama Lengkap</label>
+                    <div class="field-value" id="view-nama">-</div>
+                    <input type="text" id="input-nama" placeholder="Nama lengkap">
+                </div>
+                <div class="divider"></div>
+
+                <div class="field-group">
+                    <label>Email</label>
+                    <div class="field-value" id="view-email">-</div>
+                    <input type="email" id="input-email" placeholder="email@contoh.com">
+                </div>
+                <div class="divider"></div>
+
+                <div class="field-group">
+                    <label>No. HP</label>
+                    <div class="field-value" id="view-hp">-</div>
+                    <input type="tel" id="input-hp" placeholder="08xxxxxxxxxx">
+                </div>
+                <div class="divider"></div>
+
+                <div class="field-group">
+                    <label>Alamat Toko</label>
+                    <div class="field-value" id="view-alamat">-</div>
+                    <textarea id="input-alamat" placeholder="Jl. Contoh No. 1, Kota"></textarea>
+                </div>
+
+            </div>
+
+            <!-- Tombol aksi -->
+            <div class="action-row">
+                <button class="btn-cancel-prof" onclick="cancelEdit()">Batal</button>
+                <button class="btn-edit-prof"   onclick="enableEdit()">✏️ Edit Profil</button>
+                <button class="btn-save-prof"   onclick="saveProfile()">💾 Simpan</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ── LOAD DATA DARI LOCALSTORAGE ──
+        function loadProfile() {
+            const nama   = localStorage.getItem("userName")    || "-";
+            const email  = localStorage.getItem("userEmail")   || "-";
+            const hp     = localStorage.getItem("userHp")      || "-";
+            const alamat = localStorage.getItem("userAlamat")  || "-";
+
+            // Inisial avatar
+            const initials = nama.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+            document.getElementById("prof-avatar").textContent      = initials;
+            document.getElementById("prof-header-name").textContent = nama;
+            document.getElementById("prof-header-email").textContent = email;
+
+            // View mode
+            document.getElementById("view-nama").textContent   = nama;
+            document.getElementById("view-email").textContent  = email;
+            document.getElementById("view-hp").textContent     = hp;
+            document.getElementById("view-alamat").textContent = alamat;
+
+            // Input default
+            document.getElementById("input-nama").value   = nama   !== "-" ? nama   : "";
+            document.getElementById("input-email").value  = email  !== "-" ? email  : "";
+            document.getElementById("input-hp").value     = hp     !== "-" ? hp     : "";
+            document.getElementById("input-alamat").value = alamat !== "-" ? alamat : "";
+        }
+
+        // ── ENABLE EDIT MODE ──
+        function enableEdit() {
+            document.body.classList.add("edit-mode");
+        }
+
+        // ── CANCEL EDIT ──
+        function cancelEdit() {
+            document.body.classList.remove("edit-mode");
+            loadProfile(); // reset input ke nilai semula
+        }
+
+        // ── SAVE PROFILE ──
+        async function saveProfile() {
+            const nama   = document.getElementById("input-nama").value.trim();
+            const email  = document.getElementById("input-email").value.trim();
+            const hp     = document.getElementById("input-hp").value.trim();
+            const alamat = document.getElementById("input-alamat").value.trim();
+
+            if (!nama || !email) {
+                showToast("Nama dan email wajib diisi", "error");
+                return;
+            }
+
+            // Simpan ke localStorage
+            localStorage.setItem("userName",   nama);
+            localStorage.setItem("userEmail",  email);
+            localStorage.setItem("userHp",     hp);
+            localStorage.setItem("userAlamat", alamat);
+
+            // Optional: kirim ke API
+            // try {
+            //     const userId = localStorage.getItem("userId");
+            //     await fetch(`/api/user/${userId}`, {
+            //         method: 'PUT',
+            //         headers: { 'Content-Type': 'application/json' },
+            //         body: JSON.stringify({ nama, email, noHp: hp, alamat })
+            //     });
+            // } catch (err) { console.error(err); }
+
+            loadProfile();
+            document.body.classList.remove("edit-mode");
+            showToast("Profil berhasil disimpan!", "success");
+        }
+
+        // ── TOAST ──
+        function showToast(message, type = "success") {
+            const existing = document.querySelector(".toast");
+            if (existing) existing.remove();
+            const toast = document.createElement("div");
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span>${type === "success" ? "✓" : "✗"}</span><span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add("toast-hide");
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ── INIT ──
+        loadProfile();
+    </script>
+</body>
+</html>

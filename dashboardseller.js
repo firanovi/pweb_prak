@@ -9,6 +9,98 @@ const userId   = localStorage.getItem("userId");
 const sellerId = localStorage.getItem("sellerId");
 
 // ============================================
+// LOAD USER PROFILE
+// ============================================
+async function loadUserProfile() {
+    try {
+        const nama  = localStorage.getItem("userName")  || "Seller";
+        const email = localStorage.getItem("userEmail") || "-";
+        setProfileDisplay(nama, email);
+
+        // Uncomment kalau sudah ada API user:
+        // const res  = await fetch(`/api/user/${userId}`);
+        // const data = await res.json();
+        // setProfileDisplay(data.nama, data.email);
+        // localStorage.setItem("userName",  data.nama);
+        // localStorage.setItem("userEmail", data.email);
+
+    } catch (err) {
+        console.error('Gagal load profil:', err);
+    }
+}
+
+function setProfileDisplay(nama, email) {
+    const initials = nama
+        .split(" ")
+        .map(w => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+
+    const elName    = document.getElementById("header-user-name");
+    const elEmail   = document.getElementById("header-user-email");
+    const elInitial = document.getElementById("header-user-initial");
+    const elDdName  = document.getElementById("dropdown-user-name");
+    const elDdEmail = document.getElementById("dropdown-user-email");
+
+    if (elName)    elName.textContent    = nama;
+    if (elEmail)   elEmail.textContent   = email;
+    if (elInitial) elInitial.textContent = initials;
+    if (elDdName)  elDdName.textContent  = nama;
+    if (elDdEmail) elDdEmail.textContent = email;
+}
+
+// ============================================
+// TOGGLE DROPDOWN PROFIL
+// ============================================
+function toggleProfileDropdown() {
+    const dd = document.getElementById("profile-dropdown");
+    const ch = document.getElementById("profile-chevron");
+    if (!dd) return;
+    const isOpen = dd.classList.toggle("show");
+    if (ch) ch.classList.toggle("open", isOpen);
+}
+
+document.addEventListener("click", function(e) {
+    const trigger = document.getElementById("profile-trigger");
+    const dd      = document.getElementById("profile-dropdown");
+    if (trigger && dd && !trigger.contains(e.target)) {
+        dd.classList.remove("show");
+        const ch = document.getElementById("profile-chevron");
+        if (ch) ch.classList.remove("open");
+    }
+});
+
+// ============================================
+// NAVIGASI DARI DROPDOWN
+// ============================================
+function goToProfile() {
+    window.location.href = "./profilseller.html";
+}
+
+function goToSettings() {
+    window.location.href = "./settingsseller.html";
+}
+
+// ============================================
+// LOGOUT
+// ============================================
+function logout() {
+    if (!confirm("Yakin ingin keluar?")) return;
+
+    localStorage.removeItem("userId");
+    localStorage.removeItem("sellerId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+
+    showToast("Berhasil keluar. Mengalihkan...", "success");
+
+    setTimeout(() => {
+        window.location.href = "./loginseller.html";
+    }, 1500);
+}
+
+// ============================================
 // MAPPING GAMBAR LOKAL
 // ============================================
 const gambarProdukMap = {
@@ -27,7 +119,7 @@ const gambarProdukMap = {
 };
 
 // ============================================
-// DATA PRODUCTS - FETCH DARI DATABASE
+// DATA PRODUCTS
 // ============================================
 let productsData = [];
 
@@ -52,7 +144,7 @@ async function loadProducts() {
 }
 
 // ============================================
-// DATA ORDERS - FETCH DARI DATABASE
+// DATA ORDERS (untuk tabel Orders)
 // ============================================
 let ordersData         = [];
 let originalOrdersData = [];
@@ -64,10 +156,10 @@ async function loadOrders() {
         ordersData = data.map(o => ({
             id: o._id,
             customer: {
-                name:    o.user?.nama           || 'Unknown',
-                email:   o.user?.email          || '-',
-                phone:   o.user?.noHp           || '-',
-                address: o.alamatPengiriman     || '-'
+                name:    o.user?.nama       || 'Unknown',
+                email:   o.user?.email      || '-',
+                phone:   o.user?.noHp       || '-',
+                address: o.alamatPengiriman || '-'
             },
             date:  new Date(o.createdAt).toLocaleDateString('id-ID'),
             items: o.items.map(i => ({
@@ -95,27 +187,149 @@ async function loadOrders() {
 }
 
 // ============================================
+// DATA ORDERS UNTUK CHART & ANALYTICS
+// ============================================
+let allOrdersForChart = [];
+
+async function loadAllOrdersForChart() {
+    try {
+        const res  = await fetch(`/api/order?seller=${sellerId}`);
+        const data = await res.json();
+        allOrdersForChart = data.map(o => ({
+            date:   new Date(o.createdAt),
+            total:  (o.items || []).reduce((s, i) => s + ((i.harga || 0) * (i.jumlah || 0)), 0) + (o.ongkir || 0),
+            alamat: o.alamatPengiriman || '',
+            status: o.status || 'Pending',
+            items:  (o.items || []).map(i => ({
+                nama:     i.produk?.nama || '-',
+                subtotal: (i.harga || 0) * (i.jumlah || 0)
+            }))
+        }));
+    } catch (err) {
+        console.error('Gagal load order untuk chart:', err);
+        allOrdersForChart = [];
+    }
+}
+
+// ============================================
+// HELPER: REVENUE PER HARI DALAM 1 MINGGU
+// ============================================
+function getWeeklyRevenueData(month, weekIndex) {
+    const startDay = weekIndex * 7 + 1;
+    const endDay   = startDay + 6;
+
+    // Hitung semua order (bukan hanya Completed) supaya data tidak kosong
+    const filtered = allOrdersForChart.filter(o => {
+        return o.date.getMonth() === month &&
+               o.date.getDate()  >= startDay &&
+               o.date.getDate()  <= endDay;
+    });
+
+    const days          = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const revenuePerDay = [0, 0, 0, 0, 0, 0, 0];
+    filtered.forEach(o => {
+        revenuePerDay[o.date.getDay()] += o.total;
+    });
+
+    return { labels: days, data: revenuePerDay };
+}
+
+// ============================================
+// HELPER: JUMLAH ORDER PER KOTA
+// ============================================
+function getLocationData() {
+    const cityMap = {};
+    allOrdersForChart.forEach(o => {
+        if (!o.alamat) return;
+        // Ambil bagian terakhir dari alamat sebagai nama kota
+        const parts = o.alamat.split(/[,.\n]/);
+        const kota  = (parts[parts.length - 1] || parts[0] || '').trim();
+        if (!kota) return;
+        cityMap[kota] = (cityMap[kota] || 0) + 1;
+    });
+
+    const sorted = Object.entries(cityMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6);
+
+    return {
+        labels: sorted.map(e => e[0]),
+        data:   sorted.map(e => e[1])
+    };
+}
+
+// ============================================
+// HELPER: HITUNG STAT CARDS
+// ============================================
+function calcDashboardStats() {
+    // Hitung semua order yang masuk (bukan hanya Completed)
+    const allOrders    = allOrdersForChart;
+    const totalEarning = allOrders.reduce((s, o) => s + o.total, 0);
+    const totalOrders  = allOrders.length;
+    const avgEarning   = totalOrders > 0 ? Math.round(totalEarning / totalOrders) : 0;
+    return { totalEarning, totalOrders, avgEarning };
+}
+
+// ============================================
+// HELPER: PENJUALAN PER PRODUK UNTUK DONUT
+// ============================================
+function getSalesPerProduct() {
+    const prodMap = {};
+    allOrdersForChart.forEach(o => {
+        o.items.forEach(i => {
+            if (!i.nama || i.nama === '-') return;
+            prodMap[i.nama] = (prodMap[i.nama] || 0) + i.subtotal;
+        });
+    });
+
+    const sorted = Object.entries(prodMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 7);
+
+    const colors = ['#6BCB77','#4ECDC4','#FF6B6B','#FF8E72','#FFCC5C','#A29BFE','#4D96FF'];
+    return {
+        labels: sorted.map(e => e[0]),
+        data:   sorted.map(e => e[1]),
+        colors: sorted.map((_, i) => colors[i % colors.length])
+    };
+}
+
+// ============================================
 // VIEWS TEMPLATES
 // ============================================
 const views = {
     dashboard: `
     <div class="stats-grid">
-        <div class="stat-card"><h3>Total Earning</h3><p>Rp 5.000.000,00</p></div>
-        <div class="stat-card"><h3>Total Orders</h3><p>500 pcs</p></div>
-        <div class="stat-card"><h3>Avg Earning</h3><p>Rp 450.000,00</p></div>
+        <div class="stat-card">
+            <h3>Total Earning</h3>
+            <p id="stat-total-earning">Memuat...</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Orders</h3>
+            <p id="stat-total-orders">Memuat...</p>
+        </div>
+        <div class="stat-card">
+            <h3>Avg Earning</h3>
+            <p id="stat-avg-earning">Memuat...</p>
+        </div>
     </div>
     <div class="main-card">
         <div class="title-row">
             <h2>Weekly Financial</h2>
             <div style="display: flex; gap: 10px;">
-                <select class="custom-select" id="weekSelect">
-                    <option>Week 1</option><option>Week 2</option><option>Week 3</option><option>Week 4</option>
+                <select class="custom-select" id="weekSelect" onchange="filterWeeklyChart()">
+                    <option value="0">Week 1</option>
+                    <option value="1">Week 2</option>
+                    <option value="2">Week 3</option>
+                    <option value="3">Week 4</option>
                 </select>
-                <select class="custom-select" id="monthSelect">
-                    <option>January</option><option>February</option><option>March</option>
-                    <option>April</option><option>May</option><option>June</option>
-                    <option>July</option><option>August</option><option>September</option>
-                    <option>Oktober</option><option>November</option><option>December</option>
+                <select class="custom-select" id="monthSelect" onchange="filterWeeklyChart()">
+                    <option value="0">January</option><option value="1">February</option>
+                    <option value="2">March</option><option value="3">April</option>
+                    <option value="4">May</option><option value="5">June</option>
+                    <option value="6">July</option><option value="7">August</option>
+                    <option value="8">September</option><option value="9">Oktober</option>
+                    <option value="10">November</option><option value="11">December</option>
                 </select>
             </div>
         </div>
@@ -184,7 +398,6 @@ const views = {
                 <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Next</button>
             </div>
         </div>
-
         <div id="detailModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -202,12 +415,17 @@ const views = {
             <div class="title-row">
                 <h2>Weekly Financial</h2>
                 <div style="display: flex; gap: 10px;">
-                    <select class="custom-select"><option>Week 1</option><option>Week 2</option><option>Week 3</option><option>Week 4</option></select>
-                    <select class="custom-select">
-                        <option>January</option><option>February</option><option>March</option>
-                        <option>April</option><option>May</option><option>June</option>
-                        <option>July</option><option>August</option><option>September</option>
-                        <option>Oktober</option><option>November</option><option>December</option>
+                    <select class="custom-select" id="an-weekSelect" onchange="filterAnalyticsWeekly()">
+                        <option value="0">Week 1</option><option value="1">Week 2</option>
+                        <option value="2">Week 3</option><option value="3">Week 4</option>
+                    </select>
+                    <select class="custom-select" id="an-monthSelect" onchange="filterAnalyticsWeekly()">
+                        <option value="0">January</option><option value="1">February</option>
+                        <option value="2">March</option><option value="3">April</option>
+                        <option value="4">May</option><option value="5">June</option>
+                        <option value="6">July</option><option value="7">August</option>
+                        <option value="8">September</option><option value="9">Oktober</option>
+                        <option value="10">November</option><option value="11">December</option>
                     </select>
                 </div>
             </div>
@@ -225,12 +443,12 @@ const views = {
             <h3>Monthly Target</h3>
             <div class="chart-box">
                 <canvas id="targetChart"></canvas>
-                <div class="percentage">66%</div>
+                <div class="percentage" id="target-percentage">0%</div>
             </div>
             <div class="target-stats">
-                <div><small>Target</small><p style="font-weight:bold;">10.000.000</p></div>
-                <div><small>Revenue</small><p style="font-weight:bold;">5.000.000</p></div>
-                <div><small>Today</small><p style="font-weight:bold;">1.000.000</p></div>
+                <div><small>Target</small><p style="font-weight:bold;" id="target-nilai">-</p></div>
+                <div><small>Revenue</small><p style="font-weight:bold;" id="target-revenue">-</p></div>
+                <div><small>Today</small><p style="font-weight:bold;" id="target-today">-</p></div>
             </div>
         </div>
 
@@ -238,20 +456,288 @@ const views = {
             <h3>Total Sales</h3>
             <div class="sales-content">
                 <div class="donut-box"><canvas id="salesDonut"></canvas></div>
-                <div class="sales-legend">
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #6BCB77;"></span><span>Miniatur Karapan Sapi</span></div><strong>1.200.000</strong></div>
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #4ECDC4;"></span><span>Kaos Sakera</span></div><strong>300.000</strong></div>
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #FF6B6B;"></span><span>Odheng</span></div><strong>500.000</strong></div>
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #FF8E72;"></span><span>Buah Siwalan</span></div><strong>600.000</strong></div>
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #FFCC5C;"></span><span>Kue Macho</span></div><strong>700.000</strong></div>
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #A29BFE;"></span><span>Kacang Otok</span></div><strong>1.000.000</strong></div>
-                    <div class="legend-item"><div class="item-info"><span class="dot" style="background-color: #4D96FF;"></span><span>Batik Sumenep</span></div><strong>3.000.000</strong></div>
-                </div>
+                <div class="sales-legend" id="sales-legend-list"></div>
             </div>
         </div>
     </div>
     `,
 };
+
+// ============================================
+// INSTANCE CHART (supaya bisa di-destroy)
+// ============================================
+let mainChartInstance      = null;
+let financialChartInstance = null;
+let locationChartInstance  = null;
+let targetChartInstance    = null;
+let salesDonutInstance     = null;
+
+// ============================================
+// RENDER DASHBOARD: STAT CARDS + CHART
+// ============================================
+async function renderDashboardChart() {
+    if (allOrdersForChart.length === 0) await loadAllOrdersForChart();
+
+    // ── Stat cards ──
+    const stats  = calcDashboardStats();
+    const elEarn = document.getElementById('stat-total-earning');
+    const elOrd  = document.getElementById('stat-total-orders');
+    const elAvg  = document.getElementById('stat-avg-earning');
+
+    if (elEarn) elEarn.textContent = 'Rp ' + stats.totalEarning.toLocaleString('id-ID') + ',00';
+    if (elOrd)  elOrd.textContent  = stats.totalOrders + ' orders';
+    if (elAvg)  elAvg.textContent  = 'Rp ' + stats.avgEarning.toLocaleString('id-ID') + ',00';
+
+    // ── Set dropdown ke bulan sekarang ──
+    const now      = new Date();
+    const monthSel = document.getElementById('monthSelect');
+    const weekSel  = document.getElementById('weekSelect');
+    if (monthSel) monthSel.value = String(now.getMonth());
+    if (weekSel)  weekSel.value  = '0';
+
+    drawMainChart(now.getMonth(), 0);
+}
+
+function drawMainChart(month, weekIndex) {
+    const ctx = document.getElementById('mainChart');
+    if (!ctx) return;
+
+    const { labels, data } = getWeeklyRevenueData(month, weekIndex);
+
+    if (mainChartInstance) mainChartInstance.destroy();
+    mainChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label:           'Revenue (Rp)',
+                data,
+                backgroundColor: '#99D5FF',
+                borderRadius:    10,
+                barPercentage:   0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: v => {
+                            if (v >= 1000000) return 'Rp ' + (v / 1000000).toFixed(1) + 'M';
+                            if (v >= 1000)    return 'Rp ' + (v / 1000).toFixed(0) + 'K';
+                            return 'Rp ' + v;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function filterWeeklyChart() {
+    const month     = parseInt(document.getElementById('monthSelect').value);
+    const weekIndex = parseInt(document.getElementById('weekSelect').value);
+    drawMainChart(month, weekIndex);
+}
+
+// ============================================
+// INIT ANALYTICS (SEMUA DARI ORDER)
+// ============================================
+async function initAnalyticsCharts() {
+    if (allOrdersForChart.length === 0) await loadAllOrdersForChart();
+
+    const now = new Date();
+
+    // Set dropdown ke bulan sekarang
+    const anMonth = document.getElementById('an-monthSelect');
+    const anWeek  = document.getElementById('an-weekSelect');
+    if (anMonth) anMonth.value = String(now.getMonth());
+    if (anWeek)  anWeek.value  = '0';
+
+    drawFinancialChart(now.getMonth(), 0);
+    drawLocationChart();
+    drawTargetChart();
+    drawSalesDonut();
+}
+
+// ── Weekly Financial (Analytics) ──
+function drawFinancialChart(month, weekIndex) {
+    const ctx = document.getElementById('financialChart');
+    if (!ctx) return;
+
+    const { labels, data } = getWeeklyRevenueData(month, weekIndex);
+
+    if (financialChartInstance) financialChartInstance.destroy();
+    financialChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label:           'Revenue (Rp)',
+                data,
+                backgroundColor: '#99D5FF',
+                borderRadius:    10,
+                barPercentage:   0.6
+            }]
+        },
+        options: {
+            responsive:          true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: v => {
+                            if (v >= 1000000) return 'Rp ' + (v / 1000000).toFixed(1) + 'M';
+                            if (v >= 1000)    return 'Rp ' + (v / 1000).toFixed(0) + 'K';
+                            return 'Rp ' + v;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function filterAnalyticsWeekly() {
+    const month     = parseInt(document.getElementById('an-monthSelect').value);
+    const weekIndex = parseInt(document.getElementById('an-weekSelect').value);
+    drawFinancialChart(month, weekIndex);
+}
+
+// ── Sales By Location ──
+function drawLocationChart() {
+    const ctx = document.getElementById('locationChart');
+    if (!ctx) return;
+
+    const { labels, data } = getLocationData();
+    const finalLabels = labels.length > 0 ? labels : ['Belum ada data'];
+    const finalData   = data.length   > 0 ? data   : [0];
+
+    if (locationChartInstance) locationChartInstance.destroy();
+    locationChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: finalLabels,
+            datasets: [{
+                label:           'Jumlah Order',
+                data:            finalData,
+                backgroundColor: '#4D96FF',
+                borderRadius:    8
+            }]
+        },
+        options: {
+            responsive:          true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+}
+
+// ── Monthly Target ──
+function drawTargetChart() {
+    const ctx = document.getElementById('targetChart');
+    if (!ctx) return;
+
+    const now = new Date();
+
+    // Revenue bulan ini (semua order)
+    const revenueMonthly = allOrdersForChart
+        .filter(o =>
+            o.date.getMonth()    === now.getMonth() &&
+            o.date.getFullYear() === now.getFullYear()
+        )
+        .reduce((s, o) => s + o.total, 0);
+
+    // Revenue hari ini
+    const revenueToday = allOrdersForChart
+        .filter(o =>
+            o.date.getDate()     === now.getDate()  &&
+            o.date.getMonth()    === now.getMonth() &&
+            o.date.getFullYear() === now.getFullYear()
+        )
+        .reduce((s, o) => s + o.total, 0);
+
+    // Target = 2x revenue bulan ini, minimal Rp 10 juta
+    const target     = Math.max(revenueMonthly * 2, 10000000);
+    const percentage = Math.min(Math.round((revenueMonthly / target) * 100), 100);
+
+    // Update teks
+    const elPct     = document.getElementById('target-percentage');
+    const elTarget  = document.getElementById('target-nilai');
+    const elRevenue = document.getElementById('target-revenue');
+    const elToday   = document.getElementById('target-today');
+
+    if (elPct)     elPct.textContent     = percentage + '%';
+    if (elTarget)  elTarget.textContent  = formatRupiah(target);
+    if (elRevenue) elRevenue.textContent = formatRupiah(revenueMonthly);
+    if (elToday)   elToday.textContent   = formatRupiah(revenueToday);
+
+    if (targetChartInstance) targetChartInstance.destroy();
+    targetChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data:            [percentage, 100 - percentage],
+                backgroundColor: ['#4D96FF', '#D9E9FF'],
+                borderWidth:     0,
+                circumference:   180,
+                rotation:        270
+            }]
+        },
+        options: {
+            cutout:  '85%',
+            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+        }
+    });
+}
+
+// ── Total Sales Donut ──
+function drawSalesDonut() {
+    const ctx = document.getElementById('salesDonut');
+    if (!ctx) return;
+
+    const { labels, data, colors } = getSalesPerProduct();
+    const legendEl = document.getElementById('sales-legend-list');
+
+    const finalLabels = labels.length > 0 ? labels : ['Belum ada data'];
+    const finalData   = data.length   > 0 ? data   : [1];
+    const finalColors = colors.length > 0 ? colors : ['#ddd'];
+
+    // Render legend dinamis
+    if (legendEl) {
+        legendEl.innerHTML = finalLabels.map((label, i) => `
+            <div class="legend-item">
+                <div class="item-info">
+                    <span class="dot" style="background-color:${finalColors[i]};"></span>
+                    <span>${label}</span>
+                </div>
+                <strong>${finalData[i] ? formatRupiah(finalData[i]) : '-'}</strong>
+            </div>
+        `).join('');
+    }
+
+    if (salesDonutInstance) salesDonutInstance.destroy();
+    salesDonutInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: finalLabels,
+            datasets: [{
+                data:            finalData,
+                backgroundColor: finalColors,
+                borderWidth:     2
+            }]
+        },
+        options: {
+            cutout:  '65%',
+            plugins: { legend: { display: false } }
+        }
+    });
+}
 
 // ============================================
 // PRODUCT STATUS CONFIG
@@ -280,18 +766,16 @@ const ordersPerPage     = 5;
 const statusOptions     = ["Pending", "Processing", "Shipping", "Completed", "Cancelled"];
 
 // ============================================
-// RENDER PRODUCTS TABLE (WITH PAGINATION)
+// RENDER PRODUCTS TABLE
 // ============================================
 function renderProductsTable() {
     const tbody = document.getElementById('productTableBody');
     if (!tbody) return;
 
-    const totalPages   = Math.ceil(productsData.length / productsPerPage);
     const start        = currentPageProducts * productsPerPage;
     const pageProducts = productsData.slice(start, start + productsPerPage);
 
     tbody.innerHTML = '';
-
     pageProducts.forEach(product => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -307,11 +791,9 @@ function renderProductsTable() {
             <td>${product.stock} pcs</td>
             <td>${product.type}</td>
             <td>
-                <select
-                    class="product-status-dropdown"
-                    style="${getProductStatusDropdownStyle(product.status)}"
-                    onchange="updateProductStatus('${product.id}', this)"
-                >
+                <select class="product-status-dropdown"
+                        style="${getProductStatusDropdownStyle(product.status)}"
+                        onchange="updateProductStatus('${product.id}', this)">
                     ${productStatusOptions.map(opt => `
                         <option value="${opt}" ${product.status === opt ? 'selected' : ''}>${opt}</option>
                     `).join('')}
@@ -348,7 +830,7 @@ function changeProductPage(direction) {
 }
 
 // ============================================
-// UPDATE PRODUCT STATUS (WITH API)
+// UPDATE PRODUCT STATUS
 // ============================================
 async function updateProductStatus(productId, selectEl) {
     const newStatus = selectEl.value;
@@ -358,12 +840,10 @@ async function updateProductStatus(productId, selectEl) {
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({ status: newStatus })
         });
-
         if (!res.ok) throw new Error('Gagal update status');
 
         const product = productsData.find(p => p.id === productId);
         if (product) product.status = newStatus;
-
         selectEl.style.cssText = getProductStatusDropdownStyle(newStatus);
         showToast(`Status "${product?.name}" diubah menjadi ${newStatus}`, 'success');
     } catch (err) {
@@ -375,7 +855,7 @@ async function updateProductStatus(productId, selectEl) {
 }
 
 // ============================================
-// EDIT PRODUCT MODAL & FUNCTIONS
+// EDIT PRODUCT MODAL
 // ============================================
 function openEditModal(productId) {
     const product = productsData.find(p => p.id === productId);
@@ -400,7 +880,6 @@ function closeEditModal() {
 async function saveEditProduct(e) {
     e.preventDefault();
     const productId = document.getElementById('edit-p-id-hidden').value;
-
     const data = {
         nama:     document.getElementById('edit-p-name').value,
         harga:    parseInt(document.getElementById('edit-p-price').value),
@@ -408,21 +887,17 @@ async function saveEditProduct(e) {
         kategori: document.getElementById('edit-p-type').value,
         status:   document.getElementById('edit-p-status').value
     };
-
     const fileInput = document.getElementById('edit-p-image');
     if (fileInput.files && fileInput.files[0]) {
         data.gambar = URL.createObjectURL(fileInput.files[0]);
     }
-
     try {
         const res = await fetch(`/api/produk/${productId}`, {
             method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify(data)
         });
-
         if (!res.ok) throw new Error('Gagal update produk');
-
         showToast('Produk berhasil diperbarui', 'success');
         closeEditModal();
         await loadProducts();
@@ -462,7 +937,6 @@ function renderOrdersTable() {
             </td>
         `;
     });
-
     updateOrderPaginationButtons();
 }
 
@@ -477,7 +951,7 @@ function updateOrderPaginationButtons() {
 }
 
 // ============================================
-// ORDER MANAGEMENT (WITH API)
+// ORDER MANAGEMENT
 // ============================================
 async function updateOrderStatus(orderId, newStatus) {
     try {
@@ -486,9 +960,7 @@ async function updateOrderStatus(orderId, newStatus) {
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({ status: newStatus })
         });
-
         if (!res.ok) throw new Error('Gagal update status');
-
         showToast(`Status order diubah menjadi ${newStatus}`, 'success');
         await loadOrders();
     } catch (err) {
@@ -502,7 +974,6 @@ async function deleteOrder(orderId) {
     try {
         const res = await fetch(`/api/order/${orderId}`, { method: 'DELETE' });
         if (!res.ok) throw new Error('Gagal hapus order');
-
         showToast('Order berhasil dihapus', 'success');
         await loadOrders();
     } catch (err) {
@@ -616,8 +1087,11 @@ function showDetail(orderId) {
             <div class="summary-row total-row"><span>Total Akhir</span><span>${formatRupiah(totalAmount)}</span></div>
         </div>
     `;
-
     document.getElementById('detailModal').style.display = 'flex';
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').style.display = 'none';
 }
 
 // ============================================
@@ -670,10 +1144,7 @@ function exportProducts() {
 // ============================================
 function openModal() {
     const modal = document.getElementById('productModal');
-    if (!modal) {
-        console.error('Modal dengan id="productModal" tidak ditemukan di HTML');
-        return;
-    }
+    if (!modal) { console.error('Modal productModal tidak ditemukan'); return; }
     const productForm = document.getElementById('productForm');
     if (productForm) productForm.reset();
     modal.style.display = 'flex';
@@ -692,7 +1163,7 @@ async function addNewProduct() {
     const fileEl  = document.getElementById('p-image');
 
     if (!nameEl || !priceEl || !stockEl || !typeEl) {
-        showToast('Form tidak lengkap, cek id elemen HTML', 'error');
+        showToast('Form tidak lengkap', 'error');
         return;
     }
 
@@ -706,7 +1177,6 @@ async function addNewProduct() {
         return;
     }
 
-    // Pakai mapping lokal kalau nama cocok, fallback ke placeholder
     let image = gambarProdukMap[name] || 'https://via.placeholder.com/40';
     if (fileEl && fileEl.files && fileEl.files[0]) {
         image = URL.createObjectURL(fileEl.files[0]);
@@ -716,25 +1186,15 @@ async function addNewProduct() {
         const res = await fetch('/api/produk', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({
-                seller:   userId,
-                nama:     name,
-                harga:    price,
-                stok:     stock,
-                kategori: type,
-                gambar:   image,
-            })
+            body:    JSON.stringify({ seller: userId, nama: name, harga: price, stok: stock, kategori: type, gambar: image })
         });
-
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
             throw new Error(errData.message || 'Gagal tambah produk');
         }
-
         showToast(`Produk "${name}" berhasil ditambahkan`, 'success');
         closeModal();
         await loadProducts();
-
         currentPageProducts = Math.max(0, Math.ceil(productsData.length / productsPerPage) - 1);
         renderProductsTable();
     } catch (err) {
@@ -763,7 +1223,7 @@ function showToast(message, type = 'success') {
 }
 
 // ============================================
-// NAVIGATION & CHARTS
+// NAVIGATION
 // ============================================
 function navigate(viewName, element) {
     document.getElementById('render-target').innerHTML = views[viewName];
@@ -783,81 +1243,10 @@ function navigate(viewName, element) {
     }
 }
 
-function renderDashboardChart() {
-    const ctx = document.getElementById('mainChart');
-    if (!ctx) return;
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            datasets: [{ label: 'Revenue', data: [5, 10, 6, 11, 13, 2, 8], backgroundColor: '#99D5FF', borderRadius: 10 }]
-        }
-    });
-}
-
-function initAnalyticsCharts() {
-    const financialChart = document.getElementById('financialChart');
-    const locationChart  = document.getElementById('locationChart');
-    const targetChart    = document.getElementById('targetChart');
-    const salesDonut     = document.getElementById('salesDonut');
-
-    if (financialChart) new Chart(financialChart, {
-        type: 'bar',
-        data: {
-            labels:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            datasets: [{ label: 'Revenue (Rp)', data: [5000000, 10000000, 6500000, 11000000, 13500000, 2500000, 8000000], backgroundColor: '#99D5FF', borderRadius: 10, barPercentage: 0.6 }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { display: false } },
-            scales:  { y: { beginAtZero: true, ticks: { callback: v => 'Rp ' + (v / 1000000) + 'M' } } }
-        }
-    });
-
-    if (locationChart) new Chart(locationChart, {
-        type: 'bar',
-        data: {
-            labels:   ['Surabaya', 'Banyuwangi', 'Jogja', 'Malang', 'Semarang', 'Bandung'],
-            datasets: [{ label: 'Jumlah Penjualan (pcs)', data: [400, 50, 50, 120, 80, 200], backgroundColor: '#4D96FF', borderRadius: 8 }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'top' } }
-        }
-    });
-
-    if (targetChart) new Chart(targetChart, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data:            [66, 34],
-                backgroundColor: ['#4D96FF', '#D9E9FF'],
-                borderWidth:     0,
-                circumference:   180,
-                rotation:        270
-            }]
-        },
-        options: {
-            cutout:  '85%',
-            plugins: { legend: { display: false }, tooltip: { enabled: false } }
-        }
-    });
-
-    if (salesDonut) new Chart(salesDonut, {
-        type: 'doughnut',
-        data: {
-            labels:   ['Miniatur Karapan Sapi', 'Kaos Sakera', 'Odheng', 'Buah Siwalan', 'Kue Macho', 'Kacang Otok', 'Batik Sumenep'],
-            datasets: [{
-                data:            [1200000, 300000, 500000, 600000, 700000, 1000000, 3000000],
-                backgroundColor: ['#6BCB77', '#4ECDC4', '#FF6B6B', '#FF8E72', '#FFCC5C', '#A29BFE', '#4D96FF'],
-                borderWidth:     2
-            }]
-        },
-        options: {
-            cutout:  '65%',
-            plugins: { legend: { display: false } }
-        }
-    });
-}
+// ============================================
+// INITnode
+// ============================================
+document.addEventListener("DOMContentLoaded", function () {
+    loadUserProfile();
+    navigate('dashboard', document.querySelector('.nav-item'));
+});
