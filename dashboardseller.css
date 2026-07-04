@@ -766,3 +766,521 @@ td {
         }
 
     .dropdown-item.logout { color: #EB5757; }
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+
+/* ---------- Tablet (max-width: 1024px) ---------- */
+@media (max-width: 1024px) {
+    .main-wrapper {
+        flex-direction: column;
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .logo {
+        margin-bottom: 0;
+        font-size: 28px;
+    }
+
+    .nav-item {
+        padding: 10px 18px;
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    .search-wrapper input {
+        width: 250px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+
+    .sales-content {
+        flex-direction: column;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .donut-box {
+        width: 200px;
+        margin: 0 auto;
+    }
+
+    .footer-bar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    #detailModal .modal-content {
+        width: 90vw;
+        padding: 25px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .modal-content {
+        width: 90%;
+        max-width: 500px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+/* ---------- Mobile (max-width: 768px) ---------- */
+@media (max-width: 768px) {
+    .main-wrapper {
+        padding: 12px;
+        gap: 15px;
+        min-height: auto;
+    }
+
+    .sidebar {
+        flex-wrap: wrap;
+        padding: 15px;
+        justify-content: center;
+        border-radius: 18px;
+    }
+
+    .logo {
+        font-size: 24px;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .nav-item {
+        padding: 8px 14px;
+        font-size: 13px;
+        border-radius: 12px;
+    }
+
+    .nav-item .icon {
+        margin-right: 8px;
+        font-size: 16px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .search-wrapper input {
+        width: 100%;
+        padding: 10px 18px;
+    }
+
+    .user-meta {
+        justify-content: space-between;
+        padding: 6px 12px;
+    }
+
+    .profile-pill .text {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+
+    .stat-card p {
+        font-size: 20px;
+    }
+
+    .main-card {
+        padding: 15px;
+        border-radius: 14px;
+        overflow-x: auto;
+    }
+
+    .title-row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .title-row .btn-white,
+    .title-row .btn-blue {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        font-size: 13px;
+        margin-right: 0;
+    }
+
+    table {
+        font-size: 12px;
+        min-width: 600px;
+    }
+
+    th, td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .status {
+        padding: 4px 10px;
+        font-size: 10px;
+    }
+
+    .btn-small {
+        padding: 4px 10px;
+        font-size: 11px;
+        margin-right: 2px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 13px;
+    }
+
+    .pagination-orders {
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 13px;
+        padding-top: 12px;
+    }
+
+    .page-btn {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    .modal-content {
+        padding: 20px;
+        margin: 10px;
+        border-radius: 18px;
+        max-width: 95%;
+    }
+
+    #detailModal .modal-content {
+        padding: 20px;
+        max-width: 95vw;
+    }
+
+    .modal-header h3 {
+        font-size: 16px;
+    }
+
+    .modal-close,
+    .close-modal {
+        font-size: 24px;
+    }
+
+    .chart-box {
+        height: 160px;
+    }
+
+    .percentage {
+        font-size: 32px;
+    }
+
+    .target-stats small {
+        font-size: 15px;
+    }
+
+    .target-stats p {
+        font-size: 18px;
+    }
+
+    .sales-legend .legend-item {
+        font-size: 13px;
+        padding: 8px 0;
+    }
+
+    .legend-item strong {
+        font-size: 14px;
+    }
+
+    .product-info {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .prod-thumb {
+        width: 34px;
+        height: 34px;
+    }
+
+    .product-table th,
+    .product-table td {
+        font-size: 12px;
+        padding: 10px 6px;
+    }
+
+    .product-table {
+        min-width: 500px;
+    }
+
+    .custom-select {
+        padding: 8px 32px 8px 12px;
+        font-size: 13px;
+    }
+
+    /* Toast */
+    .toast {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        padding: 12px 16px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+
+    .profile-pill {
+        padding: 4px 10px;
+    }
+
+    .profile-pill .avatar-initials {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+    }
+
+    .profile-dropdown {
+        width: 200px;
+        right: -10px;
+    }
+
+    .dropdown-item {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+
+/* ---------- Small Mobile (max-width: 480px) ---------- */
+@media (max-width: 480px) {
+    .main-wrapper {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .sidebar {
+        padding: 12px 10px;
+        border-radius: 14px;
+    }
+
+    .logo {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .nav-item {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    .nav-item .icon {
+        font-size: 14px;
+        margin-right: 6px;
+    }
+
+    .stat-card {
+        padding: 15px;
+        border-radius: 14px;
+    }
+
+    .stat-card h3 {
+        font-size: 12px;
+    }
+
+    .stat-card p {
+        font-size: 18px;
+    }
+
+    .main-card {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .title-row h2 {
+        font-size: 16px;
+    }
+
+    .btn-blue {
+        padding: 10px 14px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    .btn-white {
+        padding: 10px 14px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    .footer-bar {
+        padding: 15px;
+    }
+
+    .footer-logo {
+        font-size: 20px;
+    }
+
+    .modal-content {
+        padding: 16px;
+        margin: 8px;
+        border-radius: 14px;
+    }
+
+    .modal-header h3 {
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .modal-actions .btn-blue,
+    .modal-actions .btn-white {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .chart-box {
+        height: 140px;
+    }
+
+    .percentage {
+        font-size: 26px;
+    }
+
+    .sales-legend .legend-item {
+        font-size: 12px;
+        padding: 6px 0;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .legend-item strong {
+        font-size: 13px;
+    }
+
+    .product-table th,
+    .product-table td {
+        font-size: 11px;
+        padding: 8px 4px;
+    }
+
+    .prod-thumb {
+        width: 28px;
+        height: 28px;
+    }
+
+    .product-table {
+        min-width: 400px;
+    }
+
+    .status-dropdown,
+    .product-status-dropdown {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .btn-small {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .toast {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+        padding: 10px 14px;
+        font-size: 12px;
+        gap: 8px;
+    }
+
+    .profile-dropdown {
+        width: 180px;
+        right: -5px;
+    }
+}
+
+/* ---------- Tablet Landscape & Medium Screens (1025px - 1366px) ---------- */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .search-wrapper input {
+        width: 300px;
+    }
+
+    .sidebar {
+        width: 220px;
+        padding: 30px 16px;
+    }
+
+    .stats-grid {
+        gap: 16px;
+    }
+
+    .stat-card {
+        padding: 24px;
+    }
+}
+
+/* ---------- Large Screens (min-width: 1367px) ---------- */
+@media (min-width: 1367px) {
+    .main-wrapper {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 24px 32px;
+    }
+
+    .sidebar {
+        width: 280px;
+    }
+
+    .stats-grid {
+        gap: 24px;
+    }
+
+    .stat-card {
+        padding: 36px;
+    }
+
+    .search-wrapper input {
+        width: 450px;
+        padding: 14px 30px;
+    }
+}
