@@ -1,97 +1,101 @@
-// ============================================================
-// DETAIL PRODUK - SakaMadura
-// ============================================================
-
-const produkData = {
-  "Batik Sumenep":          { harga: 500000, id: "batik-sumenep" },
-  "Kue Macho":              { harga: 20000,  id: "kue-macho" },
-  "Kacang Otok":            { harga: 15000,  id: "kacang-otok" },
-  "Buah Siwalan":           { harga: 35000,  id: "buah-siwalan" },
-  "Odheng":                 { harga: 25000,  id: "odheng" },
-  "Miniatur Karapan Sapi":  { harga: 400000, id: "miniatur-karapan-sapi" },
-  "Keripik Tette":          { harga: 25000,  id: "keripik-tette" },
-  "Petis Madura":           { harga: 20000,  id: "petis-madura" },
-  "Rengginang Lorjuk":      { harga: 30000,  id: "rengginang-lorjuk" },
-  "Bolu Jubada":            { harga: 15000,  id: "bolu-jubada" },
-  "Keripik Terung":         { harga: 40000,  id: "keripik-terung" },
-  "Kaos Sakera":            { harga: 40000,  id: "kaos-sakera" },
-};
-
+let produkAktif = null; // simpan data produk yang lagi dibuka
 let jumlah = 1;
 
 function formatIDR(amount) {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency', currency: 'IDR', minimumFractionDigits: 0
-  }).format(amount);
+  }).format(amount || 0);
 }
 
-function getNamaProduk() {
-  const h2 = document.querySelector('.product-right h2');
-  return h2 ? h2.textContent.trim() : null;
+function getProdukId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
 }
 
-function getHargaProduk() {
-  const priceEl = document.querySelector('.product-right .price');
-  if (!priceEl) return 0;
-  const angka = priceEl.textContent.replace(/[^0-9]/g, '');
-  return parseInt(angka) || 0;
+function showState(state) {
+  // state: 'loading' | 'notfound' | 'ready'
+  document.getElementById('loadingState').classList.toggle('hidden', state !== 'loading');
+  document.getElementById('notFoundState').classList.toggle('hidden', state !== 'notfound');
+  document.getElementById('productSection').classList.toggle('hidden', state !== 'ready');
+  document.getElementById('recommendSection').classList.toggle('hidden', state !== 'ready');
+}
+
+// ── RENDER PRODUK KE HALAMAN ────────────────────────────────
+function renderProduk(produk) {
+  produkAktif = produk;
+
+  document.title = `${produk.nama} - SakaMadura`;
+
+  const gambar = produk.gambar || './img/default.jpg';
+  document.getElementById('mainImg').src = gambar;
+  document.getElementById('mainImg').alt = produk.nama;
+  document.getElementById('subImg').src = gambar;
+  document.getElementById('subImg').alt = produk.nama;
+
+  document.getElementById('produkNama').textContent = produk.nama;
+  document.getElementById('produkHarga').textContent = formatIDR(produk.harga);
+
+  const descEl = document.getElementById('produkDesc');
+  descEl.textContent = produk.deskripsi || 'Belum ada deskripsi untuk produk ini.';
+
+  jumlah = 1;
+  document.getElementById('qtySpan').textContent = jumlah;
+
+  showState('ready');
 }
 
 // ── QUANTITY ──────────────────────────────────────────────────
 function initQty() {
-  const qtySpan  = document.querySelector('.qty span');
-  const btnMinus = document.querySelector('.qty button:first-child');
-  const btnPlus  = document.querySelector('.qty button:last-child');
-  if (!qtySpan || !btnMinus || !btnPlus) return;
+  const qtySpan = document.getElementById('qtySpan');
+  const btnMinus = document.getElementById('qtyMinus');
+  const btnPlus  = document.getElementById('qtyPlus');
 
-  qtySpan.textContent = jumlah;
   btnMinus.addEventListener('click', () => {
-    if (jumlah > 1) { jumlah--; qtySpan.textContent = jumlah; }
+    if (jumlah > 1) {
+      jumlah--;
+      qtySpan.textContent = jumlah;
+    }
   });
+
   btnPlus.addEventListener('click', () => {
-    jumlah++; qtySpan.textContent = jumlah;
+    if (produkAktif && jumlah >= produkAktif.stok) {
+      alert('Jumlah melebihi stok yang tersedia.');
+      return;
+    }
+    jumlah++;
+    qtySpan.textContent = jumlah;
   });
 }
 
 // ── ADD TO CART ───────────────────────────────────────────────
 async function addToCart() {
   const userId = localStorage.getItem('userId');
+
   if (!userId) {
     alert('Kamu harus login dulu untuk menambahkan ke cart!');
     window.location.href = './loginuser.html';
     return;
   }
 
-  const nama  = getNamaProduk();
-  const harga = getHargaProduk();
+  if (!produkAktif) return;
 
   try {
-    const res = await fetch('/api/produk');
-    const semuaProduk = await res.json();
-    const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
+    const cartRes = await fetch('/api/cart/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        produkId: produkAktif._id,
+        jumlah,
+        harga: produkAktif.harga
+      })
+    });
 
-    if (produkDB) {
-      const cartRes = await fetch('/api/cart/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, produkId: produkDB._id, jumlah, harga: produkDB.harga })
-      });
-      if (cartRes.ok) {
-        alert(`✅ ${jumlah}x ${nama} berhasil ditambahkan ke cart!`);
-      } else {
-        const err = await cartRes.json();
-        alert(err.message || 'Gagal menambahkan ke cart.');
-      }
+    if (cartRes.ok) {
+      alert(`✅ ${jumlah}x ${produkAktif.nama} berhasil ditambahkan ke cart!`);
     } else {
-      let localCart = JSON.parse(localStorage.getItem('sakamadura_cart_local') || '[]');
-      const existing = localCart.find(i => i.nama === nama);
-      if (existing) {
-        existing.jumlah += jumlah;
-      } else {
-        localCart.push({ nama, harga, jumlah, gambar: document.querySelector('.main-img')?.src || '' });
-      }
-      localStorage.setItem('sakamadura_cart_local', JSON.stringify(localCart));
-      alert(`✅ ${jumlah}x ${nama} ditambahkan ke cart!`);
+      const err = await cartRes.json();
+      alert(err.message || 'Gagal menambahkan ke cart.');
     }
   } catch (err) {
     console.error('Error add to cart:', err);
@@ -102,43 +106,30 @@ async function addToCart() {
 // ── ADD TO WISHLIST ───────────────────────────────────────────
 async function addToWishlist() {
   const userId = localStorage.getItem('userId');
+
   if (!userId) {
     alert('Kamu harus login dulu untuk menambahkan ke wishlist!');
     window.location.href = './loginuser.html';
     return;
   }
 
-  const nama = getNamaProduk();
+  if (!produkAktif) return;
 
   try {
-    const res = await fetch('/api/produk');
-    const semuaProduk = await res.json();
-    const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
+    const wRes = await fetch('/api/wishlist/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, produkId: produkAktif._id })
+    });
 
-    if (produkDB) {
-      const wRes = await fetch('/api/wishlist/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, produkId: produkDB._id })
-      });
-      const data = await wRes.json();
-      if (wRes.ok) {
-        alert(`❤️ ${nama} ditambahkan ke wishlist!`);
-      } else {
-        alert(data.message || 'Gagal menambahkan ke wishlist.');
-      }
+    const data = await wRes.json();
+    if (wRes.ok) {
+      alert(`❤️ ${produkAktif.nama} ditambahkan ke wishlist!`);
     } else {
-      let localWish = JSON.parse(localStorage.getItem('sakamadura_wishlist_local') || '[]');
-      const sudahAda = localWish.find(i => i.nama === nama);
-      if (sudahAda) {
-        alert('Produk sudah ada di wishlist!');
-      } else {
-        localWish.push({ nama, harga: getHargaProduk(), gambar: document.querySelector('.main-img')?.src || '' });
-        localStorage.setItem('sakamadura_wishlist_local', JSON.stringify(localWish));
-        alert(`❤️ ${nama} ditambahkan ke wishlist!`);
-      }
+      alert(data.message || 'Gagal menambahkan ke wishlist.');
     }
   } catch (err) {
+    console.error('Error add to wishlist:', err);
     alert('Gagal terhubung ke server.');
   }
 }
@@ -146,63 +137,80 @@ async function addToWishlist() {
 // ── BUY NOW ───────────────────────────────────────────────────
 async function buyNow() {
   const userId = localStorage.getItem('userId');
+
   if (!userId) {
     alert('Kamu harus login dulu untuk melakukan pembelian!');
     window.location.href = './loginuser.html';
     return;
   }
 
-  const nama   = getNamaProduk();
-  const harga  = getHargaProduk();
-  const gambar = document.querySelector('.main-img')?.src || '';
+  await addToCart();
+  window.location.href = './payment.html';
+}
 
+// ── REKOMENDASI PRODUK LAIN ─────────────────────────────────
+async function loadRekomendasi(idSaatIni) {
+  const grid = document.getElementById('recommendGrid');
   try {
     const res = await fetch('/api/produk');
+    if (!res.ok) throw new Error('Gagal fetch produk');
     const semuaProduk = await res.json();
-    const produkDB = semuaProduk.find(p => p.nama.toLowerCase() === nama.toLowerCase());
 
-    if (produkDB) {
-      // Tambah ke server cart
-      await fetch('/api/cart/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, produkId: produkDB._id, jumlah, harga: produkDB.harga })
-      });
+    const lainnya = semuaProduk
+      .filter(p => p._id !== idSaatIni)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 4);
+
+    if (lainnya.length === 0) {
+      grid.innerHTML = '<p>Belum ada produk lain.</p>';
+      return;
     }
 
-    // Simpan ke localStorage sebelum redirect ke payment
-    const cartToSave = [{
-      nama:   produkDB?.nama  || nama,
-      harga:  produkDB?.harga || harga,
-      jumlah,
-      gambar
-    }];
-    localStorage.setItem('sakamadura_cart_local', JSON.stringify(cartToSave));
-
-    window.location.href = './payment.html';
-
+    grid.innerHTML = lainnya.map(p => `
+      <a href="detailProduk.html?id=${p._id}" class="card">
+        <img src="${p.gambar || './img/default.jpg'}" alt="${p.nama}">
+        <p>${p.nama}</p>
+        <span>${formatIDR(p.harga)}</span>
+      </a>
+    `).join('');
   } catch (err) {
-    console.error('Error buy now:', err);
-    alert('Gagal terhubung ke server.');
+    console.error('Error load rekomendasi:', err);
+    grid.innerHTML = '';
   }
 }
 
 // ── INIT ─────────────────────────────────────────────────────
+async function initDetailProduk() {
+  const id = getProdukId();
+
+  if (!id) {
+    showState('notfound');
+    return;
+  }
+
+  showState('loading');
+
+  try {
+    const res = await fetch(`/api/produk/${id}`);
+    if (!res.ok) {
+      showState('notfound');
+      return;
+    }
+    const produk = await res.json();
+    renderProduk(produk);
+    loadRekomendasi(produk._id);
+  } catch (err) {
+    console.error('Error load produk:', err);
+    showState('notfound');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initQty();
 
-  const buttons = document.querySelectorAll('.buttons button');
-  buttons.forEach(btn => {
-    const text = btn.textContent.toLowerCase();
-    if (text.includes('cart')) {
-      btn.addEventListener('click', addToCart);
-    } else if (text.includes('wishlist')) {
-      btn.addEventListener('click', addToWishlist);
-    }
-  });
+  document.getElementById('btnCart').addEventListener('click', addToCart);
+  document.getElementById('btnWishlist').addEventListener('click', addToWishlist);
+  document.getElementById('btnBuy').addEventListener('click', buyNow);
 
-  const buyBtn = document.querySelector('.buy');
-  if (buyBtn) {
-    buyBtn.addEventListener('click', buyNow);
-  }
+  initDetailProduk();
 });

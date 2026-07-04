@@ -103,27 +103,20 @@
 
 
 // ==================== LOAD FEATURED PRODUCTS ====================
+// Menampilkan 3 produk untuk "OUR COLLECTIONS" di homepage.
 async function loadFeaturedProducts() {
     try {
-        const res = await fetch('/api/produk');
+        const res = await fetch('/api/produk?limit=3');
         const produk = await res.json();
 
         const grid = document.querySelector('.products-grid');
-        if (!grid || produk.length === 0) return;
-
-        const featured = ['Batik Sumenep', 'Kacang Otok', 'Keripik Terung'];
-
-        const filtered = featured
-            .map(nama => produk.find(p => p.nama === nama))
-            .filter(Boolean);
-
-        if (filtered.length === 0) return;
+        if (!grid || !produk || produk.length === 0) return;
 
         grid.innerHTML = '';
 
-        filtered.forEach(item => {
+        produk.forEach(item => {
             grid.innerHTML += `
-                <a href="detail${item.nama.replace(/\s+/g, '')}.html" class="product-card">
+                <a href="detailProduk.html?id=${item._id}" class="product-card">
                     <div class="product-image">
                         <img src="${item.gambar || './img/default.jpg'}" alt="${item.nama}">
                     </div>
@@ -135,7 +128,7 @@ async function loadFeaturedProducts() {
 
     } catch (err) {
         console.error('Error load produk:', err);
-        // Kalau gagal, tampilan statis tetap muncul
+        // Kalau gagal, tampilan statis di homepage.html tetap muncul
     }
 }
 

@@ -25,7 +25,7 @@
         </div>
         <div class="nav-right">
             <div class="search-box">
-                <input type="text" placeholder="Search">
+                <input type="text" id="searchInput" placeholder="Search">
                 <i class="fas fa-search"></i>
             </div>
             <a href="./loginuser.html" class="login-btn">Log in</a>
@@ -41,98 +41,57 @@
 
     <!-- Main Content -->
     <main class="container">
-        <section class="product-grid-wrapper">
-            <div class="section-title">
-                <h2>Bring Home<br>the Taste of<br>Tradition</h2>
+
+        <!-- TOOLBAR FILTER -->
+        <section class="store-toolbar">
+            <div class="filter-group" id="categoryFilters">
+                <button class="filter-chip active" data-category="all">Semua</button>
+                <button class="filter-chip" data-category="makanan">Makanan</button>
+                <button class="filter-chip" data-category="pakaian">Pakaian</button>
+                <button class="filter-chip" data-category="kerajinan">Kerajinan</button>
             </div>
 
-            <div class="product-content-area">
-                <div class="product-grid grid-3">
-                    <a href="detailBatikSumenep.html" class="product-card">
-                        <div class="img-box"><img src="./img/batiksumenep.jpg" alt="Batik Sumenep"></div>
-                        <h3>Batik Sumenep</h3>
-                        <p>Rp 500.000,00</p>
-                    </a>
-                    <a href="detailKueMacho.html" class="product-card">
-                        <div class="img-box"><img src="./img/kuemacho.png" alt="Kue Macho"></div>
-                        <h3>Kue Macho</h3>
-                        <p>Rp 20.000,00</p>
-                    </a>
-                    <a href="detailKacangOtok.html" class="product-card">
-                        <div class="img-box"><img src="./img/kacangotok.jpeg" alt="Kacang Otok"></div>
-                        <h3>Kacang Otok</h3>
-                        <p>Rp 15.000,00</p>
-                    </a>
-                </div>
-
-                <div class="product-grid grid-3">
-                    <a href="detailBuahSiwalan.html" class="product-card">
-                        <div class="img-box"><img src="./img/buahsiwalan.jpg" alt="Buah Siwalan"></div>
-                        <h3>Buah Siwalan</h3>
-                        <p>Rp 35.000,00</p>
-                    </a>
-                    <a href="detailOdheng.html" class="product-card">
-                        <div class="img-box"><img src="./img/odheng.png" alt="Odheng"></div>
-                        <h3>Odheng</h3>
-                        <p>Rp 25.000,00</p>
-                    </a>
-                    <a href="detailMiniaturKarapanSapi.html" class="product-card">
-                        <div class="img-box"><img src="./img/miniaturkarapansapi.png" alt="Miniatur Karapan Sapi"></div>
-                        <h3>Miniatur Karapan Sapi</h3>
-                        <p>Rp 400.000,00</p>
-                    </a>
-                </div>
+            <div class="sort-group">
+                <select id="sortSelect" class="sort-select">
+                    <option value="recommended">Recommended</option>
+                    <option value="price-asc">Harga: Rendah ke Tinggi</option>
+                    <option value="price-desc">Harga: Tinggi ke Rendah</option>
+                    <option value="name-asc">Nama: A-Z</option>
+                </select>
             </div>
         </section>
 
-        <section class="middle-banner">
-            <img src="./img/store2.png" alt="Batik Artisan">
+        <!-- RESULT COUNT -->
+        <section class="store-results-bar">
+            <span id="productCount">0 PRODUCTS</span>
         </section>
 
-        <section class="product-grid-wrapper">
-            <div class="section-title">
-                <h2>Discover More<br>Local<br>Treasures</h2>
-            </div>
-
-            <div class="product-content-area">
-                <div class="product-grid grid-3">
-                    <a href="detailKeripikTette.html" class="product-card">
-                        <div class="img-box"><img src="./img/keripiktette.jpeg" alt="Keripik Tette"></div>
-                        <h3>Keripik Tette</h3>
-                        <p>Rp 25.000,00</p>
-                    </a>
-                    <a href="detailPetisMadura.html" class="product-card">
-                        <div class="img-box"><img src="./img/petismadura.png" alt="Petis Madura"></div>
-                        <h3>Petis Madura</h3>
-                        <p>Rp 20.000,00</p>
-                    </a>
-                    <a href="detailRengginangLorjuk.html" class="product-card">
-                        <div class="img-box"><img src="./img/rengginanglorjuk.png" alt="Rengginang Lorjuk"></div>
-                        <h3>Rengginang Lorjuk</h3>
-                        <p>Rp 30.000,00</p>
-                    </a>
-                </div>
-
-                <div class="product-grid grid-3">
-                    <a href="detailBoluJubada.html" class="product-card">
-                        <div class="img-box"><img src="./img/bolujubada.png" alt="Bolu Jubada"></div>
-                        <h3>Bolu Jubada</h3>
-                        <p>Rp 15.000,00</p>
-                    </a>
-                    <a href="detailKeripikTerung.html" class="product-card">
-                        <div class="img-box"><img src="./img/keripikterung.png" alt="Keripik Terung"></div>
-                        <h3>Keripik Terung</h3>
-                        <p>Rp 40.000,00</p>
-                    </a>
-                    <a href="detailKausSakera.html" class="product-card">
-                        <div class="img-box"><img src="./img/kaossakera.jpeg" alt="Kaos Sakera"></div>
-                        <h3>Kaos Sakera</h3>
-                        <p>Rp 40.000,00</p>
-                    </a>
-                </div>
+        <!-- PRODUCT GRID -->
+        <section class="store-grid-wrapper">
+            <div class="product-grid grid-4" id="productGridMain">
+                <!-- Diisi otomatis oleh store.js dari database -->
             </div>
         </section>
+
     </main>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="info-item">
+            <img src="img/logo origins.png" alt="Origins">
+            <p>Origins</p>
+        </div>
+        
+        <div class="info-item">
+            <img src="img/logo treasures.png" alt="Treasures">
+            <p>Treasures</p>
+        </div>
+        
+        <div class="info-item">
+            <img src="img/logo tradition.png" alt="Tradition">
+            <p>Tradition</p>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="footer">

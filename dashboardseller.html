@@ -112,15 +112,16 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="p-type">Type</label>
+                    <label for="p-type">Kategori</label>
                     <select id="p-type">
-                        <option value="Clothes">Clothes</option>
-                        <option value="Food">Food</option>
-                        <option value="Accessory">Accessory</option>
-                        <option value="Fashion">Fashion</option>
                         <option value="Makanan">Makanan</option>
+                        <option value="Pakaian">Pakaian</option>
                         <option value="Kerajinan">Kerajinan</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="p-desc">Deskripsi Produk</label>
+                    <textarea id="p-desc" rows="4" placeholder="Tuliskan deskripsi produk di sini..." style="width:100%; padding:12px; border:1px solid #ddd; border-radius:12px; outline:none; resize:vertical; font-family:inherit;"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="p-image">Product Image</label>
@@ -164,13 +165,10 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="edit-p-type">Type</label>
+                        <label for="edit-p-type">Kategori</label>
                         <select id="edit-p-type">
-                            <option value="Clothes">Clothes</option>
-                            <option value="Food">Food</option>
-                            <option value="Accessory">Accessory</option>
-                            <option value="Fashion">Fashion</option>
                             <option value="Makanan">Makanan</option>
+                            <option value="Pakaian">Pakaian</option>
                             <option value="Kerajinan">Kerajinan</option>
                         </select>
                     </div>
@@ -185,6 +183,10 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="edit-p-desc">Deskripsi Produk</label>
+                    <textarea id="edit-p-desc" rows="4" placeholder="Tuliskan deskripsi produk di sini..." style="width:100%; padding:12px; border:1px solid #ddd; border-radius:12px; outline:none; resize:vertical; font-family:inherit;"></textarea>
+                </div>
+                <div class="form-group">
                     <label for="edit-p-image">Product Image</label>
                     <input type="file" id="edit-p-image" accept="image/*">
                 </div>
@@ -194,6 +196,38 @@
                     <button type="submit" class="btn-blue">Save Changes</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MODAL: DISKON (ON SALE)                      -->
+    <!-- ============================================ -->
+    <div id="discountModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Atur Diskon Produk</h2>
+                <span class="close-modal" onclick="cancelDiscountModal()">&times;</span>
+            </div>
+            <div class="form-group">
+                <label>Produk</label>
+                <input type="text" id="discount-product-name" disabled>
+            </div>
+            <div class="form-group">
+                <label>Harga Asli</label>
+                <input type="text" id="discount-original-price" disabled>
+            </div>
+            <div class="form-group">
+                <label for="discount-percent">Potongan (%)</label>
+                <input type="number" id="discount-percent" min="1" max="99" placeholder="Contoh: 20" oninput="previewDiscountPrice()">
+            </div>
+            <div class="form-group">
+                <label>Harga Setelah Diskon</label>
+                <input type="text" id="discount-final-price" disabled>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-white" onclick="cancelDiscountModal()">Cancel</button>
+                <button type="button" class="btn-blue" onclick="saveDiscount()">Simpan</button>
+            </div>
         </div>
     </div>
 

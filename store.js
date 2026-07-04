@@ -103,23 +103,43 @@
 
 
 // ==================== DATA PRODUK (FALLBACK) ====================
-const productsSection1Fallback = [
-    { name: "Batik Sumenep",         price: 500000, img: "./img/batiksumenep.jpg",       href: "detailBatikSumenep.html" },
-    { name: "Kue Macho",             price: 20000,  img: "./img/kuemacho.png",            href: "detailKueMacho.html" },
-    { name: "Kacang Otok",           price: 15000,  img: "./img/kacangotok.jpeg",         href: "detailKacangOtok.html" },
-    { name: "Buah Siwalan",          price: 35000,  img: "./img/buahsiwalan.jpg",         href: "detailBuahSiwalan.html" },
-    { name: "Odheng",                price: 25000,  img: "./img/odheng.png",              href: "detailOdheng.html" },
-    { name: "Miniatur Karapan Sapi", price: 400000, img: "./img/miniaturkarapansapi.png", href: "detailMiniaturKarapanSapi.html" },
+// Dipakai HANYA kalau fetch ke API gagal (misal server/database lagi down).
+const productsFallback = [
+    { name: "Batik Sumenep",         price: 500000, img: "./img/batiksumenep.jpg",       href: "store.html", kategori: "Pakaian", status: "Active", diskon: 0 },
+    { name: "Kue Macho",             price: 20000,  img: "./img/kuemacho.png",            href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Kacang Otok",           price: 15000,  img: "./img/kacangotok.jpeg",         href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Buah Siwalan",          price: 35000,  img: "./img/buahsiwalan.jpg",         href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Odheng",                price: 25000,  img: "./img/odheng.png",              href: "store.html", kategori: "Pakaian", status: "Active", diskon: 0 },
+    { name: "Miniatur Karapan Sapi", price: 400000, img: "./img/miniaturkarapansapi.png", href: "store.html", kategori: "Kerajinan", status: "Active", diskon: 0 },
+    { name: "Keripik Tette",         price: 25000,  img: "./img/keripiktette.jpeg",       href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Petis Madura",          price: 20000,  img: "./img/petismadura.png",         href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Rengginang Lorjuk",     price: 30000,  img: "./img/rengginanglorjuk.png",    href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Bolu Jubada",           price: 15000,  img: "./img/bolujubada.png",          href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Keripik Terung",        price: 40000,  img: "./img/keripikterung.png",       href: "store.html", kategori: "Makanan", status: "Active", diskon: 0 },
+    { name: "Kaos Sakera",           price: 40000,  img: "./img/kaossakera.jpeg",         href: "store.html", kategori: "Pakaian", status: "Active", diskon: 0 },
 ];
 
-const productsSection2Fallback = [
-    { name: "Keripik Tette",     price: 25000, img: "./img/keripiktette.jpeg",    href: "detailKeripikTette.html" },
-    { name: "Petis Madura",      price: 20000, img: "./img/petismadura.png",      href: "detailPetisMadura.html" },
-    { name: "Rengginang Lorjuk", price: 30000, img: "./img/rengginanglorjuk.png", href: "detailRengginangLorjuk.html" },
-    { name: "Bolu Jubada",       price: 15000, img: "./img/bolujubada.png",       href: "detailBoluJubada.html" },
-    { name: "Keripik Terung",    price: 40000, img: "./img/keripikterung.png",    href: "detailKeripikTerung.html" },
-    { name: "Kaos Sakera",       price: 40000, img: "./img/kaossakera.jpeg",      href: "detailKausSakera.html" },
-];
+// ==================== NORMALISASI KATEGORI ====================
+// Menyamakan berbagai nilai kategori dari database (Clothes, Fashion,
+// Food, Accessory, Kerajinan, dll) ke 3 kategori utama tampilan store:
+// makanan, pakaian, aksesoris.
+function normalizeCategory(kategoriRaw) {
+    const k = (kategoriRaw || '').toLowerCase();
+
+    if (['food', 'makanan'].includes(k)) return 'makanan';
+    if (['clothes', 'fashion', 'pakaian'].includes(k)) return 'pakaian';
+    if (['accessory', 'aksesoris', 'kerajinan', 'craft'].includes(k)) return 'kerajinan';
+
+    // fallback: coba tebak dari kata kunci
+    if (k.includes('makan') || k.includes('food')) return 'makanan';
+    if (k.includes('baju') || k.includes('kaos') || k.includes('cloth') || k.includes('fashion')) return 'pakaian';
+    return 'kerajinan';
+}
+
+function categoryLabel(categoryKey) {
+    const labels = { makanan: 'Makanan', pakaian: 'Pakaian', kerajinan: 'Kerajinan' };
+    return labels[categoryKey] || 'Kerajinan';
+}
 
 // ==================== FETCH PRODUK DARI DATABASE ====================
 async function fetchProdukFromDB() {
@@ -133,7 +153,11 @@ async function fetchProdukFromDB() {
             name: p.nama,
             price: p.harga,
             img: p.gambar || './img/default.jpg',
-            href: `detailProduk.html?id=${p._id}`
+            href: `detailProduk.html?id=${p._id}`,
+            kategori: p.kategori || '',
+            status: p.status || 'Active',
+            diskon: p.diskon || 0,
+            hargaDiskon: p.hargaDiskon || null
         }));
     } catch (err) {
         console.warn('Pakai data fallback:', err.message);
@@ -141,22 +165,105 @@ async function fetchProdukFromDB() {
     }
 }
 
-// ==================== RENDER PRODUK ====================
-function renderProducts(products, grids) {
-    const row1 = products.slice(0, 3);
-    const row2 = products.slice(3, 6);
+// ==================== STATE ====================
+let allProducts = [];      // semua produk hasil fetch (sudah dinormalisasi kategori)
+let activeCategory = 'all';
+let activeSort = 'recommended';
+let activeSearch = '';
 
-    [row1, row2].forEach((row, i) => {
-        if (!grids[i]) return;
-        grids[i].innerHTML = row.map(product => `
-            <a href="${product.href}" class="product-card">
-                <div class="img-box">
-                    <img src="${product.img}" alt="${product.name}">
-                </div>
-                <h3>${product.name}</h3>
-                <p>Rp ${product.price.toLocaleString('id-ID')}</p>
-            </a>
-        `).join('');
+// ==================== RENDER PRODUK (GRID 4 KOLOM) ====================
+function renderProductGrid() {
+    const grid = document.getElementById('productGridMain');
+    const countEl = document.getElementById('productCount');
+    if (!grid) return;
+
+    let filtered = allProducts.filter(p => {
+        const isVisible = p.status !== 'Inactive';
+        const matchCategory = activeCategory === 'all' || p.categoryKey === activeCategory;
+        const matchSearch = !activeSearch || p.name.toLowerCase().includes(activeSearch);
+        return isVisible && matchCategory && matchSearch;
+    });
+
+    switch (activeSort) {
+        case 'price-asc':
+            filtered = [...filtered].sort((a, b) => a.price - b.price);
+            break;
+        case 'price-desc':
+            filtered = [...filtered].sort((a, b) => b.price - a.price);
+            break;
+        case 'name-asc':
+            filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        default:
+            break; // recommended: urutan asli
+    }
+
+    if (countEl) countEl.textContent = `${filtered.length} PRODUCTS`;
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<p class="no-products-msg">Belum ada produk untuk kategori ini.</p>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(product => {
+        const isOnSale = product.status === 'On Sale' && product.diskon > 0;
+        const finalPrice = isOnSale
+            ? (product.hargaDiskon ?? Math.round(product.price * (1 - product.diskon / 100)))
+            : product.price;
+
+        const priceHtml = isOnSale
+            ? `<span class="price-old">Rp ${product.price.toLocaleString('id-ID')}</span>
+               <span class="price-new">Rp ${finalPrice.toLocaleString('id-ID')}</span>`
+            : `Rp ${product.price.toLocaleString('id-ID')}`;
+
+        const badgeHtml = isOnSale
+            ? `<div class="discount-badge">-${product.diskon}%</div>`
+            : '';
+
+        return `
+        <a href="${product.href}" class="product-card">
+            <div class="img-box">
+                ${badgeHtml}
+                <img src="${product.img}" alt="${product.name}">
+            </div>
+            <div class="product-category">${categoryLabel(product.categoryKey)}</div>
+            <h3>${product.name}</h3>
+            <p>${priceHtml}</p>
+        </a>
+    `;
+    }).join('');
+}
+
+// ==================== EVENT: FILTER KATEGORI ====================
+function initCategoryFilters() {
+    const chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeCategory = chip.dataset.category;
+            renderProductGrid();
+        });
+    });
+}
+
+// ==================== EVENT: SORT ====================
+function initSort() {
+    const sortSelect = document.getElementById('sortSelect');
+    if (!sortSelect) return;
+    sortSelect.addEventListener('change', () => {
+        activeSort = sortSelect.value;
+        renderProductGrid();
+    });
+}
+
+// ==================== EVENT: SEARCH ====================
+function initSearch() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+    searchInput.addEventListener('input', () => {
+        activeSearch = searchInput.value.trim().toLowerCase();
+        renderProductGrid();
     });
 }
 
@@ -174,17 +281,19 @@ window.addEventListener('scroll', () => {
 
 // ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', async () => {
-    const allWrappers = document.querySelectorAll('.product-grid-wrapper');
+    initCategoryFilters();
+    initSort();
+    initSearch();
 
-    if (allWrappers.length < 2) {
-        console.error('Wrapper produk tidak ditemukan!');
-        return;
-    }
+    // Coba ambil dari database dulu. Kalau gagal (server/DB down), baru
+    // pakai data fallback statis di atas.
+    const dbProducts = await fetchProdukFromDB();
+    const rawProducts = (dbProducts && dbProducts.length > 0) ? dbProducts : productsFallback;
 
-    const grids1 = allWrappers[0].querySelectorAll('.product-grid');
-    const grids2 = allWrappers[1].querySelectorAll('.product-grid');
+    allProducts = rawProducts.map(p => ({
+        ...p,
+        categoryKey: normalizeCategory(p.kategori)
+    }));
 
-    // Langsung pakai fallback, tidak fetch DB
-    renderProducts(productsSection1Fallback, grids1);
-    renderProducts(productsSection2Fallback, grids2);
+    renderProductGrid();
 });

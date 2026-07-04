@@ -128,13 +128,16 @@ async function loadProducts() {
         const res  = await fetch(`/api/produk?seller=${sellerId}`);
         const data = await res.json();
         productsData = data.map(p => ({
-            id:     p._id,
-            name:   p.nama,
-            price:  p.harga,
-            stock:  p.stok,
-            type:   p.kategori,
-            status: p.status || 'Active',
-            image:  gambarProdukMap[p.nama] || p.gambar || 'https://via.placeholder.com/40'
+            id:          p._id,
+            name:        p.nama,
+            price:       p.harga,
+            stock:       p.stok,
+            type:        p.kategori,
+            status:      p.status || 'Active',
+            deskripsi:   p.deskripsi || '',
+            diskon:      p.diskon || 0,
+            hargaDiskon: p.hargaDiskon || null,
+            image:       gambarProdukMap[p.nama] || p.gambar || 'https://via.placeholder.com/40'
         }));
         renderProductsTable();
     } catch (err) {
@@ -353,7 +356,7 @@ const views = {
                     <th>Product ID</th>
                     <th>Price</th>
                     <th>Stock</th>
-                    <th>Type</th>
+                    <th>Kategori</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -778,6 +781,13 @@ function renderProductsTable() {
     tbody.innerHTML = '';
     pageProducts.forEach(product => {
         const tr = document.createElement('tr');
+        const isOnSale = product.status === 'On Sale' && product.diskon > 0;
+        const priceCell = isOnSale
+            ? `<span style="text-decoration:line-through;color:#aaa;font-size:12px;">${product.price.toLocaleString('id-ID')}</span><br>
+               <strong style="color:#EB5757;">${(product.hargaDiskon ?? Math.round(product.price * (1 - product.diskon / 100))).toLocaleString('id-ID')}</strong>
+               <span style="background:#FFD6D6;color:#EB5757;font-size:11px;font-weight:700;padding:2px 6px;border-radius:8px;margin-left:4px;">-${product.diskon}%</span>`
+            : `${product.price.toLocaleString('id-ID')},00`;
+
         tr.innerHTML = `
             <td>
                 <div class="product-info">
@@ -787,7 +797,7 @@ function renderProductsTable() {
                 </div>
             </td>
             <td>${product.id}</td>
-            <td>${product.price.toLocaleString('id-ID')},00</td>
+            <td>${priceCell}</td>
             <td>${product.stock} pcs</td>
             <td>${product.type}</td>
             <td>
@@ -801,6 +811,7 @@ function renderProductsTable() {
             </td>
             <td>
                 <button class="btn-small btn-edit" onclick="openEditModal('${product.id}')">✏️ Edit</button>
+                <button class="btn-small btn-delete" style="padding:6px 9px;font-size:13px;" onclick="deleteProduct('${product.id}')" title="Hapus produk">🗑️</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -834,23 +845,151 @@ function changeProductPage(direction) {
 // ============================================
 async function updateProductStatus(productId, selectEl) {
     const newStatus = selectEl.value;
+    const product = productsData.find(p => p.id === productId);
+
+    // Kalau dipilih "On Sale", buka modal diskon dulu (belum langsung disimpan)
+    if (newStatus === 'On Sale') {
+        openDiscountModal(productId, selectEl);
+        return;
+    }
+
     try {
+        const body = { status: newStatus };
+        // Kalau pindah keluar dari "On Sale", reset diskon supaya tidak nyangkut
+        if (product && product.status === 'On Sale' && newStatus !== 'On Sale') {
+            body.diskon = 0;
+            body.hargaDiskon = null;
+        }
+
         const res = await fetch(`/api/produk/${productId}`, {
             method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ status: newStatus })
+            body:    JSON.stringify(body)
         });
         if (!res.ok) throw new Error('Gagal update status');
 
-        const product = productsData.find(p => p.id === productId);
-        if (product) product.status = newStatus;
+        if (product) {
+            product.status = newStatus;
+            if (body.diskon === 0) { product.diskon = 0; product.hargaDiskon = null; }
+        }
         selectEl.style.cssText = getProductStatusDropdownStyle(newStatus);
         showToast(`Status "${product?.name}" diubah menjadi ${newStatus}`, 'success');
+        renderProductsTable();
     } catch (err) {
         console.error(err);
         showToast('Gagal mengubah status', 'error');
-        const product = productsData.find(p => p.id === productId);
         if (product) selectEl.value = product.status;
+    }
+}
+
+// ============================================
+// MODAL DISKON (ON SALE)
+// ============================================
+let discountContext = { productId: null, selectEl: null, previousStatus: null };
+
+function openDiscountModal(productId, selectEl) {
+    const product = productsData.find(p => p.id === productId);
+    if (!product) return;
+
+    discountContext = { productId, selectEl, previousStatus: product.status };
+
+    document.getElementById('discount-product-name').value    = product.name;
+    document.getElementById('discount-original-price').value  = 'Rp ' + product.price.toLocaleString('id-ID');
+    document.getElementById('discount-percent').value         = product.diskon > 0 ? product.diskon : '';
+    document.getElementById('discount-final-price').value     = '';
+    previewDiscountPrice();
+
+    document.getElementById('discountModal').style.display = 'flex';
+}
+
+function previewDiscountPrice() {
+    const product = productsData.find(p => p.id === discountContext.productId);
+    if (!product) return;
+
+    const percentInput = document.getElementById('discount-percent');
+    const percent = parseFloat(percentInput.value);
+    const finalEl = document.getElementById('discount-final-price');
+
+    if (isNaN(percent) || percent <= 0 || percent >= 100) {
+        finalEl.value = '';
+        return;
+    }
+
+    const finalPrice = Math.round(product.price * (1 - percent / 100));
+    finalEl.value = 'Rp ' + finalPrice.toLocaleString('id-ID');
+}
+
+function cancelDiscountModal() {
+    // Kembalikan dropdown ke status sebelumnya karena diskon dibatalkan
+    if (discountContext.selectEl && discountContext.previousStatus) {
+        discountContext.selectEl.value = discountContext.previousStatus;
+    }
+    document.getElementById('discountModal').style.display = 'none';
+    discountContext = { productId: null, selectEl: null, previousStatus: null };
+}
+
+async function saveDiscount() {
+    const product = productsData.find(p => p.id === discountContext.productId);
+    if (!product) return;
+
+    const percent = parseFloat(document.getElementById('discount-percent').value);
+    if (isNaN(percent) || percent <= 0 || percent >= 100) {
+        showToast('Masukkan persentase diskon yang valid (1-99)', 'error');
+        return;
+    }
+
+    const finalPrice = Math.round(product.price * (1 - percent / 100));
+
+    try {
+        const res = await fetch(`/api/produk/${discountContext.productId}`, {
+            method:  'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ status: 'On Sale', diskon: percent, hargaDiskon: finalPrice })
+        });
+        if (!res.ok) throw new Error('Gagal menyimpan diskon');
+
+        product.status      = 'On Sale';
+        product.diskon      = percent;
+        product.hargaDiskon = finalPrice;
+
+        if (discountContext.selectEl) {
+            discountContext.selectEl.value = 'On Sale';
+            discountContext.selectEl.style.cssText = getProductStatusDropdownStyle('On Sale');
+        }
+
+        showToast(`Diskon ${percent}% untuk "${product.name}" berhasil disimpan`, 'success');
+        document.getElementById('discountModal').style.display = 'none';
+        discountContext = { productId: null, selectEl: null, previousStatus: null };
+        renderProductsTable();
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal menyimpan diskon', 'error');
+    }
+}
+
+// ============================================
+// HAPUS PRODUK
+// ============================================
+async function deleteProduct(productId) {
+    const product = productsData.find(p => p.id === productId);
+    if (!confirm(`Hapus produk "${product?.name || ''}"? Tindakan ini tidak bisa dibatalkan.`)) return;
+
+    try {
+        const res = await fetch(`/api/produk/${productId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Gagal menghapus produk');
+
+        showToast(`Produk "${product?.name || ''}" berhasil dihapus`, 'success');
+        await loadProducts();
+
+        // Sesuaikan halaman pagination kalau halaman terakhir jadi kosong
+        const totalPages = Math.ceil(productsData.length / productsPerPage);
+        if (currentPageProducts >= totalPages) {
+            currentPageProducts = Math.max(0, totalPages - 1);
+        }
+        renderProductsTable();
+    } catch (err) {
+        console.error(err);
+        showToast('Gagal menghapus produk', 'error');
     }
 }
 
@@ -867,6 +1006,7 @@ function openEditModal(productId) {
     document.getElementById('edit-p-stock').value       = product.stock;
     document.getElementById('edit-p-type').value        = product.type;
     document.getElementById('edit-p-status').value      = product.status;
+    document.getElementById('edit-p-desc').value        = product.deskripsi || '';
     document.getElementById('edit-p-id-hidden').value   = product.id;
     document.getElementById('edit-p-image').value       = '';
 
@@ -880,12 +1020,14 @@ function closeEditModal() {
 async function saveEditProduct(e) {
     e.preventDefault();
     const productId = document.getElementById('edit-p-id-hidden').value;
+    const descEl     = document.getElementById('edit-p-desc');
     const data = {
-        nama:     document.getElementById('edit-p-name').value,
-        harga:    parseInt(document.getElementById('edit-p-price').value),
-        stok:     parseInt(document.getElementById('edit-p-stock').value),
-        kategori: document.getElementById('edit-p-type').value,
-        status:   document.getElementById('edit-p-status').value
+        nama:      document.getElementById('edit-p-name').value,
+        harga:     parseInt(document.getElementById('edit-p-price').value),
+        stok:      parseInt(document.getElementById('edit-p-stock').value),
+        kategori:  document.getElementById('edit-p-type').value,
+        status:    document.getElementById('edit-p-status').value,
+        deskripsi: descEl ? descEl.value.trim() : ''
     };
     const fileInput = document.getElementById('edit-p-image');
     if (fileInput.files && fileInput.files[0]) {
@@ -1160,6 +1302,7 @@ async function addNewProduct() {
     const priceEl = document.getElementById('p-price');
     const stockEl = document.getElementById('p-stock');
     const typeEl  = document.getElementById('p-type');
+    const descEl  = document.getElementById('p-desc');
     const fileEl  = document.getElementById('p-image');
 
     if (!nameEl || !priceEl || !stockEl || !typeEl) {
@@ -1167,10 +1310,11 @@ async function addNewProduct() {
         return;
     }
 
-    const name  = nameEl.value.trim();
-    const price = parseInt(priceEl.value);
-    const stock = parseInt(stockEl.value);
-    const type  = typeEl.value;
+    const name      = nameEl.value.trim();
+    const price     = parseInt(priceEl.value);
+    const stock     = parseInt(stockEl.value);
+    const type      = typeEl.value;
+    const deskripsi = descEl ? descEl.value.trim() : '';
 
     if (!name || isNaN(price) || isNaN(stock) || price < 0 || stock < 0) {
         showToast('Semua field harus diisi dengan benar', 'error');
@@ -1186,7 +1330,15 @@ async function addNewProduct() {
         const res = await fetch('/api/produk', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ seller: userId, nama: name, harga: price, stok: stock, kategori: type, gambar: image })
+            body:    JSON.stringify({
+                seller:    sellerId,
+                nama:      name,
+                harga:     price,
+                stok:      stock,
+                kategori:  type,
+                gambar:    image,
+                deskripsi: deskripsi
+            })
         });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
@@ -1244,7 +1396,7 @@ function navigate(viewName, element) {
 }
 
 // ============================================
-// INITnode
+// INIT
 // ============================================
 document.addEventListener("DOMContentLoaded", function () {
     loadUserProfile();

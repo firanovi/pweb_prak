@@ -1,2 +1,0 @@
-MONGO_URL=mongodb://firapinjam_db_user:DsURkWY2ZkuNRmlI@ac-glkbvvj-shard-00-00.runcguy.mongodb.net:27017,ac-glkbvvj-shard-00-01.runcguy.mongodb.net:27017,ac-glkbvvj-shard-00-02.runcguy.mongodb.net:27017/?ssl=true&replicaSet=atlas-jsi69i-shard-0&authSource=admin&appName=SakaMadura
-PORT=3000
