@@ -76,27 +76,6 @@ body {
     gap: 15px;
 }
 
-/* SEARCH */
-.search-box {
-    position: relative;
-}
-
-.search-box input {
-    width: 250px;
-    height: 35px;
-    border-radius: 20px;
-    border: 1px solid #ddd;
-    background: #e8e8e8;
-    padding: 0 40px 0 15px;
-}
-
-.search-box i {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
 /* ICON */
 .nav-icons {
     display: flex;
@@ -132,14 +111,14 @@ body {
     display: none;
     flex-direction: column;
     background: white;
-    position: absolute;
+    position: fixed; /* Diubah ke fixed supaya tidak merusak alur scroll */
     top: 70px;
     left: 0;
     width: 100%;
     padding: 20px;
     gap: 15px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-
+    z-index: 999;
     opacity: 0;
     transform: translateY(-10px);
     transition: 0.3s;
@@ -163,21 +142,32 @@ body {
     margin-top: 10px;
 }
 
-/* PRODUCT */
+/* PRODUCT LAYOUT */
 .product {
     display: flex;
     gap: 50px;
     padding: 40px 120px;
+    justify-content: center;
 }
 
+.product-left {
+    flex: 1;
+    max-width: 450px;
+}
+
+/* Perbaikan utama: Gambar dibuat fluid agar tidak meluber */
 .product-left img {
     width: 100%;
-    max-width: 400px;
+    height: auto;
+    max-width: 100%;
     border-radius: 4px;
     margin-bottom: 15px;
+    display: block;
+    object-fit: cover;
 }
 
 .product-right {
+    flex: 1;
     max-width: 450px;
 }
 
@@ -197,16 +187,15 @@ body {
 .qty {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 25px;              /* lebih renggang */
+    justify-content: flex-start; /* Geser ke kiri biar rapi */
+    gap: 25px;              
     margin-bottom: 20px;
 }
 
-/* tombol + - */
 .qty button {
-    padding: 10px 18px;     /* lebih besar */
-    font-size: 30px;        /* icon lebih gede */
-    border-radius: 10%;     /* bulat */
+    padding: 10px 18px;     
+    font-size: 24px;        
+    border-radius: 10%;     
     border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
@@ -218,47 +207,47 @@ body {
     color: white;
 }
 
-/* angka */
 .qty span {
-    font-size: 20px;        /* angka lebih besar */
+    font-size: 20px;        
     font-weight: bold;
     min-width: 30px;
     text-align: center;
 }
 
-/* BUTTON */
+/* BUTTONS */
 .buttons {
     display: flex;
-    justify-content: center; /* tengah */
+    justify-content: flex-start; 
     gap: 12px;
     margin-top: 15px;
 }
 
-/* tombol kecil */
 .outline {
+    flex: 1; /* Biar tombol membagi ruang sama rata */
     border: 1px solid var(--dark);
     background: transparent;
-    padding: 10px 60px;      /* diperbesar */
+    padding: 12px 20px;      
     font-size: 15px;
-    border-radius: 50px;     /* bundar */
+    border-radius: 50px;     
     cursor: pointer;
+    text-align: center;
     transition: 0.3s;
 }
 
 .outline:hover {
     background: var(--dark);
     color: white;
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
-/* tombol utama */
+/* TOMBOL UTAMA */
 .buy {
     display: block;
-    margin: 20px auto;
-    width: 60%;
+    margin: 20px 0; /* Tidak auto lagi agar searah ke kiri */
+    width: 100%; /* Penuh mengikuti container */
     padding: 14px;
     font-size: 16px;
-    border-radius: 50px;     /* bundar */
+    border-radius: 50px;     
     background: var(--dark);
     color: white;
     border: none;
@@ -269,17 +258,18 @@ body {
 
 .buy:hover {
     background: var(--primary);
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 /* DESC */
 .desc {
-    font-size: 18px;
+    font-size: 16px;
     color: #0a0a0a;
     margin-bottom: 25px;
     line-height: 1.8;
 }
 
+/* RECOMMENDATION */
 .recommend {
     padding: 0;
     background: #f5f5f5;
@@ -290,7 +280,6 @@ body {
     grid-template-columns: 1fr 1fr;
 }
 
-/* KIRI */
 .recommend-left {
     display: flex;
     align-items: center;
@@ -302,12 +291,6 @@ body {
     font-size: 40px;
 }
 
-.recommend-left p {
-    font-size: 20px;
-    color: #666;
-}
-
-/* KANAN */
 .recommend-right {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -318,10 +301,18 @@ body {
 
 /* CARD */
 .card {
+    display: block; 
     background: #fff;
     padding: 10px;
-    text-align: left;
     border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 .card img {
@@ -340,49 +331,35 @@ body {
     font-size: 17px;
 }
 
-.card {
-    display: block; /* penting supaya <a> jadi kotak */
-    background: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: inherit;
-    transition: 0.3s;
+/* INFO SECTION (Origins, Treasures, etc.) */
+.info-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px; /* Diperkecil dari 200px agar tidak overflow di layar tanggung */
+    padding: 40px 20px;
+    flex-wrap: wrap;
 }
 
-.card:hover {
-    transform: scale(1.05);
-    cursor: pointer;
+.info-item {
+    text-align: center;
+}
+
+.info-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.info-item p {
+    font-size: 25px;
+    color: #333;
 }
 
 /* FOOTER */
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .nav-links,
-    .nav-icons {
-        display: none;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-
-    .search-box input {
-        width: 150px;
-    }
-
-    .product {
-        flex-direction: column;
-        padding: 20px;
-    }
-
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* ================= FOOTER ================= */
 .footer {
     position: relative;
     color: white;
@@ -411,8 +388,8 @@ body {
 
 .footer-content-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
     position: relative;
     z-index: 1;
     margin-bottom: 10px;
@@ -423,7 +400,6 @@ body {
     font-family: 'Sacramento', cursive;
     font-size: 35px;
     font-weight: 300;
-    font-style: italic;
 }
 
 .footer-middle h4,
@@ -436,7 +412,6 @@ body {
 
 .footer-middle ul {
     list-style: none;
-    margin-top: 0;
 }
 
 .footer-middle ul li {
@@ -471,23 +446,6 @@ body {
     font-size: 14px;
 }
 
-.contact-item i {
-    width: 20px;
-    text-align: center;
-    color: rgba(255,255,255,0.8);
-}
-
-.contact-item a {
-    color: white;
-    text-decoration: none;
-    opacity: 0.9;
-}
-
-.contact-item a:hover {
-    opacity: 1;
-    text-decoration: underline;
-}
-
 .social-links {
     display: flex;
     gap: 5px;
@@ -496,7 +454,6 @@ body {
 
 .social-link {
     color: rgba(255,255,255,0.8);
-    text-decoration: none;
     font-size: 1.3rem;
     width: 36px;
     height: 36px;
@@ -504,11 +461,6 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
-}
-
-.social-link:hover {
-    color: white;
-    transform: translateY(-3px);
 }
 
 .footer .divider {
@@ -519,6 +471,7 @@ body {
     margin-bottom: 15px;
     position: relative;
     z-index: 1;
+    width: 100%;
 }
 
 .copyright {
@@ -526,224 +479,99 @@ body {
     color: #ddd;
     position: relative;
     z-index: 1;
-    text-align: left;
-    padding-bottom: 10px;
 }
 
-/* ================= RESPONSIVE ================= */
 
-@media (max-width: 900px) {
-    .dashboard {
-        grid-template-columns: 1fr;  /* Stack pada tablet */
-        gap: 20px;
-    }
-    
-    .sidebar {
-        position: relative;
-        top: 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 15px;
-    }
-    
-    .menu-item {
-        flex: 1;
-        min-width: 140px;
-        margin-bottom: 0;
-        justify-content: center;
-    }
-}
+/* ================= MEDIA QUERIES (SINTAKS MOBILE) ================= */
 
-@media (max-width: 600px) {
-    .navbar {
-        padding: 15px 20px;
+@media (max-width: 992px) {
+    .product {
+        padding: 40px 40px;
     }
-    
-    .nav-links {
-        gap: 15px;
+    .footer-content-wrapper {
+        grid-template-columns: repeat(2, 1fr);
     }
-    
-    .nav-links a {
-        font-size: 13px;
-    }
-
-    .container {
-        padding: 20px 15px;
-    }
-    
-    .sidebar {
-        flex-direction: column;
-    }
-    
-    .menu-item {
-        min-width: 100%;
-    }
-
-    .profile-card {
-        padding: 25px 20px;
-    }
-
-    .profile-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-    }
-    
-    .avatar {
-        width: 100px;
-        height: 100px;
-    }
-
-    .edit-btn {
-        position: static;
-        display: inline-block;
-        margin-top: 15px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .profile-info {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .info-label {
-        margin-top: 10px;
-    }
-    
-    .info-label:first-child {
-        margin-top: 0;
-    }
-
-    .setting-item {
-        padding: 16px 20px;
-    }
-    
-    .setting-icon {
-        width: 32px;
-        height: 32px;
-        margin-right: 12px;
-    }
-}
-
-/* gambar origins, treasures, dan tradition */
-.info-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 200px;
-    padding: 40px 20px;
-    flex-wrap: wrap;
-}
-
-.info-item {
-    text-align: center;
-}
-
-.info-item img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    display: block;
-    margin: 0 auto 10px;
-}
-
-.info-item p {
-    font-size: 25px;
-    color: #333;
 }
 
 @media (max-width: 768px) {
-    .product {
-        padding: 20px;
-        gap: 20px;
+    /* Navbar Mobile */
+    .navbar {
+        padding: 15px 20px;
+    }
+    .nav-links, .nav-right {
+        display: none; /* Sembunyikan menu desktop */
+    }
+    .hamburger {
+        display: flex; /* Munculkan hamburger di HP */
     }
 
+    /* Product Section */
+    .product {
+        flex-direction: column; /* Gambar di atas, info detail di bawah */
+        padding: 20px;
+        gap: 30px;
+    }
+    .product-left, .product-right {
+        max-width: 100%;
+        width: 100%;
+    }
     .product-left img {
         max-width: 100%;
+        margin: 0 auto 15px;
     }
-
-    .product-right {
-        max-width: 100%;
-    }
-
     .product-right h2 {
         font-size: 28px;
     }
 
-    .outline {
-        padding: 10px 30px;
-        font-size: 14px;
-    }
-
+    /* Buttons */
     .buttons {
-        flex-wrap: wrap;
-    }
-
-    .buy {
         width: 100%;
     }
-
-    /* Recommend section jadi 1 kolom */
-    .recommend-wrapper {
-        grid-template-columns: 1fr;
+    .outline {
+        padding: 12px 10px;
     }
 
+    /* Recommend Section */
+    .recommend-wrapper {
+        grid-template-columns: 1fr; /* Jadi 1 kolom vertikal */
+    }
     .recommend-left {
         min-height: 150px;
         font-size: 28px;
         padding: 20px;
     }
-
     .recommend-right {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 15px;
+        grid-template-columns: repeat(2, 1fr); /* Tetap 2 grid produk di HP */
         gap: 10px;
+        padding: 10px;
     }
-
     .card img {
-        height: 200px;
+        height: 200px; /* Gambar rekomendasi dikecilkan biar proporsional */
     }
 
-    /* Info section (Origins/Treasures/Tradition) */
+    /* Info Section (Origins/Treasures) */
     .info-section {
         gap: 30px;
         padding: 30px 15px;
     }
-
     .info-item img {
-        width: 100px;
-        height: 100px;
+        width: 110px;
+        height: 110px;
     }
-
     .info-item p {
         font-size: 18px;
-    }
-
-    /* Footer jadi 1 kolom di HP */
-    .footer-content-wrapper {
-        grid-template-columns: 1fr;
-        gap: 25px;
     }
 }
 
 @media (max-width: 480px) {
-    .product-right h2 {
-        font-size: 24px;
-    }
-
-    .price {
-        font-size: 20px;
-    }
-
     .recommend-right {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Di HP sangat kecil, rekomendasi jadi 1 baris vertikal */
     }
-
     .card img {
-        height: 250px;
+        height: 280px;
+    }
+    .footer-content-wrapper {
+        grid-template-columns: 1fr; /* Footer full 1 kolom ke bawah */
+        gap: 25px;
     }
 }
