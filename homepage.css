@@ -1,26 +1,7 @@
-/* ============================================
-   RESET & VARIABLES
-   ============================================ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-:root {
-    --primary: #2c3e50;
-    --primary-hover: #1a2a3a;
-    --accent: #486d7d;
-    --accent-hover: #5a7d8d;
-    --dark: #333;
-    --light: #f5f5f5;
-    --white: #ffffff;
-    --gray: #888;
-    --border: #e0e0e0;
-    --shadow: 0 4px 20px rgba(0,0,0,0.08);
-    --radius: 12px;
-    --transition: 0.3s ease;
-    --font-serif: 'Georgia', serif;
 }
 
 body {
@@ -30,9 +11,7 @@ body {
     line-height: 1.6;
 }
 
-/* ============================================
-   NAVBAR
-   ============================================ */
+/* ==================== NAVBAR ==================== */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -57,10 +36,9 @@ body {
     font-family: 'Sacramento', cursive;
     font-size: 30px;
     font-weight: 400;
-    color: var(--primary);
+    color: #2c3e50;
     text-decoration: none;
     font-style: italic;
-    white-space: nowrap;
 }
 
 .nav-links {
@@ -72,24 +50,28 @@ body {
     padding: 0;
 }
 
+.nav-links li {
+    display: flex;
+}
+
 .nav-links li a {
     text-decoration: none;
     color: #555;
     font-size: 14px;
     font-weight: 500;
-    transition: var(--transition);
+    transition: all 0.3s;
     padding: 8px 12px;
     border-radius: 20px;
 }
 
 .nav-links li a:hover {
-    color: var(--primary);
+    color: #2c3e50;
     background: rgba(0,0,0,0.05);
 }
 
 .nav-links li a.active {
     color: white;
-    background: var(--primary);
+    background: #2c3e50;
     font-weight: 600;
 }
 
@@ -114,7 +96,7 @@ body {
     padding: 0 35px 0 15px;
     font-size: 13px;
     outline: none;
-    transition: var(--transition);
+    transition: all 0.3s;
 }
 
 .search-box input:focus {
@@ -131,23 +113,20 @@ body {
 
 .login-btn {
     padding: 6px 20px;
-    background: var(--primary);
+    background: #2c3e50;
     color: white;
     text-decoration: none;
     border-radius: 16px;
     font-size: 13px;
     font-weight: 500;
-    transition: var(--transition);
-    white-space: nowrap;
+    transition: background 0.3s;
 }
 
 .login-btn:hover {
-    background: var(--primary-hover);
+    background: #555;
 }
 
-/* ============================================
-   HAMBURGER BUTTON
-   ============================================ */
+/* ==================== HAMBURGER BUTTON ==================== */
 .hamburger-btn {
     display: none;
     flex-direction: column;
@@ -162,7 +141,6 @@ body {
     padding: 4px;
     border-radius: 8px;
     transition: background 0.2s;
-    z-index: 1001;
 }
 
 .hamburger-btn:hover {
@@ -173,7 +151,7 @@ body {
     display: block;
     width: 22px;
     height: 2px;
-    background: var(--primary);
+    background: #2c3e50;
     border-radius: 2px;
     transition: all 0.3s ease;
     transform-origin: center;
@@ -190,9 +168,7 @@ body {
     transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ============================================
-   MOBILE DRAWER MENU
-   ============================================ */
+/* ==================== MOBILE DRAWER MENU ==================== */
 .mobile-menu-overlay {
     display: none;
     position: fixed;
@@ -238,7 +214,7 @@ body {
 .mobile-menu-logo {
     font-family: 'Sacramento', cursive;
     font-size: 26px;
-    color: var(--primary);
+    color: #2c3e50;
     font-style: italic;
 }
 
@@ -279,7 +255,7 @@ body {
 
 .mobile-menu-nav a {
     text-decoration: none;
-    color: var(--primary);
+    color: #2c3e50;
     font-size: 16px;
     font-weight: 500;
     padding: 13px 12px;
@@ -295,7 +271,7 @@ body {
 }
 
 .mobile-menu-nav a.active {
-    background: var(--primary);
+    background: #2c3e50;
     color: #fff;
 }
 
@@ -320,19 +296,16 @@ body {
     text-align: center;
 }
 
-/* ============================================
-   HERO SECTION
-   ============================================ */
+/* ==================== HERO SECTION ==================== */
 .hero {
+    margin-top: 0;
     position: relative;
     width: 100%;
-    height: 85vh;
-    min-height: 500px;
-    max-height: 800px;
+    height: 100vh;
     overflow: hidden;
     border-radius: 0 0 50px 50px;
+    z-index: 3;
     background-color: #ffffff;
-    margin-top: 60px;
 }
 
 .hero-image {
@@ -355,7 +328,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.15);
+    background: none;
 }
 
 .hero-text {
@@ -368,60 +341,58 @@ body {
 }
 
 .hero-text h1 {
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 700;
-    color: #ffffff;
+    color: #111111;
     line-height: 1.15;
     margin-bottom: 16px;
-    font-family: var(--font-serif);
+    font-family: serif;
     letter-spacing: -0.5px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.2);
 }
 
 .hero-text p {
     font-size: 16px;
-    color: #ffffff;
+    color: #222222;
     line-height: 1.6;
     margin-bottom: 28px;
     font-weight: 400;
-    text-shadow: 0 1px 10px rgba(0,0,0,0.15);
 }
 
 .hero-btn {
     display: inline-block;
     padding: 13px 32px;
-    background: var(--accent);
+    background: #486d7d;
     color: white;
     text-decoration: none;
     border-radius: 50px;
     font-size: 15px;
     font-weight: 500;
-    transition: var(--transition);
+    transition: background 0.3s, transform 0.2s;
 }
 
 .hero-btn:hover {
-    background: var(--accent-hover);
+    background: #badaff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(72, 109, 125, 0.3);
 }
 
-/* ============================================
-   SEJARAH SECTION
-   ============================================ */
+/* ==================== SEJARAH SECTION ==================== */
 .sejarah-section {
     position: relative;
-    min-height: 600px;
+    min-height: 820px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
     overflow: hidden;
-    background-color: var(--primary);
-    margin-top: -40px;
-    padding: 60px 0 80px;
+    background-color: #2c4a6e;
+    border-radius: 0;
+    margin-top: -50px;
+    padding-top: 30px;
+    padding-bottom: 140px;
     z-index: 1;
 }
 
 .sejarah-bg {
+    display: block;
     position: absolute;
     top: 0;
     left: 0;
@@ -435,41 +406,58 @@ body {
     object-fit: cover;
 }
 
+.sejarah-overlay {
+    display: none;
+}
+
 .sejarah-content {
     position: relative;
     z-index: 1;
-    max-width: 580px;
-    width: 50%;
+    max-width: 620px;
+    width: 45%;
     padding: 40px 40px;
     text-align: center;
     margin-left: auto;
-    margin-right: 5%;
+    margin-right: 4%;
+    margin-top: 120px;
 }
 
 .sejarah-title {
-    font-size: 42px;
+    font-size: 48px;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 24px;
-    font-family: var(--font-serif);
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    font-family: serif;
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.sejarah-title::after {
+    display: none;
 }
 
 .sejarah-text {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .sejarah-text p {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.8;
-    color: rgba(255,255,255,0.9);
+    color: #ffffff;
 }
 
 .sejarah-text .highlight {
-    font-size: 15px;
+    font-size: 16px;
     color: #ffffff;
     font-weight: 400;
+}
+
+.divider {
+    display: none;
 }
 
 .sejarah-text strong {
@@ -477,16 +465,15 @@ body {
     font-weight: 700;
 }
 
-/* ============================================
-   TREASURES SECTION
-   ============================================ */
+/* ==================== TREASURES SECTION ==================== */
 .treasures-section {
-    padding: 60px 5% 70px;
+    padding: 80px 5% 80px;
     background-color: #ffffff;
     position: relative;
     border-radius: 50px 50px 0 0;
-    margin-top: -50px;
+    margin-top: -60px;
     z-index: 2;
+    max-width: 100%;
 }
 
 .treasures-header {
@@ -497,16 +484,17 @@ body {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 40px;
 }
 
 .treasures-line {
     flex: 1;
     height: 1px;
-    background-color: var(--primary);
+    background-color: #2c3e50;
 }
 
 .treasures-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: 3px;
     color: #5a4a3a;
@@ -517,7 +505,7 @@ body {
 .products-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -526,47 +514,39 @@ body {
     display: block;
     text-decoration: none;
     color: inherit;
-    background: #f8f8f8;
-    border-radius: 12px;
+    background: #f0f0f0;
+    border-radius: 8px;
     overflow: hidden;
-    transition: var(--transition);
+    transition: transform 0.3s ease;
 }
 
-.product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-}
+.product-card:hover { transform: translateY(-5px); }
 
 .product-image {
     width: 100%;
-    height: 240px;
+    height: 220px;
     overflow: hidden;
-    background: #e8e8e8;
+    background: #e0e0e0;
 }
 
 .product-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition);
-}
-
-.product-card:hover .product-image img {
-    transform: scale(1.03);
 }
 
 .product-card h3 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #333;
-    padding: 16px 16px 4px;
+    padding: 15px 15px 5px 15px;
     margin: 0;
 }
 
 .price {
-    font-size: 14px;
+    font-size: 12px;
     color: #666;
-    padding: 0 16px 16px;
+    padding: 0 15px 15px 15px;
     margin: 0;
 }
 
@@ -578,62 +558,52 @@ body {
 .shop-all-btn {
     display: inline-block;
     padding: 13px 32px;
-    background: var(--accent);
+    background: #486d7d;
     color: white;
     text-decoration: none;
     border-radius: 50px;
     font-size: 15px;
     font-weight: 500;
-    transition: var(--transition);
+    transition: background 0.3s, transform 0.2s;
 }
 
 .shop-all-btn:hover {
-    background: var(--accent-hover);
+    background: #badaff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(72, 109, 125, 0.3);
 }
 
-/* ============================================
-   INFO SECTION
-   ============================================ */
+/* ==================== INFO SECTION ==================== */
 .info-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 100px;
-    padding: 50px 20px;
+    gap: 200px;
+    padding: 40px 20px;
     flex-wrap: wrap;
     background-color: #ffffff;
 }
 
-.info-item {
-    text-align: center;
-}
+.info-item { text-align: center; }
 
 .info-item img {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
     display: block;
-    margin: 0 auto 12px;
-    border: 3px solid white;
-    box-shadow: var(--shadow);
+    margin: 0 auto 10px;
 }
 
 .info-item p {
-    font-size: 20px;
+    font-size: 25px;
     color: #333;
-    font-weight: 500;
 }
 
-/* ============================================
-   FOOTER
-   ============================================ */
+/* ==================== FOOTER ==================== */
 .footer {
     position: relative;
     color: white;
-    padding: 40px 50px 20px;
+    padding: 40px 10% 20px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -642,154 +612,157 @@ body {
 
 .footer-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 0;
 }
 
 .footer-bg img {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     filter: brightness(0.3);
 }
 
 .footer-content-wrapper {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
-    gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 60px;
     position: relative;
     z-index: 1;
+    margin-bottom: 10px;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 .footer-logo {
     font-family: 'Sacramento', cursive;
-    font-size: 32px;
+    font-size: 35px;
     font-weight: 300;
     font-style: italic;
 }
 
-.footer-middle h4,
-.footer-right h4 {
-    font-size: 14px;
+.footer-middle h4, .footer-right h4 {
+    font-size: 15px;
     font-weight: 600;
     color: white;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-bottom: 10px;
 }
 
-.footer-middle ul {
-    list-style: none;
-}
+.footer-middle ul { list-style: none; margin-top: 0; }
+.footer-middle ul li { margin-bottom: 10px; }
 
-.footer-middle ul li {
-    margin-bottom: 8px;
-}
-
-.footer-middle a,
-.footer-right a {
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
-    font-size: 13px;
-    transition: var(--transition);
-}
-
-.footer-middle a:hover,
-.footer-right a:hover {
+.footer-middle a, .footer-right a {
     color: white;
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.9;
+    transition: opacity 0.3s;
 }
 
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+.footer-middle a:hover, .footer-right a:hover { opacity: 1; }
+
+.contact-info { display: flex; flex-direction: column; gap: 12px; }
 
 .contact-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: rgba(255,255,255,0.8);
-    font-size: 13px;
+    color: white;
+    font-size: 14px;
 }
 
-.contact-item i {
-    width: 20px;
-    text-align: center;
-}
+.contact-item i { width: 20px; text-align: center; color: rgba(255,255,255,0.8); }
+.contact-item a { color: white; text-decoration: none; opacity: 0.9; }
+.contact-item a:hover { opacity: 1; text-decoration: underline; }
 
-.social-links {
-    display: flex;
-    gap: 8px;
-    margin-top: 15px;
-}
+.social-links { display: flex; gap: 5px; margin-top: 12px; }
 
 .social-link {
-    color: rgba(255,255,255,0.7);
-    font-size: 1.2rem;
-    width: 36px;
-    height: 36px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 1.3rem;
+    width: 36px; height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: var(--transition);
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    text-decoration: none;
+    transition: all 0.3s;
 }
 
-.social-link:hover {
-    color: white;
-    background: rgba(255,255,255,0.15);
-    transform: translateY(-2px);
-}
+.social-link:hover { color: white; transform: translateY(-3px); }
 
 .footer .divider {
     border: none;
     height: 1px;
-    background-color: rgba(255,255,255,0.15);
-    margin: 25px auto 15px;
+    background-color: rgba(255,255,255,0.2);
+    margin-top: 30px;
+    margin-bottom: 15px;
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 1200px;
 }
 
 .copyright {
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    color: #ddd;
     position: relative;
     z-index: 1;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
     text-align: left;
+    padding-bottom: 10px;
 }
 
-/* ============================================
-   RESPONSIVE - TABLET (max-width: 1024px)
-   ============================================ */
+/* ============================================================
+   RESPONSIVE - PERBAIKAN LAYOUT
+   ============================================================ */
+
+/* ---------- TABLET (max-width: 1024px) ---------- */
 @media (max-width: 1024px) {
+    .navbar {
+        padding: 10px 30px;
+    }
+
+    .nav-left {
+        gap: 25px;
+    }
+
+    .search-box input {
+        width: 150px;
+    }
+
     .hero-text h1 {
-        font-size: 40px;
+        font-size: 44px;
     }
 
     .sejarah-content {
-        width: 55%;
-        padding: 30px 30px;
+        width: 50%;
+        padding: 30px;
+        margin-right: 3%;
+        margin-top: 80px;
     }
 
     .sejarah-title {
-        font-size: 36px;
+        font-size: 40px;
     }
 
     .products-grid {
+        gap: 15px;
+    }
+
+    .product-image {
+        height: 180px;
+    }
+
+    .info-section {
+        gap: 80px;
+    }
+
+    .footer-content-wrapper {
+        gap: 40px;
+    }
+}
+
+/* ---------- TABLET PORTRAIT (max-width: 900px) ---------- */
+@media (max-width: 900px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 18px;
     }
 
@@ -797,19 +770,26 @@ body {
         height: 200px;
     }
 
-    .info-section {
-        gap: 60px;
+    .footer-content-wrapper {
+        grid-template-columns: 1fr 1fr;
+        gap: 35px;
     }
 
-    .footer-content-wrapper {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
+    .info-section {
+        gap: 50px;
+    }
+
+    .info-item img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .info-item p {
+        font-size: 20px;
     }
 }
 
-/* ============================================
-   RESPONSIVE - MOBILE (max-width: 768px)
-   ============================================ */
+/* ---------- MOBILE (max-width: 768px) ---------- */
 @media (max-width: 768px) {
     /* Navbar */
     .navbar {
@@ -838,11 +818,9 @@ body {
 
     /* Hero */
     .hero {
-        height: 70vh;
-        min-height: 400px;
-        max-height: 600px;
+        height: 85vh;
+        min-height: 500px;
         border-radius: 0 0 30px 30px;
-        margin-top: 55px;
     }
 
     .hero-text {
@@ -851,145 +829,153 @@ body {
     }
 
     .hero-text h1 {
-        font-size: 28px;
-        margin-bottom: 10px;
+        font-size: 32px;
+        line-height: 1.2;
+        margin-bottom: 12px;
     }
 
     .hero-text p {
-        font-size: 13px;
-        margin-bottom: 18px;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 20px;
     }
 
     .hero-btn {
-        padding: 10px 24px;
-        font-size: 13px;
+        padding: 11px 26px;
+        font-size: 14px;
     }
 
     /* Sejarah */
     .sejarah-section {
-        min-height: 450px;
+        min-height: auto;
         padding: 40px 0 50px;
-        margin-top: -25px;
+        margin-top: -30px;
+        align-items: center;
         justify-content: center;
     }
 
     .sejarah-content {
         width: 90%;
+        max-width: 100%;
         padding: 20px;
         margin: 0 auto;
+        margin-top: 0;
     }
 
     .sejarah-title {
-        font-size: 28px;
-        margin-bottom: 16px;
+        font-size: 32px;
+        white-space: normal;
+        margin-bottom: 20px;
     }
 
     .sejarah-text p {
-        font-size: 13px;
+        font-size: 14px;
+        line-height: 1.7;
     }
 
     .sejarah-text .highlight {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     /* Treasures */
     .treasures-section {
-        padding: 40px 4% 50px;
+        padding: 50px 4% 50px;
         border-radius: 30px 30px 0 0;
-        margin-top: -35px;
+        margin-top: -40px;
+    }
+
+    .treasures-header {
+        margin-bottom: 30px;
+        gap: 12px;
     }
 
     .treasures-title {
-        font-size: 12px;
+        font-size: 14px;
         letter-spacing: 2px;
     }
 
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 14px;
     }
 
     .product-image {
-        height: 140px;
+        height: 150px;
     }
 
     .product-card h3 {
-        font-size: 12px;
-        padding: 10px 10px 3px;
+        font-size: 13px;
+        padding: 12px 12px 4px;
     }
 
     .price {
-        font-size: 11px;
-        padding: 0 10px 10px;
+        font-size: 12px;
+        padding: 0 12px 12px;
     }
 
     .shop-all-btn {
-        padding: 10px 24px;
-        font-size: 13px;
+        padding: 11px 28px;
+        font-size: 14px;
     }
 
-    /* Info Section */
+    /* Info section */
     .info-section {
-        gap: 30px;
+        gap: 40px;
         padding: 30px 16px;
     }
 
     .info-item img {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
     }
 
     .info-item p {
-        font-size: 16px;
+        font-size: 18px;
     }
 
     /* Footer */
     .footer {
-        padding: 25px 20px 15px;
+        padding: 30px 5% 16px;
     }
 
     .footer-content-wrapper {
         grid-template-columns: 1fr 1fr;
-        gap: 24px;
+        gap: 28px;
     }
 
     .footer-logo {
-        font-size: 26px;
+        font-size: 30px;
     }
 
     .footer-middle h4,
     .footer-right h4 {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .footer-middle a,
     .footer-right a,
     .contact-item {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .copyright {
-        font-size: 11px;
-        text-align: center;
+        font-size: 12px;
     }
 }
 
-/* ============================================
-   RESPONSIVE - MOBILE KECIL (max-width: 480px)
-   ============================================ */
+/* ---------- MOBILE KECIL (max-width: 480px) ---------- */
 @media (max-width: 480px) {
-    /* Navbar */
     .navbar {
-        padding: 8px 12px;
+        padding: 8px 14px;
     }
 
     .logo {
-        font-size: 22px;
+        font-size: 24px;
     }
 
     .hamburger-btn {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
     }
 
     .hamburger-btn span {
@@ -1001,56 +987,60 @@ body {
         width: 260px;
     }
 
+    .mobile-menu-nav a {
+        font-size: 15px;
+        padding: 12px 12px;
+    }
+
     /* Hero */
     .hero {
-        height: 60vh;
-        min-height: 350px;
-        max-height: 500px;
+        height: 75vh;
+        min-height: 400px;
         border-radius: 0 0 20px 20px;
-        margin-top: 50px;
     }
 
     .hero-text h1 {
-        font-size: 22px;
+        font-size: 26px;
     }
 
     .hero-text p {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .hero-btn {
-        padding: 8px 20px;
-        font-size: 12px;
+        padding: 10px 22px;
+        font-size: 13px;
     }
 
     /* Sejarah */
     .sejarah-section {
-        min-height: 380px;
         padding: 30px 0 40px;
-        margin-top: -20px;
+        margin-top: -25px;
     }
 
     .sejarah-title {
-        font-size: 24px;
+        font-size: 26px;
+        margin-bottom: 16px;
     }
 
     .sejarah-text p {
-        font-size: 12px;
+        font-size: 13px;
+        line-height: 1.6;
     }
 
     .sejarah-text .highlight {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     /* Treasures */
     .treasures-section {
-        padding: 30px 3% 40px;
+        padding: 40px 3% 40px;
         border-radius: 20px 20px 0 0;
-        margin-top: -30px;
+        margin-top: -35px;
     }
 
     .products-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 
@@ -1060,7 +1050,7 @@ body {
 
     .product-card h3 {
         font-size: 11px;
-        padding: 8px 8px 2px;
+        padding: 8px 8px 3px;
     }
 
     .price {
@@ -1069,38 +1059,38 @@ body {
     }
 
     .shop-all-btn {
-        padding: 8px 20px;
-        font-size: 12px;
+        padding: 10px 24px;
+        font-size: 13px;
     }
 
-    /* Info Section */
+    /* Info section */
     .info-section {
-        gap: 20px;
-        padding: 20px 10px;
+        gap: 25px;
+        padding: 20px 12px;
     }
 
     .info-item img {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
     }
 
     .info-item p {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     /* Footer */
     .footer {
-        padding: 20px 15px 12px;
+        padding: 25px 4% 14px;
     }
 
     .footer-content-wrapper {
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: 22px;
         text-align: center;
     }
 
     .footer-logo {
-        font-size: 24px;
+        font-size: 26px;
     }
 
     .social-links {
@@ -1113,58 +1103,57 @@ body {
 
     .copyright {
         text-align: center;
-        font-size: 10px;
+        font-size: 11px;
     }
 }
 
-/* ============================================
-   RESPONSIVE - EXTRA SMALL (max-width: 360px)
-   ============================================ */
+/* ---------- EXTRA SMALL MOBILE (max-width: 360px) ---------- */
 @media (max-width: 360px) {
     .hero-text h1 {
-        font-size: 18px;
+        font-size: 22px;
     }
 
     .hero-text p {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     .products-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 14px;
     }
 
     .product-image {
-        height: 160px;
+        height: 180px;
     }
 
     .product-card h3 {
-        font-size: 13px;
-        padding: 10px 12px 4px;
+        font-size: 14px;
+        padding: 12px 12px 4px;
     }
 
     .price {
         font-size: 12px;
-        padding: 0 12px 10px;
+        padding: 0 12px 12px;
     }
-}
 
-/* ============================================
-   SCROLLBAR
-   ============================================ */
-::-webkit-scrollbar {
-    width: 8px;
-}
+    .sejarah-title {
+        font-size: 22px;
+    }
 
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
+    .sejarah-content {
+        padding: 15px;
+    }
 
-::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-}
+    .sejarah-text p {
+        font-size: 12px;
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
+    .info-item img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .info-item p {
+        font-size: 14px;
+    }
 }
