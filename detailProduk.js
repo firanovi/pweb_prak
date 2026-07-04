@@ -134,7 +134,7 @@ async function addToWishlist() {
   }
 }
 
-// ── BUY NOW ───────────────────────────────────────────────────
+// ── BUY NOW (langsung ke payment, tanpa masuk cart, tanpa popup) ──
 async function buyNow() {
   const userId = localStorage.getItem('userId');
 
@@ -144,8 +144,20 @@ async function buyNow() {
     return;
   }
 
-  await addToCart();
-  window.location.href = './payment.html';
+  if (!produkAktif) return;
+
+  // Simpan HANYA produk ini (bukan seluruh cart) untuk ditampilkan di payment.html
+  const buyNowItem = [{
+    nama:   produkAktif.nama,
+    harga:  produkAktif.harga,
+    jumlah: jumlah,
+    gambar: produkAktif.gambar || ''
+  }];
+  localStorage.setItem('sakamadura_buynow_item', JSON.stringify(buyNowItem));
+
+  // Tandai mode "buynow" lewat query param supaya payment.js tahu
+  // harus tampilkan produk ini saja, bukan isi cart biasa
+  window.location.href = './payment.html?mode=buynow';
 }
 
 // ── REKOMENDASI PRODUK LAIN ─────────────────────────────────

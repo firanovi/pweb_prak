@@ -10,6 +10,10 @@ let tax = 10000;
 let finalCheckoutTotal = 0;
 let cartItems = [];
 
+// Mode halaman: 'buynow' (dari tombol Buy it now di detail produk) atau 'cart' (checkout dari cart biasa)
+const urlParams = new URLSearchParams(window.location.search);
+const isBuyNowMode = urlParams.get('mode') === 'buynow';
+
 // ================= MAPPING GAMBAR LOKAL =================
 const gambarProdukMap = {
     'Batik Sumenep':         './img/batiksumenep.jpg',
@@ -37,10 +41,19 @@ async function loadCartData() {
     const itemCountEl   = document.querySelector('.item-count');
 
     try {
-        const localRaw   = localStorage.getItem('sakamadura_cart_local');
-        const localItems = JSON.parse(localRaw || '[]');
+        let sourceItems;
 
-        cartItems = localItems.map(i => ({
+        if (isBuyNowMode) {
+            // Mode "Buy it now": tampilkan HANYA 1 produk yang disimpan dari halaman detail produk
+            const buyNowRaw = localStorage.getItem('sakamadura_buynow_item');
+            sourceItems = JSON.parse(buyNowRaw || '[]');
+        } else {
+            // Mode checkout dari cart biasa
+            const localRaw = localStorage.getItem('sakamadura_cart_local');
+            sourceItems = JSON.parse(localRaw || '[]');
+        }
+
+        cartItems = sourceItems.map(i => ({
             produk: { nama: i.nama, gambar: i.gambar },
             harga:  i.harga,
             jumlah: i.jumlah
@@ -301,8 +314,14 @@ window.confirmOrder = async function () {
 
         const order = await res.json();
         if (res.ok) {
-            localStorage.removeItem('sakamadura_cart');
-            localStorage.removeItem('sakamadura_cart_local');
+            if (isBuyNowMode) {
+                // Mode Buy it now: hapus HANYA item buy-now, cart biasa (kalau ada) dibiarkan utuh
+                localStorage.removeItem('sakamadura_buynow_item');
+            } else {
+                // Mode checkout dari cart: kosongkan cart seperti biasa
+                localStorage.removeItem('sakamadura_cart');
+                localStorage.removeItem('sakamadura_cart_local');
+            }
             showQRPayment(selectedPayment);
         } else {
             alert('Gagal membuat order: ' + (order.message || 'Unknown error'));
