@@ -30,14 +30,15 @@ a:hover {
 
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh; /* Diganti dari height ke min-height supaya aman pas scrolling di HP */
     background: url('./img/backgroundloginmadura.jpg.jpeg') no-repeat center center;
     background-size: cover;
+    background-attachment: fixed; /* Biar background tetap di posisi saat di-scroll */
 }
 
 .container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 /* LEFT SIDE */
@@ -265,9 +266,52 @@ body {
     color: var(--white-color);
 }
 
-/* RESPONSIVE */
-@media only screen and (max-width: 564px) {
+/* ================= SINTAKS MOBILE YANG BARU ================= */
+@media only screen and (max-width: 900px) {
+    .container {
+        flex-direction: column; /* Mengubah kiri-kanan menjadi atas-bawah */
+        height: auto;
+        padding: 40px 20px;
+        gap: 30px;
+    }
+
+    .left {
+        flex: none;
+        width: 100%;
+    }
+
+    .overlay {
+        padding: 20px;
+        text-align: center; /* Teks intro jadi rata tengah di HP biar cantik */
+    }
+
+    .overlay h1 {
+        font-size: 36px; /* Mengecilkan ukuran judul di HP */
+    }
+
+    .overlay p {
+        margin: 0 auto;
+    }
+
+    .right {
+        flex: none;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
     .wrapper {
-        margin: 20px;
+        width: 100%; /* Kotak login otomatis selebar layar HP */
+        margin: 0;
+        padding: 100px 20px 40px; /* Padding disesuaikan */
+        height: 480px;
+    }
+    
+    .overlay h1 {
+        font-size: 28px;
+    }
+    
+    .form-cols {
+        font-size: 12px; /* Perkecil teks forgot password di HP kecil */
     }
 }
