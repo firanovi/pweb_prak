@@ -21,10 +21,10 @@ body {
     min-height: 100vh;
     color: var(--dark);
     line-height: 1.6;
-    padding-top: 80px; /* biar tidak ketutup navbar */
+    padding-top: 80px;
 }
 
-/* NAVBAR */
+/* ============ NAVBAR ============ */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -39,7 +39,6 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* LEFT */
 .nav-left {
     display: flex;
     align-items: center;
@@ -69,297 +68,288 @@ body {
     color: var(--primary);
 }
 
-/* RIGHT */
 .nav-right {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-/* ICON */
+/* ============ NAV ICONS - PERBAIKAN UTAMA ============ */
 .nav-icons {
     display: flex;
     gap: 15px;
-}
-
-.nav-icons i {
-    cursor: pointer;
-    font-size: 16px;
+    align-items: center;
 }
 
 .nav-icons a {
-    color: #333;       
+    color: #333;
     text-decoration: none;
+    font-size: 18px;
+    padding: 8px 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    /* PENTING: Pastikan bisa di-click */
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
 }
 
-/* HAMBURGER */
+.nav-icons a:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--primary);
+}
+
+.nav-icons i {
+    font-size: 18px;
+    pointer-events: none;
+    /* Mencegah i menangkap event, biar a yang menangkap */
+}
+
+/* ============ HAMBURGER ============ */
 .hamburger {
     display: none;
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    padding: 5px;
+    z-index: 1001;
+    position: relative;
 }
 
 .hamburger span {
     width: 25px;
     height: 3px;
     background: black;
+    transition: 0.3s;
+    display: block;
 }
 
-/* MOBILE MENU */
+/* ============ MOBILE MENU ============ */
 .mobile-menu {
     display: none;
     flex-direction: column;
     background: white;
-    position: fixed; /* Diubah ke fixed supaya tidak merusak alur scroll */
+    position: fixed;
     top: 70px;
     left: 0;
     width: 100%;
-    padding: 20px;
+    padding: 20px 30px;
     gap: 15px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     z-index: 999;
     opacity: 0;
     transform: translateY(-10px);
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    pointer-events: none;
 }
 
 .mobile-menu.show {
     display: flex;
     opacity: 1;
     transform: translateY(0);
+    pointer-events: all;
 }
 
 .mobile-menu a {
     text-decoration: none;
     color: var(--dark);
     font-size: 18px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: 0.2s;
+}
+
+.mobile-menu a:hover {
+    color: var(--accent);
+    padding-left: 10px;
 }
 
 .mobile-icons {
     display: flex;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-/* PRODUCT LAYOUT */
-.product {
-    display: flex;
-    gap: 50px;
-    padding: 40px 120px;
-    justify-content: center;
-}
-
-.product-left {
-    flex: 1;
-    max-width: 450px;
-}
-
-/* Perbaikan utama: Gambar dibuat fluid agar tidak meluber */
-.product-left img {
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    display: block;
-    object-fit: cover;
-}
-
-.product-right {
-    flex: 1;
-    max-width: 450px;
-}
-
-.product-right h2 {
-    font-size: 40px;
-    margin-bottom: 10px;
-    font-weight: normal;
-}
-
-.price {
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-/* QTY */
-.qty {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Geser ke kiri biar rapi */
-    gap: 25px;              
-    margin-bottom: 20px;
-}
-
-.qty button {
-    padding: 10px 18px;     
-    font-size: 24px;        
-    border-radius: 10%;     
-    border: 1px solid transparent;
-    background: transparent;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.qty button:hover {
-    background: var(--dark);
-    color: white;
-}
-
-.qty span {
-    font-size: 20px;        
-    font-weight: bold;
-    min-width: 30px;
-    text-align: center;
-}
-
-/* BUTTONS */
-.buttons {
-    display: flex;
-    justify-content: flex-start; 
-    gap: 12px;
+    gap: 25px;
     margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
 }
 
-.outline {
-    flex: 1; /* Biar tombol membagi ruang sama rata */
-    border: 1px solid var(--dark);
-    background: transparent;
-    padding: 12px 20px;      
-    font-size: 15px;
-    border-radius: 50px;     
-    cursor: pointer;
-    text-align: center;
-    transition: 0.3s;
-}
-
-.outline:hover {
-    background: var(--dark);
-    color: white;
-    transform: scale(1.02);
-}
-
-/* TOMBOL UTAMA */
-.buy {
-    display: block;
-    margin: 20px 0; /* Tidak auto lagi agar searah ke kiri */
-    width: 100%; /* Penuh mengikuti container */
-    padding: 14px;
-    font-size: 16px;
-    border-radius: 50px;     
-    background: var(--dark);
-    color: white;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    transition: 0.3s;
-}
-
-.buy:hover {
-    background: var(--primary);
-    transform: scale(1.02);
-}
-
-/* DESC */
-.desc {
-    font-size: 16px;
-    color: #0a0a0a;
-    margin-bottom: 25px;
-    line-height: 1.8;
-}
-
-/* RECOMMENDATION */
-.recommend {
-    padding: 0;
-    background: #f5f5f5;
-}
-
-.recommend-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-.recommend-left {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eaeaea;
-    min-height: 400px;
-    text-align: center;
-    font-family: serif;
-    font-size: 40px;
-}
-
-.recommend-right {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    padding: 20px;
-    background: white;
-}
-
-/* CARD */
-.card {
-    display: block; 
-    background: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: inherit;
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-}
-
-.card img {
-    width: 100%;
-    height: 350px;
-    object-fit: cover;
-}
-
-.card p {
-    font-size: 19px;
-    margin-top: 8px;
-    font-weight: 500;
-}
-
-.card span {
-    font-size: 17px;
-}
-
-/* INFO SECTION (Origins, Treasures, etc.) */
-.info-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 100px; /* Diperkecil dari 200px agar tidak overflow di layar tanggung */
-    padding: 40px 20px;
-    flex-wrap: wrap;
-}
-
-.info-item {
-    text-align: center;
-}
-
-.info-item img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    display: block;
-    margin: 0 auto 10px;
-}
-
-.info-item p {
-    font-size: 25px;
+.mobile-icons a {
     color: #333;
+    font-size: 22px;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 50%;
+    transition: 0.3s;
+    border-bottom: none;
 }
 
-/* FOOTER */
+.mobile-icons a:hover {
+    background: #f0f0f0;
+    padding-left: 12px;
+}
+
+/* ============ RESPONSIVE ============ */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .product {
+        padding: 40px 40px;
+    }
+    .footer-content-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 12px 20px;
+    }
+
+    /* Sembunyikan menu desktop */
+    .nav-links {
+        display: none;
+    }
+
+    /* Tampilkan hamburger */
+    .hamburger {
+        display: flex;
+    }
+
+    /* ===== PERBAIKAN: Nav icons tetap terlihat dan bisa di-click ===== */
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .nav-icons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .nav-icons a {
+        font-size: 16px;
+        padding: 6px 8px;
+        min-width: 36px;
+        min-height: 36px;
+        /* PENTING: Pastikan di atas elemen lain */
+        position: relative;
+        z-index: 1001;
+    }
+
+    .nav-icons a:active {
+        background: rgba(0,0,0,0.1);
+    }
+
+    .nav-icons i {
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    /* Product */
+    .product {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
+    }
+    .product-left,
+    .product-right {
+        max-width: 100%;
+        width: 100%;
+    }
+    .product-left img {
+        max-width: 100%;
+        margin: 0 auto 15px;
+    }
+    .product-right h2 {
+        font-size: 28px;
+    }
+
+    .buttons {
+        width: 100%;
+    }
+    .outline {
+        padding: 12px 10px;
+    }
+
+    /* Recommend */
+    .recommend-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .recommend-left {
+        min-height: 150px;
+        font-size: 28px;
+        padding: 20px;
+    }
+    .recommend-right {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+    .card img {
+        height: 200px;
+    }
+
+    /* Info */
+    .info-section {
+        gap: 30px;
+        padding: 30px 15px;
+    }
+    .info-item img {
+        width: 110px;
+        height: 110px;
+    }
+    .info-item p {
+        font-size: 18px;
+    }
+}
+
+/* Mobile Kecil */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .nav-icons a {
+        font-size: 14px;
+        padding: 4px 6px;
+        min-width: 32px;
+        min-height: 32px;
+    }
+
+    .nav-icons i {
+        font-size: 14px;
+    }
+
+    .recommend-right {
+        grid-template-columns: 1fr;
+    }
+    .card img {
+        height: 280px;
+    }
+
+    .footer-content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .mobile-menu {
+        top: 60px;
+        padding: 15px 20px;
+    }
+}
+
+/* ============ FOOTER ============ */
 .footer {
     position: relative;
     color: white;
@@ -481,97 +471,213 @@ body {
     z-index: 1;
 }
 
-
-/* ================= MEDIA QUERIES (SINTAKS MOBILE) ================= */
-
-@media (max-width: 992px) {
-    .product {
-        padding: 40px 40px;
-    }
-    .footer-content-wrapper {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* ============ PRODUCT LAINNYA (Tetap sama) ============ */
+.product {
+    display: flex;
+    gap: 50px;
+    padding: 40px 120px;
+    justify-content: center;
 }
 
-@media (max-width: 768px) {
-    /* Navbar Mobile */
-    .navbar {
-        padding: 15px 20px;
-    }
-    .nav-links, .nav-right {
-        display: none; /* Sembunyikan menu desktop */
-    }
-    .hamburger {
-        display: flex; /* Munculkan hamburger di HP */
-    }
-
-    /* Product Section */
-    .product {
-        flex-direction: column; /* Gambar di atas, info detail di bawah */
-        padding: 20px;
-        gap: 30px;
-    }
-    .product-left, .product-right {
-        max-width: 100%;
-        width: 100%;
-    }
-    .product-left img {
-        max-width: 100%;
-        margin: 0 auto 15px;
-    }
-    .product-right h2 {
-        font-size: 28px;
-    }
-
-    /* Buttons */
-    .buttons {
-        width: 100%;
-    }
-    .outline {
-        padding: 12px 10px;
-    }
-
-    /* Recommend Section */
-    .recommend-wrapper {
-        grid-template-columns: 1fr; /* Jadi 1 kolom vertikal */
-    }
-    .recommend-left {
-        min-height: 150px;
-        font-size: 28px;
-        padding: 20px;
-    }
-    .recommend-right {
-        grid-template-columns: repeat(2, 1fr); /* Tetap 2 grid produk di HP */
-        gap: 10px;
-        padding: 10px;
-    }
-    .card img {
-        height: 200px; /* Gambar rekomendasi dikecilkan biar proporsional */
-    }
-
-    /* Info Section (Origins/Treasures) */
-    .info-section {
-        gap: 30px;
-        padding: 30px 15px;
-    }
-    .info-item img {
-        width: 110px;
-        height: 110px;
-    }
-    .info-item p {
-        font-size: 18px;
-    }
+.product-left {
+    flex: 1;
+    max-width: 450px;
 }
 
-@media (max-width: 480px) {
-    .recommend-right {
-        grid-template-columns: 1fr; /* Di HP sangat kecil, rekomendasi jadi 1 baris vertikal */
-    }
-    .card img {
-        height: 280px;
-    }
-    .footer-content-wrapper {
-        grid-template-columns: 1fr; /* Footer full 1 kolom ke bawah */
-        gap: 25px;
-    }
+.product-left img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    display: block;
+    object-fit: cover;
+}
+
+.product-right {
+    flex: 1;
+    max-width: 450px;
+}
+
+.product-right h2 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+.price {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.qty {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.qty button {
+    padding: 10px 18px;
+    font-size: 24px;
+    border-radius: 10%;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.qty button:hover {
+    background: var(--dark);
+    color: white;
+}
+
+.qty span {
+    font-size: 20px;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.outline {
+    flex: 1;
+    border: 1px solid var(--dark);
+    background: transparent;
+    padding: 12px 20px;
+    font-size: 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.outline:hover {
+    background: var(--dark);
+    color: white;
+    transform: scale(1.02);
+}
+
+.buy {
+    display: block;
+    margin: 20px 0;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 50px;
+    background: var(--dark);
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.buy:hover {
+    background: var(--primary);
+    transform: scale(1.02);
+}
+
+.desc {
+    font-size: 16px;
+    color: #0a0a0a;
+    margin-bottom: 25px;
+    line-height: 1.8;
+}
+
+/* Recommend */
+.recommend {
+    padding: 0;
+    background: #f5f5f5;
+}
+
+.recommend-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.recommend-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eaeaea;
+    min-height: 400px;
+    text-align: center;
+    font-family: serif;
+    font-size: 40px;
+}
+
+.recommend-right {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+    background: white;
+}
+
+.card {
+    display: block;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+}
+
+.card p {
+    font-size: 19px;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.card span {
+    font-size: 17px;
+}
+
+/* Info Section */
+.info-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    padding: 40px 20px;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    text-align: center;
+}
+
+.info-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.info-item p {
+    font-size: 25px;
+    color: #333;
 }

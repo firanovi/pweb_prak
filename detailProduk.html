@@ -1,209 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Product - SakaMadura</title>
-        <link rel="stylesheet" href="./detailProduk.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
-        <style>
-            /* State loading & not-found, khusus halaman dinamis ini */
-            .state-msg {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                min-height: 50vh;
-                text-align: center;
-                gap: 16px;
-                padding: 40px 20px;
-            }
-            .state-msg p { max-width: 400px; color: #666; }
-            .state-msg a {
-                display: inline-block;
-                padding: 10px 24px;
-                border: 1px solid #333;
-                border-radius: 4px;
-                color: #333;
-                text-decoration: none;
-                transition: 0.2s;
-            }
-            .state-msg a:hover { background: #333; color: #fff; }
-            .hidden { display: none !important; }
-        </style>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - SakaMadura</title>
+    <link rel="stylesheet" href="./detailProduk.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+    <style>
+        /* State loading & not-found, khusus halaman dinamis ini */
+        .state-msg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+            text-align: center;
+            gap: 16px;
+            padding: 40px 20px;
+        }
+        .state-msg p { max-width: 400px; color: #666; }
+        .state-msg a {
+            display: inline-block;
+            padding: 10px 24px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .state-msg a:hover { background: #333; color: #fff; }
+        .hidden { display: none !important; }
+    </style>
+</head>
 
-    <body>
-        <!-- NAVBAR -->
-        <nav class="navbar">
-            <div class="nav-left">
-                <a href="#" class="logo">SakaMadura</a>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">SakaMadura</a>
 
-                <div class="nav-links">
-                    <a href="./homepage.html" class="nav-link">About</a>
-                    <a href="./sejarah.html" class="nav-link">Heritage</a>
-                    <a href="./store.html" class="nav-link">Shop</a>
-                </div>
-            </div>
-
-            <div class="nav-right">
-                <div class="nav-icons">
-                    <a href="//"><i class="fas fa-search"></i></a>
-                    <a href="./wishlist.html"><i class="fas fa-heart"></i></a>
-                    <a href="./cart.html"><i class="fas fa-shopping-cart"></i></a>
-                </div>
-            </div>
-
-            <!-- HAMBURGER -->
-            <div class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-
-        <div class="mobile-menu">
-            <a href="./homepage.html">About</a>
-            <a href="./sejarah.html">Heritage</a>
-            <a href="./store.html">Shop</a>
-
-            <div class="mobile-icons">
-                <i class="./wishlist.html"><i class="fas fa-heart"></i></a>
-                <i class="./cart.html"><i class="fas fa-shopping-cart"></i></a>
+            <div class="nav-links">
+                <a href="./homepage.html" class="nav-link">About</a>
+                <a href="./sejarah.html" class="nav-link">Heritage</a>
+                <a href="./store.html" class="nav-link">Shop</a>
             </div>
         </div>
 
-        <!-- LOADING STATE -->
-        <div id="loadingState" class="state-msg">
-            <p>Memuat produk...</p>
+        <div class="nav-right">
+            <div class="nav-icons">
+                <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+                <a href="./wishlist.html" class="nav-icon"><i class="fas fa-heart"></i></a>
+                <a href="./cart.html" class="nav-icon"><i class="fas fa-shopping-cart"></i></a>
+            </div>
         </div>
 
-        <!-- NOT FOUND STATE -->
-        <div id="notFoundState" class="state-msg hidden">
-            <h2>Produk tidak ditemukan</h2>
-            <p>Produk yang kamu cari mungkin sudah dihapus.</p>
-            <a href="./store.html">Kembali ke Shop</a>
+        <!-- HAMBURGER -->
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="./homepage.html">About</a>
+        <a href="./sejarah.html">Heritage</a>
+        <a href="./store.html">Shop</a>
+        <div class="mobile-icons">
+            <a href="./wishlist.html"><i class="fas fa-heart"></i></a>
+            <a href="./cart.html"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div id="loadingState" class="state-msg">
+        <p>Memuat produk...</p>
+    </div>
+
+    <!-- NOT FOUND STATE -->
+    <div id="notFoundState" class="state-msg hidden">
+        <h2>Produk tidak ditemukan</h2>
+        <p>Produk yang kamu cari mungkin sudah dihapus.</p>
+        <a href="./store.html">Kembali ke Shop</a>
+    </div>
+
+    <!-- PRODUCT -->
+    <section class="product hidden" id="productSection">
+        <div class="product-left">
+            <img id="mainImg" src="" class="main-img" alt="">
+            <img id="subImg" src="" class="sub-img" alt="">
         </div>
 
-        <!-- PRODUCT -->
-        <section class="product hidden" id="productSection">
-            <div class="product-left">
-                <img id="mainImg" src="" class="main-img" alt="">
-                <img id="subImg" src="" class="sub-img" alt="">
+        <div class="product-right">
+            <h2 id="produkNama"></h2>
+            <p class="price" id="produkHarga"></p>
+
+            <div class="qty">
+                <button id="qtyMinus" type="button">-</button>
+                <span id="qtySpan">1</span>
+                <button id="qtyPlus" type="button">+</button>
             </div>
 
-            <div class="product-right">
-                <h2 id="produkNama"></h2>
-                <p class="price" id="produkHarga"></p>
-
-                <div class="qty">
-                    <button id="qtyMinus" type="button">-</button>
-                    <span id="qtySpan">1</span>
-                    <button id="qtyPlus" type="button">+</button>
-                </div>
-
-                <div class="buttons">
-                    <button class="outline" id="btnCart" type="button">Add to cart</button>
-                    <button class="outline" id="btnWishlist" type="button">Wishlist</button>
-                </div>
-
-                <button class="buy" id="btnBuy" type="button">Buy it now</button>
-
-                <p class="desc" id="produkDesc"></p>
+            <div class="buttons">
+                <button class="outline" id="btnCart" type="button">Add to cart</button>
+                <button class="outline" id="btnWishlist" type="button">Wishlist</button>
             </div>
-        </section>
 
-        <!-- REKOMENDASI -->
-        <section class="recommend hidden" id="recommendSection">
+            <button class="buy" id="btnBuy" type="button">Buy it now</button>
+
+            <p class="desc" id="produkDesc"></p>
+        </div>
+    </section>
+
+    <!-- REKOMENDASI -->
+    <section class="recommend hidden" id="recommendSection">
         <div class="recommend-wrapper">
-
             <!-- KIRI -->
             <div class="recommend-left">
                 <h2>You might<br>like this too<br></h2>
             </div>
-
             <!-- KANAN -->
             <div class="recommend-right" id="recommendGrid">
                 <!-- diisi otomatis oleh detailProduk.js -->
             </div>
-
         </div>
-        </section>
+    </section>
 
-        <section class="info-section">
-            <div class="info-item">
-                <img src="img/logo origins.png" alt="Origins">
-                <p>Origins</p>
-            </div>
+    <section class="info-section">
+        <div class="info-item">
+            <img src="img/logo origins.png" alt="Origins">
+            <p>Origins</p>
+        </div>
+        <div class="info-item">
+            <img src="img/logo treasures.png" alt="Treasures">
+            <p>Treasures</p>
+        </div>
+        <div class="info-item">
+            <img src="img/logo tradition.png" alt="Tradition">
+            <p>Tradition</p>
+        </div>
+    </section>
 
-            <div class="info-item">
-                <img src="img/logo treasures.png" alt="Treasures">
-                <p>Treasures</p>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bg">
+            <img src="./img/background footer 2.png" alt="Background">
+        </div>
+        <div class="footer-content-wrapper">
+            <div class="footer-left">
+                <h3 class="footer-logo">SakaMadura</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
-
-            <div class="info-item">
-                <img src="img/logo tradition.png" alt="Tradition">
-                <p>Tradition</p>
+            <div class="footer-middle">
+                <h4>Navigasi</h4>
+                <ul>
+                    <li><a href="./homepage.html">About</a></li>
+                    <li><a href="./sejarah.html">Heritage</a></li>
+                    <li><a href="./store.html">Shop</a></li>
+                    <li><a href="./dashboarduser.html">Account</a></li>
+                </ul>
             </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            <div class="footer-bg">
-                <img src="./img/background footer 2.png" alt="Background">
+            <div class="footer-middle">
+                <h4>Lainnya</h4>
+                <ul>
+                    <li><a href="#">Syarat &amp; Ketentuan</a></li>
+                    <li><a href="#">Kebijakan Privasi</a></li>
+                    <li><a href="#">Kerjasama</a></li>
+                </ul>
             </div>
-            <div class="footer-content-wrapper">
-                <div class="footer-left">
-                    <h3 class="footer-logo">SakaMadura</h3>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <div class="footer-right">
+                <h4>Hubungi Kami</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(0123) 15734</span>
                     </div>
-                </div>
-                <div class="footer-middle">
-                    <h4>Navigasi</h4>
-                    <ul>
-                        <li><a href="./homepage.html">About</a></li>
-                        <li><a href="./sejarah.html">Heritage</a></li>
-                        <li><a href="./store.html">Shop</a></li>
-                        <li><a href="./dashboarduser.html">Account</a></li>
-                    </ul>
-                </div>
-                <div class="footer-middle">
-                    <h4>Lainnya</h4>
-                    <ul>
-                        <li><a href="#">Syarat &amp; Ketentuan</a></li>
-                        <li><a href="#">Kebijakan Privasi</a></li>
-                        <li><a href="#">Kerjasama</a></li>
-                    </ul>
-                </div>
-                <div class="footer-right">
-                    <h4>Hubungi Kami</h4>
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <span>(0123) 15734</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span><a href="mailto:sakaMadura@gmail.com">sakaMadura@gmail.com</a></span>
-                        </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><a href="mailto:sakaMadura@gmail.com">sakaMadura@gmail.com</a></span>
                     </div>
                 </div>
             </div>
-            <hr class="divider">
-            <div class="copyright">
-                <p>&copy; 2026 SakaMadura. All rights reserved.</p>
-            </div>
-        </footer>
-        <script>
-            function toggleMenu() {
-                document.querySelector('.mobile-menu').classList.toggle('show');
+        </div>
+        <hr class="divider">
+        <div class="copyright">
+            <p>&copy; 2026 SakaMadura. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('show');
+        }
+
+        // Tutup menu saat klik di luar
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            if (!hamburger.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.remove('show');
             }
-        </script>
-        <script src="./detailProduk.js"></script>
-    </body>
+        });
+    </script>
+    <script src="./detailProduk.js"></script>
+</body>
 </html>
